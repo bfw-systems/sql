@@ -1,4 +1,10 @@
 <?php
+/**
+ * Fichier de configuration du module bfw-sql
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
+ * @package bfw-sql
+ * @version 1.0
+ */
 
 //*** Base De Données ***
 $bd_host = ''; //Le serveur où est la base (ex: localhost)

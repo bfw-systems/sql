@@ -1,7 +1,7 @@
 <?php
 /**
  * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 1.0
  */
 
@@ -9,79 +9,77 @@ namespace BFWSql;
 
 /**
  * Classe Sql permettant de faire une requête de type Select
- * 
- * @author Vermeulen Maxime
- * @package BFW
- * @version 1.0
+ * @package bfw-sql
  */
 class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
 {
     /**
-     * @var $typeResult : Le type de retour pour les données
+     * @var $typeResult Le type de retour pour les données
      */
     private $typeResult = '';
     
     /**
-     * @var $req : Le retour de la requête une fois exécutée (PDO->query();)
+     * @var $req Le retour de la requête une fois exécutée (PDO->query();)
      */
     private $req = false;
     
     /**
-     * @var $no_result : Permet de savoir si l'echec est du à la requête qui n'a rien renvoyé ou une erreur
+     * @var $no_result Permet de savoir si l'echec est du à la requête qui n'a rien renvoyé ou une erreur
      */
     private $no_result = false;
     
     /**
-     * @var $select : Les champs à retournés
+     * @var $select Les champs à retournés
      */
     private $select = array();
     
     /**
-     * @var $from : Les infos sur la tables utilisé pour la partie FROM de la requête
+     * @var $from Les infos sur la tables utilisé pour la partie FROM de la requête
      */
     private $from = array();
     
     /**
-     * @var $subQuery : Les sous-requêtes
+     * @var $subQuery Les sous-requêtes
      */
     private $subQuery = array();
     
     /**
-     * @var $join : Les jointures simple
+     * @var $join Les jointures simple
      */
     private $join = array();
     
     /**
-     * @var $joinLeft : Les LEFT JOIN
+     * @var $joinLeft Les LEFT JOIN
      */
     private $joinLeft = array();
     
     /**
-     * @var $joinRight : Les RIGHT JOIN
+     * @var $joinRight Les RIGHT JOIN
      */
     private $joinRight = array();
     
     /**
-     * @var $order : Les champs pour la clause ORDER BY
+     * @var $order Les champs pour la clause ORDER BY
      */
     private $order = array();
     
     /**
-     * @var $limit : La clause LIMIT
+     * @var $limit La clause LIMIT
      */
     private $limit = '';
     
     /**
-     * @var $limit : La clause GROUP BY
+     * @var $limit La clause GROUP BY
      */
     private $group = array();
     
     /**
      * Constructeur
-     * @param Sql (référence) : L'instance Sql
-     * @param string (array|objet|object) : Le type de retour pour les données
+     * 
+     * @param Sql    $Sql  (ref) L'instance Sql
+     * @param string $type Le type de retour pour les données. Valeurs possible : array|objet|object
      */
-    public function __construct(&$Sql, $type)
+    public function __construct(Sql &$Sql, $type)
     {
         parent::__construct();
         
@@ -93,7 +91,8 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Accesseur pour l'attribut no_result
-     * @return bool : La valeur de $this->no_result
+     * 
+     * @return bool La valeur de $this->no_result
      */
     public function get_no_result()
     {
@@ -350,9 +349,11 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Permet de récupérer les informations à propos de la table sur laquel on souhaite agir.
-     * @param array : Les infos sur la table
-     * @return array : les infos découpé ['tableName'] contient le nom de la table et ['as'] sont raccourcis. 
-     *                  Si as n'a pas été indiqué, il vaux la valeur de tableName
+     * 
+     * @param array $table Les infos sur la table
+     * 
+     * @return array les infos découpé ['tableName'] contient le nom de la table et ['as'] sont raccourcis. 
+     * Si as n'a pas été indiqué, il vaux la valeur de tableName
      */
     public function infosTable($table)
     {
@@ -374,9 +375,10 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Ajoute des champs pour le select
-     * @param array : Les champs à ajouter.
-     * @param array (référence) : Le tableau auquel ajouter les champs
-     * @param as : Le paramètre AS pour savoir quel table
+     * 
+     * @param array  $champs Les champs à ajouter.
+     * @param array  $array  (ref) Le tableau auquel ajouter les champs
+     * @param string $as     Le paramètre AS pour savoir quel table
      */
     public function addChamps($champs, &$array, $as)
     {
@@ -438,9 +440,11 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Permet d'indiquer les infos pour le FROM
-     * @param string/array : La table du FROM, si tableau, la clé est la valeur du AS
-     * @param string/array : Le ou les champs à récupérer de cette table
-     * @return Sql_Select : L'instance de l'objet courant.
+     * 
+     * @param string|array $table  La table du FROM, si tableau, la clé est la valeur du AS
+     * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
+     * 
+     * @return Sql_Select L'instance de l'objet courant.
      */
     public function from($table, $champs='*')
     {
@@ -463,9 +467,11 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Permet d'indiquer les infos pour le FROM
-     * @param ressources : L'instance Sql_Select de la sous-requête
-     * @param string : La valeur du AS pour la sous-requête
-     * @return Sql_Select : L'instance de l'objet courant.
+     * 
+     * @param SqlSelect|SqlUpdate|SqlInsert|SqlDelete $req L'instance Sql_Select de la sous-requête
+     * @param string                                  $as  La valeur du AS pour la sous-requête
+     * 
+     * @return Sql_Select L'instance de l'objet courant.
      */
     public function subQuery($req, $as)
     {
@@ -475,10 +481,12 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Permet d'indiquer les infos pour la jointure
-     * @param string/array : La table du JOIN, si tableau, la clé est la valeur du AS
-     * @param string : La valeur de la partie ON de la jointure
-     * @param string/array : Le ou les champs à récupérer de cette table
-     * @return Sql_Select : L'instance de l'objet courant.
+     * 
+     * @param string|array $table  La table du JOIN, si tableau, la clé est la valeur du AS
+     * @param string       $on     La valeur de la partie ON de la jointure
+     * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
+     * 
+     * @return Sql_Select L'instance de l'objet courant.
      */
     public function join($table, $on, $champs='*')
     {
@@ -493,10 +501,12 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Permet d'indiquer les infos pour la jointure
-     * @param string/array : La table du LEFT JOIN, si tableau, la clé est la valeur du AS
-     * @param string : La valeur de la partie ON de la jointure
-     * @param string/array : Le ou les champs à récupérer de cette table
-     * @return Sql_Select : L'instance de l'objet courant.
+     * 
+     * @param string|array $table  La table du LEFT JOIN, si tableau, la clé est la valeur du AS
+     * @param string       $on     La valeur de la partie ON de la jointure
+     * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
+     * 
+     * @return Sql_Select L'instance de l'objet courant.
      */
     public function joinLeft($table, $on, $champs='*')
     {
@@ -511,10 +521,12 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Permet d'indiquer les infos pour la jointure
-     * @param string/array : La table du RIGHT JOIN, si tableau, la clé est la valeur du AS
-     * @param string : La valeur de la partie ON de la jointure
-     * @param string/array : Le ou les champs à récupérer de cette table
-     * @return Sql_Select : L'instance de l'objet courant.
+     * 
+     * @param string|array $table  La table du RIGHT JOIN, si tableau, la clé est la valeur du AS
+     * @param string       $on     La valeur de la partie ON de la jointure
+     * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
+     * 
+     * @return Sql_Select L'instance de l'objet courant.
      */
     public function joinRight($table, $on, $champs='*')
     {
@@ -529,8 +541,10 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Permet d'ajouter une clause order by à la requête
-     * @param string : Le champ concerné par l'order by
-     * @return Sql_Select : L'instance de l'objet courant.
+     * 
+     * @param string $cond Le champ concerné par l'order by
+     * 
+     * @return Sql_Select L'instance de l'objet courant.
      */
     public function order($cond)
     {
@@ -540,9 +554,10 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Permet d'ajouter une clause limit à la requête
-     * @param array|string : Soit 1 paramètre (le nombre à retourner), soit 2 paramètres 
-     *                          (le nombre où on commence et le nombre à retourner)
-     * @return Sql_Select : L'instance de l'objet courant.
+     * 
+     * @param array|string $limit Soit 1 paramètre (le nombre à retourner), soit 2 paramètres (le nombre où on commence et le nombre à retourner)
+     * 
+     * @return Sql_Select L'instance de l'objet courant.
      */
     public function limit($limit)
     {
@@ -567,8 +582,10 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Permet d'ajouter une clause group by à la requête
-     * @param string : Le champ concerné par le group by
-     * @return Sql_Select : L'instance de l'objet courant.
+     * 
+     * @param string $cond Le champ concerné par le group by
+     * 
+     * @return Sql_Select L'instance de l'objet courant.
      */
     public function group($cond)
     {
@@ -578,8 +595,10 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Execute la requête généré
-     * Génère une exception s'il y a eu un échec
-     * @return mixed : La ressource de la requête exécuté si elle a réussi, false sinon.
+     * 
+     * @throws \Exception Si la requête à echoué
+     * 
+     * @return \PDOStatement|bool : La ressource de la requête exécuté si elle a réussi, false sinon.
      */
     private function executeReq()
     {
@@ -623,8 +642,8 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Retourne une seule ligne de résultat
-     * @return mixed : Les données sous la forme demandé, false s'il y a un problème avec la requête 
-     *                  (l'erreur est automatiquement affiché).
+     * 
+     * @return mixed Les données sous la forme demandé, false s'il y a un problème avec la requête (l'erreur est automatiquement affiché).
      */
     public function fetchRow()
     {
@@ -632,7 +651,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         {
             $req = $this->executeReq();
         }
-        catch(Exception $e) //S'il y a un problème on affiche l'erreur
+        catch(\Exception $e) //S'il y a un problème on affiche l'erreur
         {
             die ($e->getMessage());
         }
@@ -659,8 +678,9 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Retourne toutes les lignes de la requête
-     * @return mixed : Les données sous la forme demandé mis dans un array où chaque noeud est une ligne
-     *                  false s'il y a un problème avec la requête (l'erreur est automatiquement affiché).
+     * 
+     * @return mixed Les données sous la forme demandé mis dans un array où chaque noeud est une ligne
+     * false s'il y a un problème avec la requête (l'erreur est automatiquement affiché).
      */
     public function fetchAll()
     {
@@ -670,7 +690,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         {
             $req = $this->executeReq();
         }
-        catch(Exception $e) //S'il y a un problème on affiche l'erreur
+        catch(\Exception $e) //S'il y a un problème on affiche l'erreur
         {
             die ($e->getMessage());
         }
@@ -703,7 +723,8 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     
     /**
      * Retourne le nombre de ligne retourner par la requête
-     * @return mixed le nombre de ligne. false si ça a échoué.
+     * 
+     * @return int|bool le nombre de ligne. false si ça a échoué.
      */
     public function nb_result()
     {

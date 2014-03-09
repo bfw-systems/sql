@@ -1,7 +1,7 @@
 <?php
 /**
  * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 1.0
  */
 
@@ -9,19 +9,17 @@ namespace BFWSql;
 
 /**
  * Classe gérant les requêtes de type DELETE FROM
- * 
- * @author Vermeulen Maxime
- * @package BFW
- * @version 1.0
+ * @package bfw-sql
  */
 class SqlDelete extends SqlActions implements \BFWSqlInterface\ISqlDelete
 {
     /**
      * Constructeur
-     * @param Sql (référence) : L'instance Sql
-     * @param string : La table sur laquelle agir
+     * 
+     * @param Sql    $Sql   (ref) L'instance Sql
+     * @param string $table La table sur laquelle agir
      */
-    public function __construct(&$Sql, $table)
+    public function __construct(Sql &$Sql, $table)
     {
         parent::__construct();
         
@@ -68,8 +66,10 @@ class SqlDelete extends SqlActions implements \BFWSqlInterface\ISqlDelete
     
     /**
      * Permet de déclarer une requête DELETE
-     * @param string : La table sur laquelle agir
-     * @return Sql_Delete : L'instance de l'objet courant.
+     * 
+     * @param string $table La table sur laquelle agir
+     * 
+     * @return Sql_Delete L'instance de l'objet courant.
      */
     public function delete($table)
     {
