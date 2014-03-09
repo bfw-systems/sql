@@ -1,8 +1,7 @@
 <?php
 /**
  * Classes en rapport avec les modèles
- * 
- * @author Vermeulen Maxime
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 1.0
  */
 
@@ -10,7 +9,7 @@ namespace BFWSql;
  
 /**
  * Gestion des modèles
- * @package BFW
+ * @package bfw-sql
  */
 abstract class Modeles extends \BFWSql\Sql implements \BFWSqlInterface\IModeles
 {

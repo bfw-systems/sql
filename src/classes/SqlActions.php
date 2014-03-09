@@ -1,7 +1,7 @@
 <?php
 /**
  * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 1.0
  */
 
@@ -10,60 +10,62 @@ namespace BFWSql;
 /**
  * Classe parent aux classes Sql_Select, Sql_Insert, Sql_Update et Sql_Delete
  * Elle stock l'instance de pdo et définie quelques méthodes.
- * 
- * @author Vermeulen Maxime
- * @package BFW
- * @version 1.0
+ * @package bfw-sql
  */
-class SqlActions extends \BFW\Kernel implements \BFWSqlInterface\ISqlActions
+class SqlActions implements \BFWSqlInterface\ISqlActions
 {
     /**
-     * @var $PDO : L'instance de pdo
+     * @var $_kernel L'instance du Kernel
+     */
+    private $_kernel;
+    
+    /**
+     * @var $PDO L'instance de pdo
      */
     protected $PDO;
     
     /**
-     * @var $RequeteAssembler : La requête final qui sera exécutée
+     * @var $RequeteAssembler La requête final qui sera exécutée
      */
     protected $RequeteAssembler = '';
     
     /**
-     * @var $modeleName : Le nom de la table du modele
+     * @var $modeleName Le nom de la table du modele
      */
     protected $modeleName = null;
     
     /**
-     * @var $prefix : Le préfix des tables
+     * @var $prefix Le préfix des tables
      */
     protected $prefix;
     
     /**
-     * @var $prepare : Permet de savoir si on utilise les requêtes préparées ou non
+     * @var $prepare Permet de savoir si on utilise les requêtes préparées ou non
      */
     protected $prepareBool = true;
     
     /**
-     * @var $table : La table sur laquel agir
+     * @var $table La table sur laquel agir
      */
     protected $table = '';
     
     /**
-     * @var $champs : Les données à insérer
+     * @var $champs Les données à insérer
      */
     protected $champs = array();
     
     /**
-     * @var $where : Les clauses where
+     * @var $where Les clauses where
      */
     protected $where = array();
     
     /**
-     * @var $prepare : Les arguments de la requête préparée
+     * @var $prepare Les arguments de la requête préparée
      */
     protected $prepare = array();
     
     /**
-     * @var $prepare_option : Les options pour la requête préparée
+     * @var $prepare_option Les options pour la requête préparée
      */
     protected $prepare_option = array();
     
@@ -72,8 +74,9 @@ class SqlActions extends \BFW\Kernel implements \BFWSqlInterface\ISqlActions
      */
     public function __construct()
     {
-        global $Kernel;
-        $this->set_observers($Kernel->get_observers());
+        $this->_kernel = getKernel();
+        
+        $this->set_observers($this->_kernel->get_observers());
     }
     
     /**
@@ -98,7 +101,10 @@ class SqlActions extends \BFW\Kernel implements \BFWSqlInterface\ISqlActions
     
     /**
      * Execute la requête (type INSERT, UPDATE et DELETE)
-     * @return mixed : La ressource de la requête exécuté si elle a réussi, false sinon (avec une Exception).
+     * 
+     * @throws \Exception Si la requête à echoué
+     * 
+     * @return \PDOStatement|bool : La ressource de la requête exécuté si elle a réussi, false sinon.
      */
     public function execute()
     {
@@ -124,7 +130,7 @@ class SqlActions extends \BFW\Kernel implements \BFWSqlInterface\ISqlActions
             $erreur = $this->PDO->errorInfo();
             if($erreur[0] != 0000)
             {
-                die($erreur[2]);
+                throw new \Exception($erreur[2]);
             }
             return false;
         }
@@ -132,7 +138,8 @@ class SqlActions extends \BFW\Kernel implements \BFWSqlInterface\ISqlActions
     
     /**
      * Permet d'inserer sa propre requête directement sans avoir à utiliser les méthodes from etc
-     * @param string : La requête
+     * 
+     * @param string $req La requête
      */
     public function query($req)
     {
@@ -149,7 +156,8 @@ class SqlActions extends \BFW\Kernel implements \BFWSqlInterface\ISqlActions
     
     /**
      * Définie les options pour la requête préparée
-     * @param array : Les options
+     * 
+     * @param array $option Les options
      */
     public function set_prepare_option($option)
     {
@@ -158,8 +166,13 @@ class SqlActions extends \BFW\Kernel implements \BFWSqlInterface\ISqlActions
     
     /**
      * Permet d'ajouter une clause where à la requête
-     * @param string : La condition du where
-     * @return Sql_Select : L'instance de l'objet courant.
+     * 
+     * @param string     $cond    La condition du where
+     * @param arrya|null $prepare (default: null) Les infos pour la requête préparé
+     * 
+     * @throws \Exception : Si la clé utilisé sur la requête préparé est déjà utilisé.
+     * 
+     * @return Sql_Select L'instance de l'objet courant.
      */
     public function where($cond, $prepare=null)
     {
@@ -170,7 +183,7 @@ class SqlActions extends \BFW\Kernel implements \BFWSqlInterface\ISqlActions
             {
                 if(isset($this->prepare[$key]) && $this->prepare[$key] != $val)
                 {
-                    new Exception('La clé '.$key.' pour la requête sql préparé est déjà utilisé avec une autre valeur.');
+                    throw new \Exception('La clé '.$key.' pour la requête sql préparé est déjà utilisé avec une autre valeur.');
                 }
                 else
                 {

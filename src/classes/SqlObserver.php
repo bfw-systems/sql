@@ -1,7 +1,7 @@
 <?php
 /**
  * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 1.0
  */
 
@@ -9,14 +9,17 @@ namespace BFWSql;
 
 /**
  * Classe gérant l'observeur des requêtes SQL pour créer le log avec les EXPLAIN
- * 
- * @author Vermeulen Maxime
- * @package BFW
- * @version 1.0
+ * @package bfw-sql
  */
 class SqlObserver extends \BFW\Observer
 {
-    public function updateWithAction($subject, $action)
+    /**
+     * L'action à effectuer quand l'observer est déclanché
+     * 
+     * @param BFW\Kernel $subject Le sujet observant
+     * @param array      $action  Les actions à effectuer
+     */
+    public function updateWithAction(BFW\Kernel $subject, $action)
     {
         if(is_array($action))
         {

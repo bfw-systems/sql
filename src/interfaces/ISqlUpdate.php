@@ -1,15 +1,27 @@
 <?php
+/**
+ * Interface en rapport avec les classes de surcouche à pdo
+ * 
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
+ * @version 1.0
+ */
+
 namespace BFWSqlInterface;
 
+/**
+ * Interface de la classe SqlUpdate
+ * @package bfw-sql
+ */
 interface ISqlUpdate
 {
     /**
      * Constructeur
-     * @param Sql (référence) : L'instance Sql
-     * @param string : La table sur laquelle agir
-     * @param array : Les données à modifier : array('champSql' => 'données');
+     * 
+     * @param Sql    $Sql    (ref) L'instance Sql
+     * @param string $table  La table sur laquelle agir
+     * @param array  $champs Les données à modifier : array('champSql' => 'données');
      */
-    public function __construct(&$Sql, $table, $champs);
+    public function __construct(Sql &$Sql, $table, $champs);
     
     /**
      * On assemble la requête
@@ -18,16 +30,20 @@ interface ISqlUpdate
     
     /**
      * Permet de déclarer une requête UPDATE
-     * @param string : La table sur laquelle agir
-     * @param array : Les données à modifier : array('champSql' => 'données');
-     * @return Sql_Update : L'instance de l'objet courant.
+     * 
+     * @param string $table  La table sur laquelle agir
+     * @param array  $champs Les données à modifier : array('champSql' => 'données');
+     * 
+     * @return Sql_Update L'instance de l'objet courant.
      */
     public function update($table, $champs);
     
     /**
      * Permet d'ajouter d'autres données à ajouter
-     * @param array : Les données à ajouter : array('champSql' => 'données');
-     * @return Sql_Update : L'instance de l'objet courant.
+     * 
+     * @param array $champs Les données à ajouter : array('champSql' => 'données');
+     * 
+     * @return Sql_Update L'instance de l'objet courant.
      */
     public function addChamps($champs);
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 1.0
  */
 
@@ -9,50 +9,57 @@ namespace BFWSql;
 
 /**
  * Classe PDO faisait la connexion
- * @package BFW
+ * @package bfw-sql
  */
-class SqlConnect extends \BFW\Kernel implements \BFWSqlInterface\ISqlConnect
+class SqlConnect implements \BFWSqlInterface\ISqlConnect
 {
     /**
-     * @var $debug : Si on est en mode débug ou non 
-     *                  (utile pour afficher les erreurs ou non suivant si on est en prod ou pas)
+     * @var $_kernel L'instance du Kernel
+     */
+    private $_kernel;
+    
+    /**
+     * @var $debug Si on est en mode débug ou non 
+     * (utile pour afficher les erreurs ou non suivant si on est en prod ou pas)
      */
     protected $debug;
     
     /**
-     * @var $type : Type de connexion (mysql/pgsql/etc)
+     * @var $type Type de connexion (mysql/pgsql/etc)
      */
     private $type;
     
     /**
-     * @var $nb_query : Nombre de requête effectué
+     * @var $nb_query Nombre de requête effectué
      */
     private $nb_query;
     
     /**
-     * @var $PDO : L'objet PDO
+     * @var $PDO L'objet PDO
      */
     private $PDO;
     
     /**
      * Constructeur de la classe. Créer la connexion
-     * @param string $host Adresse du serveur hôte
+     * 
+     * @param string $host  Adresse du serveur hôte
      * @param string $login Le login de connexion
      * @param string $passe Le mot de passe de connexion
-     * @param string $base Le nom de la base à laquelle se connecter
-     * @param string $type [optionnel] : Le type de base à laquel on se connexion (pgsql/mysql/etc) au format de pdo
-     * @param bool $utf8 [optionnel] : Si on a la base en utf8 ou non (par défaut : true)
+     * @param string $base  Le nom de la base à laquelle se connecter
+     * @param string $type  (default: "mysql") Le type de base à laquel on se connexion (pgsql/mysql/etc) au format de pdo
+     * @param bool   $utf8  (default: "true") Si on a la base en utf8 ou non (par défaut : true)
      */
     public function __construct($host, $login, $passe, $base, $type='mysql', $utf8=true)
     {
-        global $Debug; //Inclus la variable $Debug qui permet de savoir si on est en prod ou non.
+        $this->_kernel = getKernel();
+        $this->debug = $this->_kernel->get_debug();
 
         $this->type = $type;
         try
         {
             $this->PDO = new \PDO($type.':host='.$host.';dbname='.$base, $login, $passe);
         }
-        catch(Exception $e)
+        catch(\Exception $e)
         {
             echo $e->getMessage();
             exit;
@@ -74,7 +81,9 @@ class SqlConnect extends \BFW\Kernel implements \BFWSqlInterface\ISqlConnect
     
     /**
      * Permet de protéger une requête contre les injections et autres.
+     * 
      * @param string $string la requêtre sql
+     * 
      * @return string la requête sql protégé
      */
     public function protect($string)
@@ -89,7 +98,8 @@ class SqlConnect extends \BFW\Kernel implements \BFWSqlInterface\ISqlConnect
     
     /**
      * Accesseur pour accéder à $this->PDO
-     * @return PDO : Instance de la classe PDO
+     * 
+     * @return PDO Instance de la classe PDO
      */
     public function getPDO()
     {
@@ -98,7 +108,8 @@ class SqlConnect extends \BFW\Kernel implements \BFWSqlInterface\ISqlConnect
     
     /**
      * Accesseur pour accéder à $this->nb_query
-     * @return int : Le nombre de requête
+     * 
+     * @return int Le nombre de requête
      */
     public function getNbQuery()
     {

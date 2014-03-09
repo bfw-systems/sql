@@ -31,5 +31,5 @@ php composer.phar install
 ```
 Via un utilitaire du framework BFW, créer un lien vers le module dans le dossier module du projet :
 ```
-sh vendor/bin/bfw_loadModules
+./vendor/bin/bfw_loadModules
 ```
