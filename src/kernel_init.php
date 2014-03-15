@@ -6,7 +6,7 @@
  * @version 1.0
  */
  
-require_once($path.'modules/bfw-sql/config.php');
+require_once($rootPath.'configs/bfw-sql/config.php');
 
 if($bd_enabled)
 {
