@@ -23,7 +23,7 @@
 	"require":
 	{
 		"php": ">=5.3.0",
-		"bulton-fr/bfw": ">=2.0.1"
+		"bulton-fr/bfw": ">=2.0.2"
 	},
 	"require-dev":
 	{
