@@ -76,7 +76,7 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
     {
         $this->_kernel = getKernel();
         
-        $this->set_observers($this->_kernel->get_observers());
+        $this->_kernel->set_observers($this->_kernel->get_observers());
     }
     
     /**
@@ -123,18 +123,19 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
             $erreur = $this->PDO->errorInfo();
         }
         
-        if($req)
+        if($erreur[0] != null)
         {
-            return $req;
+            throw new \Exception($erreur[2]);
         }
         else
         {
-            if($erreur[0] != null)
+            if($req)
             {
-                throw new \Exception($erreur[2]);
+                return $req;
             }
-            return false;
         }
+
+        return false;
     }
     
     /**

@@ -618,27 +618,26 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         }
         $this->req = $req;
         
-        if($req) //Si la requête à réussi, on retourne sa ressource
+        if($erreur[0] != null)
         {
-            if($this->nb_result() > 0)
-            {
-                return $req;
-            }
-            else
-            {
-                $this->no_result = true;
-                return false;
-            }
+            throw new \Exception($erreur[2]);
         }
         else
         {
-            //On récupère l'erreur
-            if($erreur[0] != null) //On créé l'exception si on peut récupérer les infos de l'erreur
+            if($req) //Si la requête à réussi, on retourne sa ressource
             {
-                throw new \Exception($erreur[2]);
+                if($this->nb_result() > 0)
+                {
+                    return $req;
+                }
+                else
+                {
+                    $this->no_result = true;
+                }
             }
-            return false; //On retourne false car échec.
         }
+
+        return false;
     }
     
     /**
