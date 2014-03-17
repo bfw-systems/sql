@@ -115,10 +115,12 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
         {
             $req = $this->PDO->prepare($this->RequeteAssembler, $this->prepare_option);
             $req->execute($this->prepare);
+            $erreur = $req->errorInfo();
         }
         else
         {
             $req = $this->PDO->exec($this->RequeteAssembler);
+            $erreur = $this->PDO->errorInfo();
         }
         
         if($req)
@@ -127,8 +129,7 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
         }
         else
         {
-            $erreur = $this->PDO->errorInfo();
-            if($erreur[0] != 0000)
+            if($erreur[0] != null)
             {
                 throw new \Exception($erreur[2]);
             }

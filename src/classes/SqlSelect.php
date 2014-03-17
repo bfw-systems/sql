@@ -609,10 +609,12 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         {
             $req = $this->PDO->prepare($this->RequeteAssembler, $this->prepare_option);
             $req->execute($this->prepare);
+            $erreur = $req->errorInfo();
         }
         else
         {
-            $req = $this->PDO->query($this->RequeteAssembler); //On exécute la reqête
+            $req = $this->PDO->query($this->RequeteAssembler); //On exécute la requête
+            $erreur = $this->PDO->errorInfo();
         }
         $this->req = $req;
         
@@ -631,8 +633,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         else
         {
             //On récupère l'erreur
-            $erreur = $this->PDO->errorInfo();
-            if($erreur[0] != 0000) //On créé l'exception si on peut récupérer les infos de l'erreur
+            if($erreur[0] != null) //On créé l'exception si on peut récupérer les infos de l'erreur
             {
                 throw new \Exception($erreur[2]);
             }
