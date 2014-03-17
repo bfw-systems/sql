@@ -618,7 +618,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         }
         $this->req = $req;
         
-        if($erreur[0] != null)
+        if($erreur[0] != null && $erreur[0] != '00000')
         {
             throw new \Exception($erreur[2]);
         }

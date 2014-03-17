@@ -123,7 +123,7 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
             $erreur = $this->PDO->errorInfo();
         }
         
-        if($erreur[0] != null)
+        if($erreur[0] != null && $erreur[0] != '00000')
         {
             throw new \Exception($erreur[2]);
         }
