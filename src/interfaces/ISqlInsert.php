@@ -15,15 +15,6 @@ namespace BFWSqlInterface;
 interface ISqlInsert
 {
     /**
-     * Constructeur
-     * 
-     * @param Sql    $Sql    (ref) L'instance Sql
-     * @param string $table  La table sur laquelle agir
-     * @param array  $champs Les données à ajouter : array('champSql' => 'données');
-     */
-    public function __construct(Sql &$Sql, $table, $champs);
-    
-    /**
      * On assemble la requête
      */
     public function assembler_requete();

@@ -15,11 +15,6 @@ namespace BFWSqlInterface;
 interface ISqlActions
 {
     /**
-     * Constructeur de la classe
-     */
-    public function __construct();
-    
-    /**
      * Permet de vérifier si la requête finale a été assemblé et si ce n'est pas le cas de lancer l'assemblage.
      */
     public function is_Assembler();

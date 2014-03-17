@@ -15,14 +15,6 @@ namespace BFWSqlInterface;
 interface ISqlDelete
 {
     /**
-     * Constructeur
-     * 
-     * @param Sql    $Sql   (ref) L'instance Sql
-     * @param string $table La table sur laquelle agir
-     */
-    public function __construct(Sql &$Sql, $table);
-    
-    /**
      * On assemble la requête
      */
     public function assembler_requete();

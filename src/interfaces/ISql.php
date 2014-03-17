@@ -15,20 +15,6 @@ namespace BFWSqlInterface;
 interface ISql
 {
     /**
-     * Renvoi la valeur d'un attribut
-     * 
-     * @param string $name Le nom de l'argument
-     */
-    public function __get($name);
-    
-    /**
-     * Constructeur de la classe.
-     * 
-     * @param Sql_connect|null $DB_connect (ref) (default: null) L'instance de la classe Sql_connect. Si elle n'est pas indiqué, elle sera créé.
-     */
-    public function __construct(&$DB_connect=null);
-    
-    /**
      * Modifie le nom de la table sur laquelle on travail
      * 
      * @param string $name le nom de la table

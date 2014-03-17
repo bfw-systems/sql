@@ -15,14 +15,6 @@ namespace BFWSqlInterface;
 interface ISqlSelect
 {
     /**
-     * Constructeur
-     * 
-     * @param Sql    $Sql  (ref) L'instance Sql
-     * @param string $type Le type de retour pour les données. Valeurs possible : array|objet|object
-     */
-    public function __construct(Sql &$Sql, $type);
-    
-    /**
      * Accesseur pour l'attribut no_result
      * 
      * @return bool La valeur de $this->no_result
