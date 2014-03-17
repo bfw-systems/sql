@@ -17,7 +17,7 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
     /**
      * @var $_kernel L'instance du Kernel
      */
-    private $_kernel;
+    protected $_kernel;
     
     /**
      * @var $PDO L'instance de pdo

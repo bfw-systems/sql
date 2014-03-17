@@ -16,62 +16,62 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     /**
      * @var $typeResult Le type de retour pour les données
      */
-    private $typeResult = '';
+    protected $typeResult = '';
     
     /**
      * @var $req Le retour de la requête une fois exécutée (PDO->query();)
      */
-    private $req = false;
+    protected $req = false;
     
     /**
      * @var $no_result Permet de savoir si l'echec est du à la requête qui n'a rien renvoyé ou une erreur
      */
-    private $no_result = false;
+    protected $no_result = false;
     
     /**
      * @var $select Les champs à retournés
      */
-    private $select = array();
+    protected $select = array();
     
     /**
      * @var $from Les infos sur la tables utilisé pour la partie FROM de la requête
      */
-    private $from = array();
+    protected $from = array();
     
     /**
      * @var $subQuery Les sous-requêtes
      */
-    private $subQuery = array();
+    protected $subQuery = array();
     
     /**
      * @var $join Les jointures simple
      */
-    private $join = array();
+    protected $join = array();
     
     /**
      * @var $joinLeft Les LEFT JOIN
      */
-    private $joinLeft = array();
+    protected $joinLeft = array();
     
     /**
      * @var $joinRight Les RIGHT JOIN
      */
-    private $joinRight = array();
+    protected $joinRight = array();
     
     /**
      * @var $order Les champs pour la clause ORDER BY
      */
-    private $order = array();
+    protected $order = array();
     
     /**
      * @var $limit La clause LIMIT
      */
-    private $limit = '';
+    protected $limit = '';
     
     /**
      * @var $limit La clause GROUP BY
      */
-    private $group = array();
+    protected $group = array();
     
     /**
      * Constructeur
@@ -600,7 +600,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      * 
      * @return \PDOStatement|bool : La ressource de la requête exécuté si elle a réussi, false sinon.
      */
-    private function executeReq()
+    protected function executeReq()
     {
         $this->PDO->nb_query++;
         $this->is_Assembler(); //On vérifie que la requête est bien généré

@@ -16,7 +16,7 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     /**
      * @var $_kernel L'instance du Kernel
      */
-    private $_kernel;
+    protected $_kernel;
     
     /**
      * @var $debug Si on est en mode débug ou non 
@@ -27,17 +27,17 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     /**
      * @var $type Type de connexion (mysql/pgsql/etc)
      */
-    private $type;
+    protected $type;
     
     /**
      * @var $nb_query Nombre de requête effectué
      */
-    private $nb_query;
+    protected $nb_query;
     
     /**
      * @var $PDO L'objet PDO
      */
-    private $PDO;
+    protected $PDO;
     
     /**
      * Constructeur de la classe. Créer la connexion
@@ -74,7 +74,7 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     /**
      * Permet d'utiliser la base sql en utf8
      */
-    private function set_utf8()
+    protected function set_utf8()
     {
         $this->PDO->exec('SET NAMES utf8');
     }
