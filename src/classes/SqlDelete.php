@@ -21,7 +21,7 @@ class SqlDelete extends SqlActions implements \BFWSqlInterface\ISqlDelete
      */
     public function __construct(Sql &$Sql, $table)
     {
-        parent::__construct();
+        parent::__construct($Sql);
         
         $this->PDO = &$Sql->PDO;
         $this->prefix = $Sql->prefix;

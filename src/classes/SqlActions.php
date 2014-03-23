@@ -71,9 +71,12 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
     
     /**
      * Constructeur de la classe
+     * 
+     * @param Sql $Sql : (ref) Instance de la classe Sql
      */
-    public function __construct()
+    public function __construct(Sql &$Sql)
     {
+        $this->_sql = $Sql;
         $this->_kernel = getKernel();
         
         $this->_kernel->set_observers($this->_kernel->get_observers());
@@ -108,7 +111,7 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
      */
     public function execute()
     {
-        $this->PDO->nb_query++;
+        $this->_sql->upNbQuery();
         $this->is_Assembler();
         
         if($this->prepareBool)

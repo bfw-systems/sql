@@ -24,9 +24,14 @@ class Sql implements \BFWSqlInterface\ISql
     protected $nb_query;
     
     /**
-     * @var @PDO L'objet PDO
+     * @var PDO L'objet PDO
      */
     protected $PDO;
+    
+    /**
+     * @var SqlConnect L'objet SqlConnect
+     */
+    protected $SqlConnect;
     
     /**
      * @var $modeleName Nom de la table si c'est un modele
@@ -52,6 +57,8 @@ class Sql implements \BFWSqlInterface\ISql
      * Constructeur de la classe.
      * 
      * @param Sql_connect|null $DB_connect (ref) (default: null) L'instance de la classe Sql_connect. Si elle n'est pas indiqué, elle sera créé.
+     * 
+     * @throws \Exception
      */
     public function __construct(&$DB_connect=null)
     {
@@ -66,8 +73,9 @@ class Sql implements \BFWSqlInterface\ISql
         if(is_object($DB_connect))
         {
             $this->PDO = $DB_connect->getPDO();
-            $this->nb_query = &$DB_connect->getNbQuery();
+            $this->SqlConnect = &$DB_connect;
         }
+        else {throw new \Exception('La variable vers la connexion à la bdd doit être un objet.');}
         
         global $bd_prefix;
         $this->prefix = $bd_prefix;
@@ -263,7 +271,7 @@ class Sql implements \BFWSqlInterface\ISql
      */
     public function query($requete)
     {
-        $this->PDO->nb_query++;
+        $this->upNbQuery();
         $req = $this->PDO->query($requete); //On exécute la reqête
         
         if($req) //Si la requête à réussi, on retourne sa ressource
@@ -281,6 +289,14 @@ class Sql implements \BFWSqlInterface\ISql
             }
             return false; //On retourne false car échec.
         }
+    }
+    
+    /**
+     * Incrémente le nombre de requête effectué
+     */
+    public function upNbQuery()
+    {
+        $this->SqlConnect->upNbQuery();
     }
 }
 ?>

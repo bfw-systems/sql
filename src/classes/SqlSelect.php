@@ -81,7 +81,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      */
     public function __construct(Sql &$Sql, $type)
     {
-        parent::__construct();
+        parent::__construct($Sql);
         
         $this->PDO = &$Sql->PDO;
         $this->prefix = $Sql->prefix;
@@ -602,7 +602,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      */
     protected function executeReq()
     {
-        $this->PDO->nb_query++;
+        $this->_sql->upNbQuery();
         $this->is_Assembler(); //On vérifie que la requête est bien généré
         
         if($this->prepareBool)

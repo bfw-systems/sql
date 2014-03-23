@@ -115,5 +115,13 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     {
         return $this->nb_query;
     }
+    
+    /**
+     * Incrémente le nombre de requête effectué
+     */
+    public function upNbQuery()
+    {
+        $this->nb_query++;
+    }
 }
 ?> 

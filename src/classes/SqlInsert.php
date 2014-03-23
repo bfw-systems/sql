@@ -22,7 +22,7 @@ class SqlInsert extends SqlActions implements \BFWSqlInterface\ISqlInsert
      */
     public function __construct(Sql &$Sql, $table, $champs)
     {
-        parent::__construct();
+        parent::__construct($Sql);
         
         $this->PDO = &$Sql->PDO;
         $this->prefix = $Sql->prefix;
