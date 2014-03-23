@@ -344,7 +344,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         //Et on créer la requête :)
         $this->RequeteAssembler = 'SELECT '.$select.' FROM '.$from.$join.$joinLeft.$joinRight.$where.$group.$order.$limit;
         
-        $this->notifyObserver(array('value' => 'REQ_SQL', 'REQ_SQL' => $this->RequeteAssembler));
+        $this->_kernel->notifyObserver(array('value' => 'REQ_SQL', 'REQ_SQL' => $this->RequeteAssembler));
     }
     
     /**
