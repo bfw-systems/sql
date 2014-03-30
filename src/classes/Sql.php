@@ -85,10 +85,13 @@ class Sql implements \BFWSqlInterface\ISql
      * Modifie le nom de la table sur laquelle on travail
      * 
      * @param string $name le nom de la table
+     * 
+     * @return string : Le nom réel de la table avec préfix s'il y en a un de défini.
      */
     public function set_modeleName($name)
     {
         $this->modeleName = $this->prefix.$name;
+        return $this->modeleName;
     }
     
     /**

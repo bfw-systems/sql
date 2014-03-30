@@ -19,6 +19,11 @@ abstract class Modeles extends \BFWSql\Sql implements \BFWSqlInterface\IModeles
     protected $_name = '';
     
     /**
+     * @var $_realName : Le nom réel de la table (avec préfix)
+     */
+    protected $_realName = '';
+    
+    /**
      * @var $DB : L'instace $Sql_connect qui gère la connexion vers la sgdb
      */
     protected $DB;
@@ -34,7 +39,7 @@ abstract class Modeles extends \BFWSql\Sql implements \BFWSqlInterface\IModeles
         
         if($this->_name != '')
         {
-            parent::set_modeleName($this->_name);
+            $this->_realName = parent::set_modeleName($this->_name);
         }
     }
 }

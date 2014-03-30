@@ -124,4 +124,4 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
         $this->nb_query++;
     }
 }
-?> 
+?>
