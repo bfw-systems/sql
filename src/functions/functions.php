@@ -15,6 +15,8 @@
  */
 function DB_protect($data)
 {
+	global $DB;
+	
 	if(!is_null($DB)) {return $DB->protect($data);}
 	else {return $data}
 }
