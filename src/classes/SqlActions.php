@@ -7,6 +7,8 @@
 
 namespace BFWSql;
 
+use \Exception;
+
 /**
  * Classe parent aux classes Sql_Select, Sql_Insert, Sql_Update et Sql_Delete
  * Elle stock l'instance de pdo et définie quelques méthodes.
@@ -82,8 +84,9 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
     public function __construct(Sql &$Sql)
     {
         $this->_sql = $Sql;
-        $this->_kernel = getKernel();
+        $this->PDO  = $this->_sql->PDO;
         
+        $this->_kernel = getKernel();
         $this->_kernel->set_observers($this->_kernel->get_observers());
     }
     
@@ -131,19 +134,12 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
             $erreur = $this->PDO->errorInfo();
         }
         
-        if($erreur[0] != null && $erreur[0] != '00000')
+        if(!$req && $erreur[0] != null && $erreur[0] != '00000' && isset($erreur[2])) 
         {
-            throw new \Exception($erreur[2]);
+            throw new Exception($erreur[2]);
         }
-        else
-        {
-            if($req)
-            {
-                return $req;
-            }
-        }
-
-        return false;
+        
+        return $req;
     }
     
     /**

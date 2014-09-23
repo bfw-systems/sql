@@ -7,6 +7,8 @@
 
 namespace BFWSql;
 
+use \Exception;
+
 /**
  * Classe POO gérant la sgbd.
  * @package bfw-sql
@@ -17,11 +19,6 @@ class Sql implements \BFWSqlInterface\ISql
      * @var $_kernel : L'instance du Kernel
      */
     protected $_kernel;
-    
-    /**
-     * @var $nb_query Nombre de requête effectué
-     */
-    protected $nb_query;
     
     /**
      * @var PDO L'objet PDO
@@ -64,18 +61,21 @@ class Sql implements \BFWSqlInterface\ISql
     {
         $this->_kernel = getKernel();
         
-        if($DB_connect == null)
+        if($DB_connect === null)
         {
             global $DB;
             $DB_connect = $DB;
         }
+        
+        $this->PDO = null;
+        $this->SqlConnect = null;
         
         if(is_object($DB_connect))
         {
             $this->PDO = $DB_connect->getPDO();
             $this->SqlConnect = &$DB_connect;
         }
-        else {throw new \Exception('La variable vers la connexion à la bdd doit être un objet.');}
+        else {throw new Exception('La variable vers la connexion à la bdd doit être un objet.');}
         
         global $bd_prefix;
         $this->prefix = $bd_prefix;
@@ -103,7 +103,7 @@ class Sql implements \BFWSqlInterface\ISql
      */
     public function der_id($name=null)
     {
-        return $this->PDO->lastInsertId($name);
+        return (int) $this->PDO->lastInsertId($name);
     }
     
     /**
@@ -114,7 +114,7 @@ class Sql implements \BFWSqlInterface\ISql
      * @param string|array $order   Les champs sur lesquels se baser
      * @param string|array $where   Clause where
      * 
-     * @return int|bool l'id, false si aucun résultat
+     * @return int le dernier id, 0 si aucun résultat
      */
     public function der_id_noAI($table, $champID, $order, $where='')
     {
@@ -147,19 +147,10 @@ class Sql implements \BFWSqlInterface\ISql
         $res = $req->fetchRow();
         if($res)
         {
-            return $res[$champID];
+            return (int) $res[$champID];
         }
-        else
-        {
-            if($req->get_no_result())
-            {
-                return 0;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        
+        return 0;
     }
     
     /**
@@ -171,7 +162,6 @@ class Sql implements \BFWSqlInterface\ISql
      */
     public function select($type='array')
     {
-        $this->nb_query++;
         return new SqlSelect($this, $type);
     }
     
@@ -185,7 +175,6 @@ class Sql implements \BFWSqlInterface\ISql
      */
     public function insert($table=null, $champs=null)
     {
-        $this->nb_query++;
         return new SqlInsert($this, $table, $champs);
     }
     
@@ -199,7 +188,6 @@ class Sql implements \BFWSqlInterface\ISql
      */
     public function update($table=null, $champs=null)
     {
-        $this->nb_query++;
         return new SqlUpdate($this, $table, $champs);
     }
     
@@ -212,7 +200,6 @@ class Sql implements \BFWSqlInterface\ISql
      */
     public function delete($table=null)
     {
-        $this->nb_query++;
         return new SqlDelete($this, $table);
     }
     
@@ -221,6 +208,8 @@ class Sql implements \BFWSqlInterface\ISql
      * 
      * @param string $table La table
      * @param string $champ Le champ. Les valeurs du champ doivent être du type int.
+     * 
+     * @throws \Exception Si ue erreur dans la recherche d'id s'est produite
      * 
      * @return int/bool L'id libre trouvé. False si erreur
      */
@@ -231,36 +220,20 @@ class Sql implements \BFWSqlInterface\ISql
         
         if($res)
         {
-            if($res[$champ] != 1)
-            {
-                return $res[$champ]-1;
-            }
-            else
+            if($res[$champ] == 1)
             {
                 $req2 = $this->select()->from($table, $champ)->order($champ.' DESC')->limit(1);
                 $res2 = $req2->fetchRow();
                 
-                if($res2)
-                {
-                    return $res2[$champ]+1;
-                }
-                else
-                {
-                    return false;
-                }
+                //Exception levé si $res2 == false.
+                return $res2[$champ]+1;
             }
+            
+            return $res[$champ]-1;
         }
-        else
-        {
-            if($req->get_no_result() == true)
-            {
-                return 1;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        // Pas de else car exception levé.
+        
+        return 1;
     }
     
     /**
@@ -270,28 +243,24 @@ class Sql implements \BFWSqlInterface\ISql
      * 
      * @throws \Exception Si la requête à echoué
      * 
-     * @return \PDOStatement|bool La ressource de la requête exécuté si elle a réussi, false sinon.
+     * @return \PDOStatement La ressource de la requête exécuté si elle a réussi.
      */
     public function query($requete)
     {
         $this->upNbQuery();
         $req = $this->PDO->query($requete); //On exécute la reqête
         
-        if($req) //Si la requête à réussi, on retourne sa ressource
+        //On récupère l'erreur
+        $erreur = $this->PDO->errorInfo();
+        
+        //On créé l'exception que s'il y a véritablement une erreur.
+        if(!$req && $erreur[0] != null && $erreur[0] != '00000' && isset($erreur[2])) 
         {
-            return $req;
+            throw new Exception($erreur[2]);
         }
-        else
-        {
-            //On récupère l'erreur
-            $erreur = $this->PDO->errorInfo();
-            
-            if($erreur[0] != 0000) //On créé l'exception si on peut récupérer les infos de l'erreur
-            {
-                throw new \Exception($erreur[2]);
-            }
-            return false; //On retourne false car échec.
-        }
+        
+        //Si la requête à réussi, on retourne sa ressource
+        return $req;
     }
     
     /**
@@ -300,6 +269,16 @@ class Sql implements \BFWSqlInterface\ISql
     public function upNbQuery()
     {
         $this->SqlConnect->upNbQuery();
+    }
+    
+    /**
+     * Accesseur pour accéder au nombre de requête
+     * 
+     * @return int Le nombre de requête
+     */
+    public function getNbQuery()
+    {
+        return $this->SqlConnect->getNbQuery();
     }
 }
 ?>

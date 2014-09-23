@@ -30,9 +30,9 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     protected $type;
     
     /**
-     * @var $nb_query Nombre de requête effectué
+     * @var $nb_query (default: 0) Nombre de requête effectué
      */
-    protected $nb_query;
+    protected $nb_query = 0;
     
     /**
      * @var $PDO L'objet PDO
@@ -55,15 +55,8 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
         $this->debug = $this->_kernel->get_debug();
 
         $this->type = $type;
-        try
-        {
-            $this->PDO = new \PDO($type.':host='.$host.';dbname='.$base, $login, $passe);
-        }
-        catch(\Exception $e)
-        {
-            echo $e->getMessage();
-            exit;
-        }
+        $this->PDO = new \PDO($type.':host='.$host.';dbname='.$base, $login, $passe);
+        //PDO create \Exception if fail.
         
         if($utf8)
         {

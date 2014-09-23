@@ -16,15 +16,14 @@ class SqlUpdate extends SqlActions implements \BFWSqlInterface\ISqlUpdate
     /**
      * Constructeur
      * 
-     * @param Sql    $Sql    (ref) L'instance Sql
-     * @param string $table  La table sur laquelle agir
-     * @param array  $champs Les données à modifier : array('champSql' => 'données');
+     * @param Sql         $Sql    (ref) L'instance Sql
+     * @param string|null $table  La table sur laquelle agir
+     * @param array       $champs Les données à modifier : array('champSql' => 'données');
      */
     public function __construct(Sql &$Sql, $table, $champs)
     {
         parent::__construct($Sql);
         
-        $this->PDO = &$Sql->PDO;
         $this->prefix = $Sql->prefix;
         $this->modeleName = $Sql->modeleName;
         
@@ -107,11 +106,24 @@ class SqlUpdate extends SqlActions implements \BFWSqlInterface\ISqlUpdate
      * 
      * @param array $champs Les données à ajouter : array('champSql' => 'données');
      * 
+     * @throws \Exception : Erreur si colonne déjà utilisé
+     * 
      * @return Sql_Update L'instance de l'objet courant.
      */
     public function addChamps($champs)
     {
-        $this->champs[] = $champs;
+        foreach($champs as $column => $data)
+        {
+            if(isset($this->champs[$column]) && $this->champs[$column] != $data)
+            {
+                throw new \Exception('Une valeur pour la colonne '.$column.' est déjà déclaré.');
+            }
+            else
+            {
+                $this->champs[$column] = $data;
+            }
+        }
+        
         return $this;
     }
 }

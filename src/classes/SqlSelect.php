@@ -83,7 +83,6 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     {
         parent::__construct($Sql);
         
-        $this->PDO = &$Sql->PDO;
         $this->prefix = $Sql->prefix;
         $this->modeleName = $Sql->modeleName;
         $this->typeResult = $type;
@@ -121,8 +120,13 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         }
         
         //Retourne tous le modèle
-        if($select == '' && $this->from['tableName'] == '' && $this->modeleName != null)
-        {
+        if(
+            $select == '' && $this->modeleName != null &&
+            (
+                (isset($this->from['tableName']) && $this->from['tableName'] == '') || 
+                !isset($this->from['tableName'])
+            )
+        ){
             $select = '*';
         }
         
@@ -145,9 +149,15 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         
         //Partie FROM
             //Gestion des modeles
-            if($this->from['tableName'] == '' && $this->modeleName != null)
+            if(
+                $this->modeleName != null && 
+                (
+                    (isset($this->from['tableName']) && $this->from['tableName'] == '') || 
+                    !isset($this->from['tableName'])
+                )
+            )
             {
-                $from = array(
+                $this->from = array(
                     'tableName' => $this->modeleName,
                     'as' => $this->modeleName
                 );
@@ -182,11 +192,6 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         {
             foreach($this->join as $val)
             {
-                if($join != '')
-                {
-                    $join .= ' ';
-                }
-                
                 if($val['tableName'] == $val['as'])
                 {
                     $val['tableName'] = $this->prefix.$val['tableName'];
@@ -219,11 +224,6 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         {
             foreach($this->joinLeft as $val)
             {
-                if($joinLeft != '')
-                {
-                    $joinLeft .= ' ';
-                }
-                
                 if($val['tableName'] == $val['as'])
                 {
                     $val['tableName'] = $this->prefix.$val['tableName'];
@@ -255,11 +255,6 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
         {
             foreach($this->joinRight as $val)
             {
-                if($joinRight != '')
-                {
-                    $joinRight .= ' ';
-                }
-                
                 if($val['tableName'] == $val['as'])
                 {
                     $val['tableName'] = $this->prefix.$val['tableName'];
@@ -350,7 +345,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     /**
      * Permet de récupérer les informations à propos de la table sur laquel on souhaite agir.
      * 
-     * @param array $table Les infos sur la table
+     * @param string|array $table Les infos sur la table
      * 
      * @return array les infos découpé ['tableName'] contient le nom de la table et ['as'] sont raccourcis. 
      * Si as n'a pas été indiqué, il vaux la valeur de tableName
@@ -468,8 +463,8 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     /**
      * Permet d'indiquer les infos pour le FROM
      * 
-     * @param SqlSelect|SqlUpdate|SqlInsert|SqlDelete $req L'instance Sql_Select de la sous-requête
-     * @param string                                  $as  La valeur du AS pour la sous-requête
+     * @param SqlActions $req L'instance de la class SqlActions ou qui l'étends correspondant à la sous-requête
+     * @param string     $as  La valeur du AS pour la sous-requête
      * 
      * @return Sql_Select L'instance de l'objet courant.
      */
@@ -647,14 +642,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      */
     public function fetchRow()
     {
-        try //On exécute la requête
-        {
-            $req = $this->executeReq();
-        }
-        catch(\Exception $e) //S'il y a un problème on affiche l'erreur
-        {
-            die ($e->getMessage());
-        }
+        $req = $this->executeReq();
         
         if($req) //Si la requête est passé
         {
@@ -670,10 +658,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
             
             return $res; //On renvoi les données
         }
-        else //Sinon il y a eu un souci donc on renvoi false.
-        {
-            return false;
-        }
+        else {return false;} //Si else car la requête a fail, executeReq lève une exception.
     }
     
     /**
@@ -685,15 +670,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     public function fetchAll()
     {
         $res = array();
-        
-        try //On exécute la requête
-        {
-            $req = $this->executeReq();
-        }
-        catch(\Exception $e) //S'il y a un problème on affiche l'erreur
-        {
-            die ($e->getMessage());
-        }
+        $req = $this->executeReq();
         
         if($req) //Si la requête est passé
         {
@@ -715,10 +692,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
             
             return $res; //On retourne toutes les lignes
         }
-        else //Sinon il y a eu un souci donc on renvoi false.
-        {
-            return false;
-        }
+        else {return false;} //Si else car la requête a fail, executeReq lève une exception.
     }
     
     /**
