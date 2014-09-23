@@ -18,6 +18,7 @@ php:
 before_script:
   - mysql -e "create database IF NOT EXISTS bfw_sql_alone_test;" -uroot;
   - wget http://downloads.atoum.org/nightly/mageekguy.atoum.phar;
+  - composer install;
 
 script:
   - php mageekguy.atoum.phar -d test/classes/ -c .atoum.php;
