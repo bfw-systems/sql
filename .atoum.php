@@ -18,7 +18,7 @@ $script->addDefaultReport();
 Publish code coverage report on coveralls.io
 */
 $sources = './src';
-$token = 'I1yjfchEzzK5uLEYY1AEM2vixt6hAOgTF';
+$token = '9bfQpxPIGH2q85EvtfvIWSFldHWpcNcWk';
 $coverallsReport = new reports\asynchronous\coveralls($sources, $token);
 
 /*
