@@ -11,13 +11,17 @@
 $rootPath = realpath(__DIR__.'/../').'/';
 
 $loader = require($rootPath.'vendor/autoload.php');
+$loaderAddPsr4 = 'addPsr4';
+
 $loader->addPsr4('BFWSql\\', __DIR__.'/../src/classes/');
 $loader->addPsr4('BFWSqlInterface\\', __DIR__.'/../src/interfaces/');
 $loader->addPsr4('BFWSql\tests\units\\',  __DIR__.'/classes/');
 
-//Instancie la classe Kernel
-$BFWKernel = new BFW\Kernel;
-$BFWKernel->set_debug(true);
+$forceConfig = true;
+require_once(__DIR__.'/../vendor/bulton-fr/bfw/install/skeleton/config.php');
+$base_url = 'http://test.bulton.fr/bfw-v2/';
+
+require_once(__DIR__.'/../vendor/bulton-fr/bfw/src/BFW_init.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
@@ -25,13 +29,9 @@ ini_set('html_errors', true);
 
 //J'inclus les fonctions du projet bfw-sql-alone
 require_once($rootPath.'src/functions/functions.php');
-require_once($rootPath.'vendor/bulton-fr/bfw/src/fonctions/global.php');
 
 //Et sa config
 require_once(__DIR__.'/config.php');
-
-//$rootPath = __DIR__.'/../';
-//require_once(__DIR__.'/../vendor/bulton-fr/bfw/src/BFW_init.php');
 
 //Partie initialisation du projet bfw-sql-alone
 if($bd_enabled) //La config déclare qu'une connexion sql doit être faite
