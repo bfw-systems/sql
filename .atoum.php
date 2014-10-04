@@ -1,18 +1,65 @@
 <?php
-/*
-Sample atoum configuration file to publish code coverage report on coveralls.io.
-Do "php path/to/test/file -c path/to/this/file" or "php path/to/atoum/scripts/runner.php -c path/to/this/file -f path/to/test/file" to use it.
-*/
-
-use
-    \mageekguy\atoum,
-    \mageekguy\atoum\reports
-;
 
 /*
-This will ad the default CLI report
+This file will automatically be included before EACH run.
+
+Use it to configure atoum or anything that needs to be done before EACH run.
+
+More information on documentation:
+[en] http://docs.atoum.org/en/chapter3.html#Configuration-files
+[fr] http://docs.atoum.org/fr/chapter3.html#Fichier-de-configuration
 */
-$script->addDefaultReport();
+
+use \mageekguy\atoum,
+    \mageekguy\atoum\reports;
+
+$report = $script->addDefaultReport();
+
+/*
+LOGO
+*/
+// This will add the atoum logo before each run.
+$report->addField(new atoum\report\fields\runner\atoum\logo());
+
+// This will add a green or red logo after each run depending on its status.
+$report->addField(new atoum\report\fields\runner\result\logo());
+/**/
+
+/*
+CODE COVERAGE SETUP
+*/
+// Please replace in next line "Project Name" by your project name and "/path/to/destination/directory" by your destination directory path for html files.
+$coverageField = new atoum\report\fields\runner\coverage\html('BFW', '/home/bubu-blog/www/atoum/bfw-sql/report');
+
+// Please replace in next line http://url/of/web/site by the root url of your code coverage web site.
+$coverageField->setRootUrl('http://test.bulton.fr/atoum/bfw-sql/');
+
+$report->addField($coverageField);
+/**/
+
+/*
+TEST GENERATOR SETUP
+*/
+$testGenerator = new atoum\test\generator();
+
+// Please replace in next line "/path/to/your/tests/units/classes/directory" by your unit test's directory.
+$testGenerator->setTestClassesDirectory(__DIR__.'/test/classes');
+
+// Please replace in next line "your\project\namespace\tests\units" by your unit test's namespace.
+$testGenerator->setTestClassNamespace('BFWSql\test\unit');
+
+// Please replace in next line "/path/to/your/classes/directory" by your classes directory.
+$testGenerator->setTestedClassesDirectory(__DIR__.'/src/classes');
+
+// Please replace in next line "your\project\namespace" by your project namespace.
+$testGenerator->setTestedClassNamespace('BFWSql');
+
+// Please replace in next line "path/to/your/tests/units/runner.php" by path to your unit test's runner.
+//$testGenerator->setRunnerPath('path/to/your/tests/units/runner.php');
+
+$script->getRunner()->setTestGenerator($testGenerator);
+/**/
+
 
 /*
 Publish code coverage report on coveralls.io
