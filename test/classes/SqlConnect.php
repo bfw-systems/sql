@@ -35,20 +35,20 @@ class SqlConnect extends atoum
     {
         include(__DIR__.'/../config.php');
         
-        $this->class = new \BFWSql\SqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type, $bd_utf8, $bd_debug);
-        $this->mock  = new MockSqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type, $bd_utf8, $bd_debug);
+        $this->class = new \BFWSql\SqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
+        $this->mock  = new MockSqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
         
         $this->bd_host = $bd_host;
         $this->bd_user = $bd_user;
     }
     
     /**
-     * Test du constructeur : SqlConnect($host, $login, $passe, $base, [$type='mysql', [$utf8=true, [$debug=false]]])
+     * Test du constructeur : SqlConnect($host, $login, $passe, $base, [$type='mysql', [$utf8=true]])
      */
     public function testSqlConnect()
     {
         include(__DIR__.'/../config.php');
-        $mock  = new MockSqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type, $bd_utf8, $bd_debug);
+        $mock  = new MockSqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
         
         //Test des attributs initilisé
         $this->boolean($mock->debug)->isFalse();
@@ -62,7 +62,7 @@ class SqlConnect extends atoum
         $this->exception(function()
         {
             include(__DIR__.'/../config.php');
-            new \BFWSql\SqlConnect($bd_host, $bd_user, 'Genial MotDePasse', $bd_name, $bd_type, $bd_utf8, $bd_debug);            
+            new \BFWSql\SqlConnect($bd_host, $bd_user, 'Genial MotDePasse', $bd_name, $bd_type);            
         })->message->contains("[1045] Access denied for user '".$this->bd_user."'@'".$this->bd_host."' (using password: YES)");
     }
     

@@ -19,31 +19,15 @@ $loader->addPsr4('BFWSql\tests\units\\',  __DIR__.'/classes/');
 
 $forceConfig = true;
 require_once(__DIR__.'/../vendor/bulton-fr/bfw/install/skeleton/config.php');
+
+//Modif de certaines config par défault
 $base_url = 'http://test.bulton.fr/bfw-v2/';
+$bd_enabled = true; //Permet d'activer ou non la partie SQL
+$bd_module = 'bfw-sql'; //suggest package: bfw-sql
 
 require_once(__DIR__.'/../vendor/bulton-fr/bfw/src/BFW_init.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 ini_set('html_errors', true);
-
-//J'inclus les fonctions du projet bfw-sql-alone
-require_once($rootPath.'src/functions/functions.php');
-
-//Et sa config
-require_once(__DIR__.'/config.php');
-
-//Partie initialisation du projet bfw-sql-alone
-if($bd_enabled) //La config déclare qu'une connexion sql doit être faite
-{
-    //On l'inclu et on stock l'instance de SqlConnect dans la variable déclaré
-    $DB = new \BFWSql\SqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type, $bd_utf8);
-    
-    //Juste un petit au cas où pour pas que cette donnée ne traine dans le projet.
-    unset($bd_pass);
-}
-else //Pas de connexion sql demandée
-{
-    $DB = null; //On déclare notre variable (initialisation) à null.
-}
 ?>
