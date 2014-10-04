@@ -19,10 +19,10 @@ before_script:
   - mysql -e "create database IF NOT EXISTS bfw_sql_alone_test;" -uroot;
   - wget http://downloads.atoum.org/nightly/mageekguy.atoum.phar;
   - composer install;
-  - mkdir modules && mkdir modules/bfw-sql && mkdir configs && mkdir configs/bfw-sql
-  - cp -R src/* modules/bfw-sql/
-  - cp bfw_modules_info.php modules/bfw-sql/bfw_modules_info.php
-  - cp test/config.php configs/bfw-sql/config.php
+  - mkdir modules && mkdir modules/bfw-sql && mkdir configs && mkdir configs/bfw-sql;
+  - cp -R src/* modules/bfw-sql/;
+  - cp bfw_modules_info.php modules/bfw-sql/bfw_modules_info.php;
+  - cp test/config.php configs/bfw-sql/config.php;
 
 script:
   - php mageekguy.atoum.phar -d test/classes/ -c .atoum.php;
