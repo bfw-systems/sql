@@ -31,7 +31,7 @@ class Functions extends atoum
         $this->mock = new \BFWSql\Functions;
         
         include(__DIR__.'/../config.php');
-        new \BFWSql\SqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type, $bd_utf8, $bd_debug);
+        new \BFWSql\SqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
     }
     
     /**
