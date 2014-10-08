@@ -68,7 +68,7 @@ class SqlDelete extends SqlActions implements \BFWSqlInterface\ISqlDelete
      * 
      * @param string $table La table sur laquelle agir
      * 
-     * @return Sql_Delete L'instance de l'objet courant.
+     * @return SqlDelete L'instance de l'objet courant.
      */
     public function delete($table)
     {

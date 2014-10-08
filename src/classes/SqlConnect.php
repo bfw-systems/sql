@@ -92,7 +92,7 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     /**
      * Accesseur pour accéder à $this->PDO
      * 
-     * @return PDO Instance de la classe PDO
+     * @return \PDO Instance de la classe PDO
      */
     public function getPDO()
     {

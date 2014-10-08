@@ -18,6 +18,7 @@ interface ISql
      * Modifie le nom de la table sur laquelle on travail
      * 
      * @param string $name le nom de la table
+     * @return string
      */
     public function set_modeleName($name);
     
@@ -38,7 +39,7 @@ interface ISql
      * @param string|array $order   Les champs sur lesquels se baser
      * @param string|array $where   Clause where
      * 
-     * @return int|bool l'id, false si aucun résultat
+     * @return integer l'id, false si aucun résultat
      */
     public function der_id_noAI($table, $champID, $order, $where='');
     
@@ -47,7 +48,7 @@ interface ISql
      * 
      * @param string $type (default: "array") Le type de retour pour les données. Valeurs possible : array|objet|object
      * 
-     * @return Sql_Select L'instance de l'objet Sql_Select créé
+     * @return \BFWSql\SqlSelect L'instance de l'objet Sql_Select créé
      */
     public function select($type='array');
     
@@ -57,7 +58,7 @@ interface ISql
      * @param string $table  (default: null) La table sur laquelle agir
      * @param array  $champs (default: null) Les données à ajouter : array('champSql' => 'données');
      * 
-     * @return Sql_Insert L'instance de l'objet Sql_Select créé
+     * @return \BFWSql\SqlInsert L'instance de l'objet Sql_Select créé
      */
     public function insert($table=null, $champs=null);
     
@@ -67,7 +68,7 @@ interface ISql
      * @param string $table  (default: null) La table sur laquelle agir
      * @param array  $champs (default: null) Les données à ajouter : array('champSql' => 'données');
      * 
-     * @return Sql_Update L'instance de l'objet Sql_Select créé
+     * @return \BFWSql\SqlUpdate L'instance de l'objet Sql_Select créé
      */
     public function update($table=null, $champs=null);
     
@@ -76,7 +77,7 @@ interface ISql
      * 
      * @param string $table (default: null) La table sur laquelle agir
      * 
-     * @return Sql_Delete L'instance de l'objet Sql_Select créé
+     * @return \BFWSql\SqlDelete L'instance de l'objet Sql_Select créé
      */
     public function delete($table=null);
     
@@ -97,7 +98,7 @@ interface ISql
      * 
      * @throws \Exception Si la requête à echoué
      * 
-     * @return \PDOStatement|bool La ressource de la requête exécuté si elle a réussi, false sinon.
+     * @return \PDOStatement La ressource de la requête exécuté si elle a réussi, false sinon.
      */
     public function query($requete);
 }
