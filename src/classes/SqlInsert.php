@@ -75,7 +75,7 @@ class SqlInsert extends SqlActions implements \BFWSqlInterface\ISqlInsert
      * @param string $table  La table sur laquelle agir
      * @param array  $champs Les données à ajouter : array('champSql' => 'données');
      * 
-     * @return Sql_Insert L'instance de l'objet courant.
+     * @return SqlInsert L'instance de l'objet courant.
      */
     public function insert($table, $champs)
     {
@@ -92,7 +92,7 @@ class SqlInsert extends SqlActions implements \BFWSqlInterface\ISqlInsert
      * 
      * @throws \Exception : Erreur si colonne déjà utilisé
      * 
-     * @return Sql_Insert L'instance de l'objet courant.
+     * @return SqlInsert L'instance de l'objet courant.
      */
     public function data($champs)
     {

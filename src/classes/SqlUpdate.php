@@ -91,7 +91,7 @@ class SqlUpdate extends SqlActions implements \BFWSqlInterface\ISqlUpdate
      * @param string $table  La table sur laquelle agir
      * @param array  $champs Les données à modifier : array('champSql' => 'données');
      * 
-     * @return Sql_Update L'instance de l'objet courant.
+     * @return SqlUpdate L'instance de l'objet courant.
      */
     public function update($table, $champs)
     {
@@ -108,7 +108,7 @@ class SqlUpdate extends SqlActions implements \BFWSqlInterface\ISqlUpdate
      * 
      * @throws \Exception : Erreur si colonne déjà utilisé
      * 
-     * @return Sql_Update L'instance de l'objet courant.
+     * @return SqlUpdate L'instance de l'objet courant.
      */
     public function addChamps($champs)
     {

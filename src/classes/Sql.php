@@ -158,7 +158,7 @@ class Sql implements \BFWSqlInterface\ISql
      * 
      * @param string $type (default: "array") Le type de retour pour les données. Valeurs possible : array|objet|object
      * 
-     * @return Sql_Select L'instance de l'objet Sql_Select créé
+     * @return SqlSelect L'instance de l'objet Sql_Select créé
      */
     public function select($type='array')
     {
@@ -171,7 +171,7 @@ class Sql implements \BFWSqlInterface\ISql
      * @param string $table  (default: null) La table sur laquelle agir
      * @param array  $champs (default: null) Les données à ajouter : array('champSql' => 'données');
      * 
-     * @return Sql_Insert L'instance de l'objet Sql_Select créé
+     * @return SqlInsert L'instance de l'objet Sql_Select créé
      */
     public function insert($table=null, $champs=null)
     {
@@ -184,7 +184,7 @@ class Sql implements \BFWSqlInterface\ISql
      * @param string $table  (default: null) La table sur laquelle agir
      * @param array  $champs (default: null) Les données à ajouter : array('champSql' => 'données');
      * 
-     * @return Sql_Update L'instance de l'objet Sql_Select créé
+     * @return SqlUpdate L'instance de l'objet Sql_Select créé
      */
     public function update($table=null, $champs=null)
     {
@@ -196,7 +196,7 @@ class Sql implements \BFWSqlInterface\ISql
      * 
      * @param string $table (default: null) La table sur laquelle agir
      * 
-     * @return Sql_Delete L'instance de l'objet Sql_Select créé
+     * @return SqlDelete L'instance de l'objet Sql_Select créé
      */
     public function delete($table=null)
     {

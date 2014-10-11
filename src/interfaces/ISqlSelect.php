@@ -23,6 +23,7 @@ interface ISqlSelect
     
     /**
      * On assemble la requête
+     * @return void
      */
     public function assembler_requete();
     
@@ -42,6 +43,7 @@ interface ISqlSelect
      * @param array  $champs Les champs à ajouter.
      * @param array  $array  (ref) Le tableau auquel ajouter les champs
      * @param string $as     Le paramètre AS pour savoir quel table
+     * @return void
      */
     public function addChamps($champs, &$array, $as);
     
@@ -51,7 +53,7 @@ interface ISqlSelect
      * @param string|array $table  La table du FROM, si tableau, la clé est la valeur du AS
      * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function from($table, $champs='*');
     
@@ -61,7 +63,7 @@ interface ISqlSelect
      * @param SqlSelect|SqlUpdate|SqlInsert|SqlDelete $req L'instance Sql_Select de la sous-requête
      * @param string                                  $as  La valeur du AS pour la sous-requête
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function subQuery($req, $as);
     
@@ -72,7 +74,7 @@ interface ISqlSelect
      * @param string       $on     La valeur de la partie ON de la jointure
      * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function join($table, $on, $champs='*');
     
@@ -83,7 +85,7 @@ interface ISqlSelect
      * @param string       $on     La valeur de la partie ON de la jointure
      * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function joinLeft($table, $on, $champs='*');
     
@@ -94,7 +96,7 @@ interface ISqlSelect
      * @param string       $on     La valeur de la partie ON de la jointure
      * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function joinRight($table, $on, $champs='*');
     
@@ -103,7 +105,7 @@ interface ISqlSelect
      * 
      * @param string $cond Le champ concerné par l'order by
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function order($cond);
     
@@ -112,7 +114,7 @@ interface ISqlSelect
      * 
      * @param array|string $limit Soit 1 paramètre (le nombre à retourner), soit 2 paramètres (le nombre où on commence et le nombre à retourner)
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function limit($limit);
     
@@ -121,7 +123,7 @@ interface ISqlSelect
      * 
      * @param string $cond Le champ concerné par le group by
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function group($cond);
     

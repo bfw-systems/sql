@@ -178,7 +178,7 @@ class SqlActions implements \BFWSqlInterface\ISqlActions
      * 
      * @throws \Exception : Si la clé utilisé sur la requête préparé est déjà utilisé.
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return SqlActions L'instance de l'objet courant.
      */
     public function where($cond, $prepare=null)
     {
