@@ -16,6 +16,7 @@ interface ISqlInsert
 {
     /**
      * On assemble la requête
+     * 
      * @return void
      */
     public function assembler_requete();

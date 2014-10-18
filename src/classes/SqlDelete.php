@@ -23,37 +23,34 @@ class SqlDelete extends SqlActions implements \BFWSqlInterface\ISqlDelete
     {
         parent::__construct($Sql);
         
-        $this->prefix = $Sql->prefix;
-        $this->modeleName = $Sql->modeleName;
+        //Par défault on prend le nom du modèle pour le nom de la table
+        $this->table = $this->modeleName;
         
-        if($table != null)
-        {
-            $this->table = $table;
-        }
-        else
-        {
-            $this->table = $this->modeleName;
-        }
+        //Si la table est déclaré, on prend sa valeur
+        if($table != null) {$this->table = $table;}
     }
     
     /**
      * On assemble la requête
+     * 
+     * @return void
      */
     public function assembler_requete()
     {
         $lst_where = '';
         
-        if(count($this->where) > 0) //On regarde s'il y a une clause where à mettre
+        //On regarde s'il y a une clause where à mettre
+        if(count($this->where) > 0)
         {
             $i = 0;
             $lst_where = ' WHERE ';
             
-            foreach($this->where as $val) //Chaque élément du tableau est une condition
+            //Chaque élément du tableau est une condition
+            foreach($this->where as $val)
             {
-                if($i > 0)
-                {
-                    $lst_where .= ' AND ';
-                }
+                //Idem que la virgule, si une condition est déjà présente, on met un AND
+                if($i > 0) {$lst_where .= ' AND ';}
+                
                 $lst_where .= $val;
                 $i++;
             }
@@ -68,7 +65,7 @@ class SqlDelete extends SqlActions implements \BFWSqlInterface\ISqlDelete
      * 
      * @param string $table La table sur laquelle agir
      * 
-     * @return SqlDelete L'instance de l'objet courant.
+     * @return \BFWSql\SqlDelete L'instance de l'objet courant.
      */
     public function delete($table)
     {

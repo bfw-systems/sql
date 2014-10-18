@@ -15,19 +15,11 @@ namespace BFWSqlInterface;
 interface ISql
 {
     /**
-     * Modifie le nom de la table sur laquelle on travail
-     * 
-     * @param string $name le nom de la table
-     * @return string
-     */
-    public function set_modeleName($name);
-    
-    /**
      * Renvoi l'id du dernier élément ajouté en bdd
      * 
      * @param string|null $name (default: null) nom de la séquence pour l'id (pour PostgreSQL par exemple)
      * 
-     * @return int
+     * @return integer
      */
     public function der_id($name=null);
     
@@ -39,7 +31,7 @@ interface ISql
      * @param string|array $order   Les champs sur lesquels se baser
      * @param string|array $where   Clause where
      * 
-     * @return integer l'id, false si aucun résultat
+     * @return integer le dernier id, 0 si aucun résultat
      */
     public function der_id_noAI($table, $champID, $order, $where='');
     
@@ -87,7 +79,9 @@ interface ISql
      * @param string $table La table
      * @param string $champ Le champ. Les valeurs du champ doivent être du type int.
      * 
-     * @return int/bool L'id libre trouvé. False si erreur
+     * @throws \Exception Si ue erreur dans la recherche d'id s'est produite
+     * 
+     * @return integer L'id libre trouvé. False si erreur
      */
     public function create_id($table, $champ);
     
@@ -98,8 +92,22 @@ interface ISql
      * 
      * @throws \Exception Si la requête à echoué
      * 
-     * @return \PDOStatement La ressource de la requête exécuté si elle a réussi, false sinon.
+     * @return \PDOStatement La ressource de la requête exécuté si elle a réussi.
      */
     public function query($requete);
+    
+    /**
+     * Incrémente le nombre de requête effectué
+     * 
+     * @return void
+     */
+    public function upNbQuery();
+    
+    /**
+     * Accesseur pour accéder au nombre de requête
+     * 
+     * @return integer Le nombre de requête
+     */
+    public function getNbQuery();
 }
 ?>

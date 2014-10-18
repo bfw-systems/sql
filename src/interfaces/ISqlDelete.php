@@ -16,6 +16,7 @@ interface ISqlDelete
 {
     /**
      * On assemble la requête
+     * 
      * @return void
      */
     public function assembler_requete();

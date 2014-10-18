@@ -21,33 +21,63 @@ class Sql implements \BFWSqlInterface\ISql
     protected $_kernel;
     
     /**
-     * @var PDO L'objet PDO
+     * @var \PDO L'objet PDO
      */
     protected $PDO;
     
     /**
-     * @var SqlConnect L'objet SqlConnect
+     * @var \BFWSql\SqlConnect L'objet SqlConnect
      */
     protected $SqlConnect;
     
     /**
-     * @var $modeleName Nom de la table si c'est un modele
+     * @var string|null $modeleName Nom de la table si c'est un modele
      */
     protected $modeleName;
     
     /**
-     * @var $prefix Le préfix des tables
+     * @var string $prefix Le préfix des tables
      */
     protected $prefix = '';
     
     /**
-     * Renvoi la valeur d'un attribut
+     * Accesseur get vers l'attribut $PDO
      * 
-     * @param string $name Le nom de l'argument
+     * @return \PDO
      */
-    public function __get($name)
+    public function getPDO()
     {
-        return $this->$name;
+        return $this->PDO;
+    }
+    
+    /**
+     * Accesseur get vers l'attribut $SqlConnect
+     * 
+     * @return \BFWSql\SqlConnect
+     */
+    public function getSqlConnect()
+    {
+        return $this->SqlConnect;
+    }
+    
+    /**
+     * Accesseur get vers l'attribut $modeleName
+     * 
+     * @return string
+     */
+    public function getModeleName()
+    {
+        return $this->modeleName;
+    }
+    
+    /**
+     * Accesseur get vers l'attribut $prefix
+     * 
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
     }
     
     /**
@@ -99,7 +129,7 @@ class Sql implements \BFWSqlInterface\ISql
      * 
      * @param string|null $name (default: null) nom de la séquence pour l'id (pour PostgreSQL par exemple)
      * 
-     * @return int
+     * @return integer
      */
     public function der_id($name=null)
     {
@@ -114,7 +144,7 @@ class Sql implements \BFWSqlInterface\ISql
      * @param string|array $order   Les champs sur lesquels se baser
      * @param string|array $where   Clause where
      * 
-     * @return int le dernier id, 0 si aucun résultat
+     * @return integer le dernier id, 0 si aucun résultat
      */
     public function der_id_noAI($table, $champID, $order, $where='')
     {
@@ -158,7 +188,7 @@ class Sql implements \BFWSqlInterface\ISql
      * 
      * @param string $type (default: "array") Le type de retour pour les données. Valeurs possible : array|objet|object
      * 
-     * @return SqlSelect L'instance de l'objet Sql_Select créé
+     * @return \BFWSql\SqlSelect L'instance de l'objet Sql_Select créé
      */
     public function select($type='array')
     {
@@ -171,7 +201,7 @@ class Sql implements \BFWSqlInterface\ISql
      * @param string $table  (default: null) La table sur laquelle agir
      * @param array  $champs (default: null) Les données à ajouter : array('champSql' => 'données');
      * 
-     * @return SqlInsert L'instance de l'objet Sql_Select créé
+     * @return \BFWSql\SqlInsert L'instance de l'objet Sql_Select créé
      */
     public function insert($table=null, $champs=null)
     {
@@ -184,7 +214,7 @@ class Sql implements \BFWSqlInterface\ISql
      * @param string $table  (default: null) La table sur laquelle agir
      * @param array  $champs (default: null) Les données à ajouter : array('champSql' => 'données');
      * 
-     * @return SqlUpdate L'instance de l'objet Sql_Select créé
+     * @return \BFWSql\SqlUpdate L'instance de l'objet Sql_Select créé
      */
     public function update($table=null, $champs=null)
     {
@@ -196,7 +226,7 @@ class Sql implements \BFWSqlInterface\ISql
      * 
      * @param string $table (default: null) La table sur laquelle agir
      * 
-     * @return SqlDelete L'instance de l'objet Sql_Select créé
+     * @return \BFWSql\SqlDelete L'instance de l'objet Sql_Select créé
      */
     public function delete($table=null)
     {
@@ -211,7 +241,7 @@ class Sql implements \BFWSqlInterface\ISql
      * 
      * @throws \Exception Si ue erreur dans la recherche d'id s'est produite
      * 
-     * @return int/bool L'id libre trouvé. False si erreur
+     * @return integer L'id libre trouvé. False si erreur
      */
     public function create_id($table, $champ)
     {
@@ -265,6 +295,8 @@ class Sql implements \BFWSqlInterface\ISql
     
     /**
      * Incrémente le nombre de requête effectué
+     * 
+     * @return void
      */
     public function upNbQuery()
     {
@@ -274,7 +306,7 @@ class Sql implements \BFWSqlInterface\ISql
     /**
      * Accesseur pour accéder au nombre de requête
      * 
-     * @return int Le nombre de requête
+     * @return integer Le nombre de requête
      */
     public function getNbQuery()
     {

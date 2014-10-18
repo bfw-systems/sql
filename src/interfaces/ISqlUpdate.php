@@ -16,6 +16,7 @@ interface ISqlUpdate
 {
     /**
      * On assemble la requête
+     * 
      * @return void
      */
     public function assembler_requete();
@@ -29,14 +30,5 @@ interface ISqlUpdate
      * @return \BFWSql\SqlUpdate L'instance de l'objet courant.
      */
     public function update($table, $champs);
-    
-    /**
-     * Permet d'ajouter d'autres données à ajouter
-     * 
-     * @param array $champs Les données à ajouter : array('champSql' => 'données');
-     * 
-     * @return \BFWSql\SqlUpdate L'instance de l'objet courant.
-     */
-    public function addChamps($champs);
 }
 ?>

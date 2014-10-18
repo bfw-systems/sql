@@ -49,7 +49,7 @@ class SqlDelete extends atoum
     public function testSqlDelete()
     {
         //Initialisation des attributs
-        $this->string($this->mock->prefix)->isEqualTo($this->sql->prefix);
+        $this->string($this->mock->prefix)->isEqualTo($this->sql->getPrefix());
         $this->variable($this->mock->modeleName)->isNull();
         
         //Initialisation via un nom de modele et sans indiqué le nom de la table

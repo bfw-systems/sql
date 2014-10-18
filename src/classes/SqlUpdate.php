@@ -18,62 +18,57 @@ class SqlUpdate extends SqlActions implements \BFWSqlInterface\ISqlUpdate
      * 
      * @param Sql         $Sql    (ref) L'instance Sql
      * @param string|null $table  La table sur laquelle agir
-     * @param array       $champs Les données à modifier : array('champSql' => 'données');
+     * @param array       $champs (default: null) Les données à modifier : array('champSql' => 'données');
      */
     public function __construct(Sql &$Sql, $table, $champs)
     {
         parent::__construct($Sql);
         
-        $this->prefix = $Sql->prefix;
-        $this->modeleName = $Sql->modeleName;
+        //Par défault on prend le nom du modèle pour le nom de la table
+        $this->table = $this->modeleName;
         
-        if($table != null)
-        {
-            $this->table = $table;
-        }
-        else
-        {
-            $this->table = $this->modeleName;
-        }
+        //Si la table est déclaré, on prend sa valeur
+        if($table != null) {$this->table = $table;}
         
-        if($champs != null)
-        {
-            $this->champs = $champs;
-        }
+        //Si des champs à modifier sont déjà indiqué, on initialise avec
+        if($champs != null) {$this->champs = $champs;}
     }
     
     /**
      * On assemble la requête
+     * 
+     * @return void
      */
     public function assembler_requete()
     {
+        //Si des champs à modifier sont indiqués
         if(count($this->champs) > 0)
         {
+            //Initialisation
             $lst_champ = $lst_where = '';
             $i = 0;
             
-            foreach($this->champs as $key => $val) //On liste les données à modifier
+            //On liste les données à modifier
+            foreach($this->champs as $key => $val)
             {
-                if($i > 0)
-                {
-                    $lst_champ .= ', ';
-                }
+                //S'il y a déjà un champ, on met une , entre chacun
+                if($i > 0) {$lst_champ .= ', ';}
                 
                 $lst_champ .= $key.'='.$val;
                 $i++;
             }
             
-            if(count($this->where) > 0) //On regarde s'il y a une clause where à mettre
+            //On regarde s'il y a une clause where à mettre
+            if(count($this->where) > 0)
             {
                 $lst_where = ' WHERE ';
                 $i = 0;
                 
-                foreach($this->where as $val) //Chaque élément du tableau est une condition
+                //Chaque élément du tableau est une condition
+                foreach($this->where as $val)
                 {
-                    if($i > 0)
-                    {
-                        $lst_where .= ' AND ';
-                    }
+                    //Idem que la virgule, si une condition est déjà présente, on met un AND
+                    if($i > 0) {$lst_where .= ' AND ';}
                     
                     $lst_where .= $val;
                     $i++;
@@ -91,38 +86,12 @@ class SqlUpdate extends SqlActions implements \BFWSqlInterface\ISqlUpdate
      * @param string $table  La table sur laquelle agir
      * @param array  $champs Les données à modifier : array('champSql' => 'données');
      * 
-     * @return SqlUpdate L'instance de l'objet courant.
+     * @return \BFWSql\SqlUpdate L'instance de l'objet courant.
      */
     public function update($table, $champs)
     {
         $this->table = $table;
         $this->champs = $champs;
-        
-        return $this;
-    }
-    
-    /**
-     * Permet d'ajouter d'autres données à ajouter
-     * 
-     * @param array $champs Les données à ajouter : array('champSql' => 'données');
-     * 
-     * @throws \Exception : Erreur si colonne déjà utilisé
-     * 
-     * @return SqlUpdate L'instance de l'objet courant.
-     */
-    public function addChamps($champs)
-    {
-        foreach($champs as $column => $data)
-        {
-            if(isset($this->champs[$column]) && $this->champs[$column] != $data)
-            {
-                throw new \Exception('Une valeur pour la colonne '.$column.' est déjà déclaré.');
-            }
-            else
-            {
-                $this->champs[$column] = $data;
-            }
-        }
         
         return $this;
     }

@@ -66,6 +66,8 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     
     /**
      * Permet d'utiliser la base sql en utf8
+     * 
+     * @return void
      */
     protected function set_utf8()
     {
@@ -102,7 +104,7 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     /**
      * Accesseur pour accéder à $this->nb_query
      * 
-     * @return int Le nombre de requête
+     * @return integer Le nombre de requête
      */
     public function getNbQuery()
     {
@@ -111,6 +113,8 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     
     /**
      * Incrémente le nombre de requête effectué
+     * 
+     * @return void
      */
     public function upNbQuery()
     {

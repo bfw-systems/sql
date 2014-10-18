@@ -15,14 +15,8 @@ namespace BFWSqlInterface;
 interface ISqlSelect
 {
     /**
-     * Accesseur pour l'attribut no_result
-     * 
-     * @return bool La valeur de $this->no_result
-     */
-    public function get_no_result();
-    
-    /**
      * On assemble la requête
+     * 
      * @return void
      */
     public function assembler_requete();
@@ -30,22 +24,12 @@ interface ISqlSelect
     /**
      * Permet de récupérer les informations à propos de la table sur laquel on souhaite agir.
      * 
-     * @param array $table Les infos sur la table
+     * @param mixed $table Les infos sur la table
      * 
      * @return array les infos découpé ['tableName'] contient le nom de la table et ['as'] sont raccourcis. 
      * Si as n'a pas été indiqué, il vaux la valeur de tableName
      */
     public function infosTable($table);
-    
-    /**
-     * Ajoute des champs pour le select
-     * 
-     * @param array  $champs Les champs à ajouter.
-     * @param array  $array  (ref) Le tableau auquel ajouter les champs
-     * @param string $as     Le paramètre AS pour savoir quel table
-     * @return void
-     */
-    public function addChamps($champs, &$array, $as);
     
     /**
      * Permet d'indiquer les infos pour le FROM
@@ -60,8 +44,8 @@ interface ISqlSelect
     /**
      * Permet d'indiquer les infos pour le FROM
      * 
-     * @param SqlSelect|SqlUpdate|SqlInsert|SqlDelete $req L'instance Sql_Select de la sous-requête
-     * @param string                                  $as  La valeur du AS pour la sous-requête
+     * @param SqlActions $req L'instance de la class SqlActions ou qui l'étends correspondant à la sous-requête
+     * @param string     $as  La valeur du AS pour la sous-requête
      * 
      * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
