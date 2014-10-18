@@ -52,7 +52,7 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     public function __construct($host, $login, $passe, $base, $type='mysql', $utf8=true)
     {
         $this->_kernel = getKernel();
-        $this->debug = $this->_kernel->get_debug();
+        $this->debug = $this->_kernel->getDebug();
 
         $this->type = $type;
         $this->PDO = new \PDO($type.':host='.$host.';dbname='.$base, $login, $passe);

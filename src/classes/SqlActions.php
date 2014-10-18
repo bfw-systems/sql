@@ -92,9 +92,8 @@ abstract class SqlActions implements \BFWSqlInterface\ISqlActions
         $this->PDO  = $this->_sql->getPDO();
         
         $this->_kernel = getKernel();
-        $this->_kernel->set_observers($this->_kernel->get_observers());
         
-        $this->prefix = $Sql->getPrefix();;
+        $this->prefix     = $Sql->getPrefix();;
         $this->modeleName = $Sql->getModeleName();
     }
     
