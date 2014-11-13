@@ -24,11 +24,6 @@ class SqlActions extends atoum
     protected $sql;
     
     /**
-     * @var $class : Instance de la class SqlActions
-     */
-    protected $class;
-    
-    /**
      * @var $class : Instance du mock pour la class SqlActions
      */
     protected $mock;
@@ -39,7 +34,6 @@ class SqlActions extends atoum
     public function beforeTestMethod($testMethod)
     {
         $this->sql   = new \BFWSql\Sql();
-        $this->class = new \BFWSql\SqlActions($this->sql);
         $this->mock  = new MockSqlActions($this->sql);
     }
     
@@ -115,6 +109,35 @@ class SqlActions extends atoum
     }
     
     /**
+     * Test de la méthode nb_result()
+     */
+    public function testNb_result()
+    {
+        //Test de la valeur par défault
+        $this->mock->req = false;
+        $this->boolean($this->mock->nb_result())->isFalse();
+        
+        //Création d'une table et ajout de valeur pour tester
+        $this->sql->query('
+            DROP TABLE IF EXISTS SqlActions_nbResult;
+            CREATE TABLE IF NOT EXISTS SqlActions_nbResult
+            (
+                 `id` INTEGER UNSIGNED NOT NULL,
+                 `name` VARCHAR(255),
+                 PRIMARY KEY (`id`)
+            ) ENGINE=MyISAM;
+            
+            TRUNCATE TABLE SqlActions_nbResult;
+            INSERT INTO SqlActions_nbResult VALUES(1, "monTest 1");
+        ');
+        
+        //Test d'une requête devant retourner 1 résultat
+        $req = $this->sql->query('SELECT name FROM SqlActions_nbResult WHERE id=1');
+        $this->mock->req = $req;
+        $this->integer($this->mock->nb_result())->isEqualTo(1);
+    }
+    
+    /**
      * Test de la méthode query($req)
      */
     public function testQuery()
@@ -147,7 +170,7 @@ class SqlActions extends atoum
     public function testWhere()
     {
         //Test du retour de la méthode where, correspondant à $this
-        $this->object($this->class->where('id=1'))->isIdenticalTo($this->class);
+        $this->object($this->mock->where('id=1'))->isIdenticalTo($this->mock);
         
         //Vérification de la valeur de l'attribut where
         $this->mock->where('id=1');

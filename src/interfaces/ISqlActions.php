@@ -16,11 +16,15 @@ interface ISqlActions
 {
     /**
      * Permet de vérifier si la requête finale a été assemblé et si ce n'est pas le cas de lancer l'assemblage.
+     * 
+     * @return void
      */
     public function is_Assembler();
     
     /**
      * Retourne la requête finale
+     * 
+     * @return string
      */
     public function assemble();
     
@@ -37,11 +41,15 @@ interface ISqlActions
      * Permet d'inserer sa propre requête directement sans avoir à utiliser les méthodes from etc
      * 
      * @param string $req La requête
+     * 
+     * @return void
      */
     public function query($req);
     
     /**
      * Permet d'indiquer qu'on ne veux pas utiliser de requête préparée.
+     * 
+     * @return void
      */
     public function no_prepare();
     
@@ -49,6 +57,8 @@ interface ISqlActions
      * Définie les options pour la requête préparée
      * 
      * @param array $option Les options
+     * 
+     * @return void
      */
     public function set_prepare_option($option);
     
@@ -60,8 +70,17 @@ interface ISqlActions
      * 
      * @throws \Exception : Si la clé utilisé sur la requête préparé est déjà utilisé.
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlActions L'instance de l'objet courant.
      */
     public function where($cond, $prepare=null);
+    
+    /**
+     * Permet d'ajouter d'autres données à ajouter
+     * 
+     * @param array $champs Les données à ajouter : array('champSql' => 'données');
+     * 
+     * @return \BFWSql\SqlActions L'instance de l'objet courant.
+     */
+    public function addChamps($champs);
 }
 ?>

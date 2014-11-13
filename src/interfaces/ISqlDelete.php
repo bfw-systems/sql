@@ -16,6 +16,8 @@ interface ISqlDelete
 {
     /**
      * On assemble la requête
+     * 
+     * @return void
      */
     public function assembler_requete();
     
@@ -24,7 +26,7 @@ interface ISqlDelete
      * 
      * @param string $table La table sur laquelle agir
      * 
-     * @return Sql_Delete L'instance de l'objet courant.
+     * @return \BFWSql\SqlDelete L'instance de l'objet courant.
      */
     public function delete($table);
 }

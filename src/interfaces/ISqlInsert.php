@@ -16,6 +16,8 @@ interface ISqlInsert
 {
     /**
      * On assemble la requête
+     * 
+     * @return void
      */
     public function assembler_requete();
     
@@ -25,7 +27,7 @@ interface ISqlInsert
      * @param string $table  La table sur laquelle agir
      * @param array  $champs Les données à ajouter : array('champSql' => 'données');
      * 
-     * @return Sql_Insert L'instance de l'objet courant.
+     * @return \BFWSql\SqlInsert L'instance de l'objet courant.
      */
     public function insert($table, $champs);
     
@@ -34,7 +36,7 @@ interface ISqlInsert
      * 
      * @param array $champs Les données à ajouter : array('champSql' => 'données');
      * 
-     * @return Sql_Insert L'instance de l'objet courant.
+     * @return \BFWSql\SqlInsert L'instance de l'objet courant.
      */
     public function data($champs);
 }

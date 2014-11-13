@@ -7,6 +7,8 @@
 
 namespace BFWSql;
 
+use \PDOStatement;
+
 /**
  * Classe Sql permettant de faire une requête de type Select
  * @package bfw-sql
@@ -14,62 +16,62 @@ namespace BFWSql;
 class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
 {
     /**
-     * @var $typeResult Le type de retour pour les données
+     * @var string $typeResult Le type de retour pour les données
      */
     protected $typeResult = '';
     
     /**
-     * @var $req Le retour de la requête une fois exécutée (PDO->query();)
+     * @var PDOStatement|bool $req Le retour de la requête une fois exécutée (PDO->query();)
      */
     protected $req = false;
     
     /**
-     * @var $no_result Permet de savoir si l'echec est du à la requête qui n'a rien renvoyé ou une erreur
+     * @var array $no_result Permet de savoir si l'echec est du à la requête qui n'a rien renvoyé ou une erreur
      */
     protected $no_result = false;
     
     /**
-     * @var $select Les champs à retournés
+     * @var array $select Les champs à retournés
      */
     protected $select = array();
     
     /**
-     * @var $from Les infos sur la tables utilisé pour la partie FROM de la requête
+     * @var array $from Les infos sur la tables utilisé pour la partie FROM de la requête
      */
     protected $from = array();
     
     /**
-     * @var $subQuery Les sous-requêtes
+     * @var array $subQuery Les sous-requêtes
      */
     protected $subQuery = array();
     
     /**
-     * @var $join Les jointures simple
+     * @var array $join Les jointures simple
      */
     protected $join = array();
     
     /**
-     * @var $joinLeft Les LEFT JOIN
+     * @var array $joinLeft Les LEFT JOIN
      */
     protected $joinLeft = array();
     
     /**
-     * @var $joinRight Les RIGHT JOIN
+     * @var array $joinRight Les RIGHT JOIN
      */
     protected $joinRight = array();
     
     /**
-     * @var $order Les champs pour la clause ORDER BY
+     * @var array $order Les champs pour la clause ORDER BY
      */
     protected $order = array();
     
     /**
-     * @var $limit La clause LIMIT
+     * @var string $limit La clause LIMIT
      */
     protected $limit = '';
     
     /**
-     * @var $limit La clause GROUP BY
+     * @var array $limit La clause GROUP BY
      */
     protected $group = array();
     
@@ -82,9 +84,6 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     public function __construct(Sql &$Sql, $type)
     {
         parent::__construct($Sql);
-        
-        $this->prefix = $Sql->prefix;
-        $this->modeleName = $Sql->modeleName;
         $this->typeResult = $type;
     }
     
@@ -99,250 +98,6 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     }
     
     /**
-     * On assemble la requête
-     */
-    public function assembler_requete()
-    {
-        //Partie SELECT
-        $select = '';
-        foreach($this->select as $val) //On liste tous les champs
-        {
-            if($select != '')
-            {
-                $select .= ', ';
-            }
-            
-            $select .= $val[0];
-            if(isset($val[1]))
-            {
-                $select .= ' AS '.$val[1];
-            }
-        }
-        
-        //Retourne tous le modèle
-        if(
-            $select == '' && $this->modeleName != null &&
-            (
-                (isset($this->from['tableName']) && $this->from['tableName'] == '') || 
-                !isset($this->from['tableName'])
-            )
-        ){
-            $select = '*';
-        }
-        
-        //Sous-Requête
-        $subQuery = '';
-        if($this->subQuery != '')
-        {
-            foreach($this->subQuery as $val) //On liste les sous-requêtes
-            {
-                if($select != '')
-                {
-                    $select .= ', ';
-                }
-                
-                $select .= $val[0].' AS `'.$val[1].'`';
-            }
-        }
-        //Fin Sous-Requête
-        //Fin Partie SELECT
-        
-        //Partie FROM
-            //Gestion des modeles
-            if(
-                $this->modeleName != null && 
-                (
-                    (isset($this->from['tableName']) && $this->from['tableName'] == '') || 
-                    !isset($this->from['tableName'])
-                )
-            )
-            {
-                $this->from = array(
-                    'tableName' => $this->modeleName,
-                    'as' => $this->modeleName
-                );
-            }
-            else
-            {
-                if($this->from['tableName'] == $this->from['as'])
-                {
-                    $this->from['tableName'] = $this->prefix.$this->from['tableName'];
-                    $this->from['as'] = $this->prefix.$this->from['as'];
-                }
-                else
-                {
-                    $this->from['tableName'] = $this->prefix.$this->from['tableName'];
-                }
-                
-            }
-        
-        if($this->from['tableName'] == $this->from['as'])
-        {
-            $from = '`'.$this->from['tableName'].'`';
-        }
-        else //avec le AS
-        {
-            $from = '`'.$this->from['tableName'].'` AS `'.$this->from['as'].'`';
-        }
-        //Fin Partie FROM
-        
-        //Partie INNER JOIN
-        $join = '';
-        if(count($this->join) > 0)
-        {
-            foreach($this->join as $val)
-            {
-                if($val['tableName'] == $val['as'])
-                {
-                    $val['tableName'] = $this->prefix.$val['tableName'];
-                    $val['as'] = $this->prefix.$val['as'];
-                }
-                else
-                {
-                    $val['tableName'] = $this->prefix.$val['tableName'];
-                }
-                
-                $join .= ' INNER JOIN ';
-                
-                if($val['tableName'] == $val['as'])
-                {
-                    $join .= '`'.$val['tableName'].'`';
-                }
-                else
-                {
-                    $join .= '`'.$val['tableName'].'` AS `'.$val['as'].'`';
-                }
-                
-                $join .= ' ON '.$val['on'];
-            }
-        }
-        //Fin Partie INNER JOIN
-        
-        //Partie LEFT JOIN
-        $joinLeft = '';
-        if(count($this->joinLeft) > 0)
-        {
-            foreach($this->joinLeft as $val)
-            {
-                if($val['tableName'] == $val['as'])
-                {
-                    $val['tableName'] = $this->prefix.$val['tableName'];
-                    $val['as'] = $this->prefix.$val['as'];
-                }
-                else
-                {
-                    $val['tableName'] = $this->prefix.$val['tableName'];
-                }
-                
-                $joinLeft .= ' LEFT JOIN ';
-                if($val['tableName'] == $val['as'])
-                {
-                    $joinLeft .= '`'.$val['tableName'].'`';
-                }
-                else
-                {
-                    $joinLeft .= '`'.$val['tableName'].'` AS `'.$val['as'].'`';
-                }
-                
-                $joinLeft .= ' ON '.$val['on'];
-            }
-        }
-        //Fin Partie LEFT JOIN
-        
-        //Partie RIGHT JOIN
-        $joinRight = '';
-        if(count($this->joinRight) > 0)
-        {
-            foreach($this->joinRight as $val)
-            {
-                if($val['tableName'] == $val['as'])
-                {
-                    $val['tableName'] = $this->prefix.$val['tableName'];
-                    $val['as'] = $this->prefix.$val['as'];
-                }
-                else
-                {
-                    $val['tableName'] = $this->prefix.$val['tableName'];
-                }
-                
-                $joinRight .= ' RIGHT JOIN ';
-                if($val['tableName'] == $val['as'])
-                {
-                    $joinRight .= '`'.$val['tableName'].'`';
-                }
-                else
-                {
-                    $joinRight .= '`'.$val['tableName'].'` AS `'.$val['as'].'`';
-                }
-                
-                $joinRight .= ' ON '.$val['on'];
-            }
-        }
-        //Fin Partie RIGHT JOIN
-        
-        //Partie WHERE
-        $where = '';
-        if(count($this->where) > 0)
-        {
-            $where = ' WHERE ';
-            foreach($this->where as $val)
-            {
-                if($where != ' WHERE ')
-                {
-                    $where .= ' AND ';
-                }
-                $where .= $val;
-            } 
-        }
-        //Fin Partie WHERE
-        
-        //Partie ORDER BY
-        $order = '';
-        if(count($this->order) > 0)
-        {
-            $order = ' ORDER BY ';
-            foreach($this->order as $val)
-            {
-                if($order != ' ORDER BY ')
-                {
-                    $order .= ', ';
-                }
-                $order .= $val;
-            } 
-        }
-        //Fin Partie ORDER BY
-        
-        //Partie GROUP BY
-        $group = '';
-        if(count($this->group) > 0)
-        {
-            $group = ' GROUP BY ';
-            foreach($this->group as $val)
-            {
-                if($group != ' GROUP BY ')
-                {
-                    $group .= ', ';
-                }
-                $group .= $val;
-            } 
-        }
-        //Fin Partie GROUP BY
-        
-        //Partie LIMIT
-        $limit = '';
-        if($this->limit != '')
-        {
-            $limit = ' LIMIT '.$this->limit;
-        }
-        //Fin Partie LIMIT
-        
-        //Et on créer la requête :)
-        $this->RequeteAssembler = 'SELECT '.$select.' FROM '.$from.$join.$joinLeft.$joinRight.$where.$group.$order.$limit;
-        
-        $this->_kernel->notifyObserver(array('value' => 'REQ_SQL', 'REQ_SQL' => $this->RequeteAssembler));
-    }
-    
-    /**
      * Permet de récupérer les informations à propos de la table sur laquel on souhaite agir.
      * 
      * @param string|array $table Les infos sur la table
@@ -352,84 +107,49 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      */
     public function infosTable($table)
     {
+        //Si la table passé en paramètre est un tableau
         if(is_array($table))
         {
-            foreach($table as $key => $val)
-            {
-                $as = $key;
-                $tableName = $val;
-            }
+            $tableName = reset($table);
+            $as        = key($table);
         }
-        else
-        {
-            $as = $tableName = $table;
-        }
-                
-        return array('tableName' => $tableName, 'as' => $as);
+        else {$as = $tableName = $table;} //Sinon, tout est égale.
+        
+        return array(
+            'tableName' => $tableName, 
+            'as'        => $as
+        );
     }
     
     /**
      * Ajoute des champs pour le select
      * 
-     * @param array  $champs Les champs à ajouter.
-     * @param array  $array  (ref) Le tableau auquel ajouter les champs
-     * @param string $as     Le paramètre AS pour savoir quel table
+     * @param array|string $champs Les champs à ajouter.
+     * @param array        &$array Le tableau auquel ajouter les champs
+     * @param string       $as     Le paramètre AS pour savoir quel table
      */
-    public function addChamps($champs, &$array, $as)
+    protected function addChampsToTable($champs, &$array, $as)
     {
-        if(is_array($champs))
+        //S'il s'agit d'une chaine, on transforme en array
+        if(!is_array($champs)) {$champs = (array) $champs;}
+        
+        //Liste tous les champs données en paramètre
+        foreach($champs as $key => $val)
         {
-            foreach($champs as $key => $val)
+            //On vérifie qu'il a des champs à ajouter. Si pas le cas, suivant.
+            if($val == '') {continue;}
+            
+            //Si le champ est en fait une fonction, pas de quote spécial
+            if(!strpos($val, '('))
             {
-                if(strpos($val, '('))
-                {
-                    if(is_string($key))
-                    {
-                        $array[] = array($val, $key);
-                    }
-                    else
-                    {
-                        $array[] = array($val);
-                    }
-                }
-                else
-                {
-                    if($val != '*')
-                    {
-                        $val = '`'.$val.'`';
-                    }
-                    
-                    if(is_string($key))
-                    {
-                        $array[] = array('`'.$as.'`.'.$val, $key);
-                    }
-                    else
-                    {
-                        $array[] = array('`'.$as.'`.'.$val);
-                    }
-                }
+                //S'il s'agit d'un champ en particulier, on insert des quotes
+                if($val != '*') {$val = '`'.$val.'`';}
+                $val = '`'.$as.'`.'.$val;
             }
-        }
-        else
-        {
-            if($champs != '')
-            {
-                if(strpos($champs, '('))
-                {
-                    $array[] = array($champs);
-                }
-                else
-                {
-                    if($champs != '*')
-                    {
-                        $array[] = array('`'.$as.'`.`'.$champs.'`');
-                    }
-                    else
-                    {
-                        $array[] = array('`'.$as.'`.'.$champs);
-                    }
-                }
-            }
+            
+            //S'il y a un attribut AS
+            if(is_string($key)) {$array[] = array($val, $key);}
+            else {$array[] = array($val);}
         }
     }
     
@@ -437,25 +157,24 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      * Permet d'indiquer les infos pour le FROM
      * 
      * @param string|array $table  La table du FROM, si tableau, la clé est la valeur du AS
-     * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
+     * @param string       $champs (default: "*") Le ou les champs à récupérer de cette table
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function from($table, $champs='*')
     {
         $infosTable = $this->infosTable($table);
         $this->from = $infosTable;
         
+        //Si la table à un alias (AS)
         if($infosTable['as'] != $infosTable['tableName'])
         {
             $as = $infosTable['as'];
         }
-        else
-        {
-            $as = $this->prefix.$infosTable['as'];
-        }
+        //Si la table n'a pas d'alias, on rajoute le préfix au champs as
+        else {$as = $this->prefix.$infosTable['as'];}
         
-        $this->addChamps($champs, $this->select, $as);
+        self::addChampsToTable($champs, $this->select, $as);
         
         return $this;
     }
@@ -466,10 +185,11 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      * @param SqlActions $req L'instance de la class SqlActions ou qui l'étends correspondant à la sous-requête
      * @param string     $as  La valeur du AS pour la sous-requête
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function subQuery($req, $as)
     {
+        //Ajoute la requête assemblé de la sous-requête au tableau des sous requêtes
         $this->subQuery[] = array('('.$req->assemble().')', $as);
         return $this;
     }
@@ -481,17 +201,11 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      * @param string       $on     La valeur de la partie ON de la jointure
      * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function join($table, $on, $champs='*')
     {
-        $infosTable = $this->infosTable($table);
-        $infosTable['on'] = $on;
-        $this->join[] = $infosTable;
-        
-        $this->addChamps($champs, $this->select, $infosTable['as']);
-        
-        return $this;
+        return $this->abstractJoin('join', $table, $on, $champs);
     }
     
     /**
@@ -501,17 +215,11 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      * @param string       $on     La valeur de la partie ON de la jointure
      * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function joinLeft($table, $on, $champs='*')
     {
-        $infosTable = $this->infosTable($table);
-        $infosTable['on'] = $on;
-        $this->joinLeft[] = $infosTable;
-        
-        $this->addChamps($champs, $this->select, $infosTable['as']);
-        
-        return $this;
+        return $this->abstractJoin('joinLeft', $table, $on, $champs);
     }
     
     /**
@@ -521,15 +229,31 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      * @param string       $on     La valeur de la partie ON de la jointure
      * @param string|array $champs (default: "*") Le ou les champs à récupérer de cette table
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function joinRight($table, $on, $champs='*')
     {
-        $infosTable = $this->infosTable($table);
-        $infosTable['on'] = $on;
-        $this->joinRight[] = $infosTable;
+        return $this->abstractJoin('joinRight', $table, $on, $champs);
+    }
+    
+    /**
+     * Permet d'ajouter tout type de jointure géré par la classe
+     * 
+     * @param string       $attribute Le type de jointure. Valeurs possible "join", "joinLeft", "joinRight"
+     * @param string|array $table     La table de la jointure, si tableau, la clé est la valeur du AS
+     * @param string       $on        La valeur de la partie ON de la jointure
+     * @param string|array $champs    (default: "*") Le ou les champs à récupérer de cette table
+     * 
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
+     */
+    protected function abstractJoin($attribute, $table, $on, $champs)
+    {
+        $infosTable        = $this->infosTable($table);
+        $infosTable['on']  = $on;
+        $this->{$attribute}[] = $infosTable;
         
-        $this->addChamps($champs, $this->select, $infosTable['as']);
+        //Ajout des champs
+        self::addChampsToTable($champs, $this->select, $infosTable['as']);
         
         return $this;
     }
@@ -539,7 +263,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      * 
      * @param string $cond Le champ concerné par l'order by
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function order($cond)
     {
@@ -552,25 +276,15 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      * 
      * @param array|string $limit Soit 1 paramètre (le nombre à retourner), soit 2 paramètres (le nombre où on commence et le nombre à retourner)
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function limit($limit)
     {
-        if(is_array($limit))
-        {
-            if(isset($limit[1]))
-            {
-                $this->limit = $limit[0].', '.$limit[1];
-            }
-            else
-            {
-                $this->limit = $limit[0];
-            }
-        }
-        else
-        {
-            $this->limit = $limit;
-        }
+        if(!is_array($limit)) {$limit = (array) $limit;}
+        
+        //S'il s'agit d'un eccart de valeur (ex: pagination)
+        if(isset($limit[1])) {$this->limit = $limit[0].', '.$limit[1];}
+        else {$this->limit = $limit[0];} //Juste un nombre de valeur à retourner
         
         return $this;
     }
@@ -580,7 +294,7 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      * 
      * @param string $cond Le champ concerné par le group by
      * 
-     * @return Sql_Select L'instance de l'objet courant.
+     * @return \BFWSql\SqlSelect L'instance de l'objet courant.
      */
     public function group($cond)
     {
@@ -589,50 +303,33 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
     }
     
     /**
-     * Execute la requête généré
      * 
-     * @throws \Exception Si la requête à echoué
-     * 
-     * @return \PDOStatement|bool : La ressource de la requête exécuté si elle a réussi, false sinon.
      */
-    protected function executeReq()
+    protected function fetch()
     {
-        $this->_sql->upNbQuery();
-        $this->is_Assembler(); //On vérifie que la requête est bien généré
+        //Exécution de la requête
+        $req = $this->execute();
         
-        if($this->prepareBool)
-        {
-            $req = $this->PDO->prepare($this->RequeteAssembler, $this->prepare_option);
-            $req->execute($this->prepare);
-            $erreur = $req->errorInfo();
-        }
-        else
-        {
-            $req = $this->PDO->query($this->RequeteAssembler); //On exécute la requête
-            $erreur = $this->PDO->errorInfo();
-        }
-        $this->req = $req;
+        //Si la requête est passé
+        if($req) {return $req;}
         
-        if($erreur[0] != null && $erreur[0] != '00000')
-        {
-            throw new \Exception($erreur[2]);
-        }
-        else
-        {
-            if($req) //Si la requête à réussi, on retourne sa ressource
-            {
-                if($this->nb_result() > 0)
-                {
-                    return $req;
-                }
-                else
-                {
-                    $this->no_result = true;
-                }
-            }
-        }
-
+        //Si la requête à fail et qu'on est ici, executeReq() aura levé une exception
         return false;
+    }
+    
+    /**
+     * Permet d'obtenir la constante PDO pour le format de donnée à renvoyer
+     * 
+     * @return integer
+     */
+    protected function getPdoFetchType()
+    {
+        //On détermine la forme souhaité
+        if($this->typeResult == 'objet' || $this->typeResult == 'object')
+        {
+            return \PDO::FETCH_OBJ;
+        }
+        else {return \PDO::FETCH_ASSOC;}
     }
     
     /**
@@ -642,23 +339,15 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      */
     public function fetchRow()
     {
-        $req = $this->executeReq();
+        //Exécution de la requête
+        $req = $this->execute();
         
-        if($req) //Si la requête est passé
-        {
-            //On récupère les résultats sous la forme demandée
-            if($this->typeResult == 'objet' || $this->typeResult == 'object')
-            {
-                $res = $req->fetch(\PDO::FETCH_OBJ);
-            }
-            else
-            {
-                $res = $req->fetch(\PDO::FETCH_ASSOC);
-            }
-            
-            return $res; //On renvoi les données
-        }
-        else {return false;} //Si else car la requête a fail, executeReq lève une exception.
+        //Si la requête fail, executeReq() aura levé une exception
+        if(!$req) {return false;}
+        
+        //On renvoi les données
+        return $req->fetch($this->getPdoFetchType());
+        
     }
     
     /**
@@ -669,47 +358,235 @@ class SqlSelect extends SqlActions implements \BFWSqlInterface\ISqlSelect
      */
     public function fetchAll()
     {
+        //Initialise le tableau qui récupérera tout
         $res = array();
-        $req = $this->executeReq();
         
-        if($req) //Si la requête est passé
+        //Exécution de la requête
+        //Si la requête fail, executeReq() leve une exception
+        $req = $this->execute();
+        
+        //Si la requête fail, executeReq() aura levé une exception
+        if(!$req) {return false;}
+        
+        //On boucle pour tout récupérer et on met tout dans une nouveau noeud de $res
+        while($fetch = $req->fetch($this->getPdoFetchType()))
         {
-            //On détermine la forme souhaité
-            if($this->typeResult == 'objet' || $this->typeResult == 'object')
-            {
-                $type = \PDO::FETCH_OBJ;
-            }
-            else
-            {
-                $type = \PDO::FETCH_ASSOC;
-            }
-            
-            //On boucle pour tout récupérer et on met tout dans une nouveau noeud de $res
-            while($fetch = $req->fetch($type))
-            {
-                $res[] = $fetch;
-            }
-            
-            return $res; //On retourne toutes les lignes
+            $res[] = $fetch;
         }
-        else {return false;} //Si else car la requête a fail, executeReq lève une exception.
+        
+        //On retourne toutes les lignes
+        return $res;
     }
     
     /**
-     * Retourne le nombre de ligne retourner par la requête
+     * On assemble la requête
      * 
-     * @return int|bool le nombre de ligne. false si ça a échoué.
+     * @return void
      */
-    public function nb_result()
+    public function assembler_requete()
     {
-        if($this->req != false)
+        $select = $this->generateSelect();
+        $from   = $this->generateFrom();
+        
+        $join      = $this->generateJoin('join');
+        $joinLeft  = $this->generateJoin('joinLeft');
+        $joinRight = $this->generateJoin('joinRight');
+        
+        $where = $this->generateWhere();
+        $order = $this->generateOrderBy();
+        $group = $this->generateGroupBy();
+        
+        //Partie LIMIT
+        $limit = '';
+        if($this->limit != '') {$limit = ' LIMIT '.$this->limit;}
+        //Fin Partie LIMIT
+        
+        //Et on créer la requête :)
+        $this->RequeteAssembler = 'SELECT '.$select.' FROM '.$from.$join.$joinLeft.$joinRight.$where.$group.$order.$limit;
+        
+        $this->_kernel->notifyObserver(array('value' => 'REQ_SQL', 'REQ_SQL' => $this->RequeteAssembler));
+    }
+    
+    /**
+     * Permet de générer la partie select pour la génération de la requête
+     * 
+     * @return string
+     */
+    protected function generateSelect()
+    {
+        $select = '';
+        foreach($this->select as $val) //On liste tous les champs
         {
-            return $this->req->rowCount();
+            //S'il y a d'autres champs dans la clause, on met une virgule
+            if($select != '') {$select .= ', ';}
+            
+            $select .= $val[0]; //Récupère le nom de la colonne
+            if(isset($val[1])) {$select .= ' AS '.$val[1];} //l'alias s'il y en a un
         }
-        else
+        
+        //Cas où la table est le modèle, pas de champs indiqué : on retourne toutes les colonnes.
+        if(
+            $select == '' && $this->modeleName != null &&
+            (
+                (isset($this->from['tableName']) && $this->from['tableName'] == '') || 
+                !isset($this->from['tableName'])
+            )
+        )
         {
-            return false;
+            $select = '*';
         }
+        
+        //Sous-Requête
+        if($this->subQuery != '')
+        {
+            foreach($this->subQuery as $val) //On liste les sous-requêtes
+            {
+                //S'il y a d'autres champs dans la clause, on met une virgule
+                if($select != '') {$select .= ', ';}
+                
+                $select .= $val[0].' AS `'.$val[1].'`';
+            }
+        }
+        //Fin Sous-Requête
+        
+        return $select;
+    }
+    
+    /**
+     * Permet de générer la partie from pour la génération de la requête
+     * 
+     * @return string
+     */
+    protected function generateFrom()
+    {
+        //Si la table n'est pas indiqué, on utilise le modèle
+        if(
+            $this->modeleName != null && 
+            (
+                (isset($this->from['tableName']) && $this->from['tableName'] == '') || 
+                !isset($this->from['tableName'])
+            )
+        )
+        {
+            $this->from = array(
+                'tableName' => $this->modeleName,
+                'as'        => $this->modeleName
+            );
+        }
+        else //Sinon on prend les infos de la table pour lui ajouter le préfix
+        {
+            //Si la table a le même nom que l'alias indiqué : On ajoute le préfix au nom et à l'alias
+            if($this->from['tableName'] == $this->from['as'])
+            {
+                $this->from = array(
+                    'tableName' => $this->prefix.$this->from['tableName'],
+                    'as'        => $this->prefix.$this->from['as']
+                );
+            }
+            //Si l'alias est différent du nom, on ajoute le préfix qu'au nom
+            else {$this->from['tableName'] = $this->prefix.$this->from['tableName'];}
+            
+        }
+        
+        //Si le préfix et le nom de la table sont identique : pas besoin de AS dans la requête
+        if($this->from['tableName'] == $this->from['as'])
+        {
+            $from = '`'.$this->from['tableName'].'`';
+        }
+        else {$from = '`'.$this->from['tableName'].'` AS `'.$this->from['as'].'`';}
+        
+        return $from;
+    }
+    
+    /**
+     * Permet d'ajouter tout type de jointure géré par la classe à la génération de la requête
+     * 
+     * @param string       $attribute Le type de jointure. Valeurs possible "join", "joinLeft", "joinRight"
+     * 
+     * @return string
+     */
+    protected function generateJoin($attribute)
+    {
+        $join = '';
+        if(count($this->{$attribute}) > 0) //S'il y a une jointure inner join à faire
+        {
+            $condition = '';
+                if($attribute == 'join')      {$condition = ' INNER JOIN ';}
+            elseif($attribute == 'joinLeft')  {$condition = ' LEFT JOIN ';}
+            elseif($attribute == 'joinRight') {$condition = ' RIGHT JOIN ';}
+            
+            //Boucle sur toutes les jointures
+            foreach($this->{$attribute} as $val)
+            {
+                //Si le nom de la table et l'alias sont identique : On rajoute le prefix
+                if($val['tableName'] == $val['as'])
+                {
+                    $val['tableName'] = $this->prefix.$val['tableName'];
+                    $val['as']        = $this->prefix.$val['as'];
+                }
+                //Sinon on met le préfix que sur la table, pas sur l'alias
+                else {$val['tableName'] = $this->prefix.$val['tableName'];}
+                
+                $join .= $condition;
+                
+                //Si la table et l'alias sont identique, pas besoin du AS
+                if($val['tableName'] == $val['as'])
+                {
+                    $join .= '`'.$val['tableName'].'`';
+                }
+                else {$join .= '`'.$val['tableName'].'` AS `'.$val['as'].'`';}
+                
+                $join .= ' ON '.$val['on'];
+            }
+        }
+        
+        return $join;
+    }
+    
+    /**
+     * Permet de générer la partie order by pour la génération de la requête
+     * 
+     * @return string
+     */
+    protected function generateOrderBy()
+    {
+        $order = '';
+        if(count($this->order) > 0) //S'il y a une partie ORDER BY
+        {
+            $order = ' ORDER BY ';
+            //Boucle sur les conditions order
+            foreach($this->order as $val)
+            {
+                //S'il y en a déjà une, on rajoute une virgule entre chaque
+                if($order != ' ORDER BY ') {$order .= ', ';}
+                $order .= $val;
+            } 
+        }
+        
+        return $order;
+    }
+    
+    /**
+     * Permet de générer la partie group by pour la génération de la requête
+     * 
+     * @return string
+     */
+    protected function generateGroupBy()
+    {
+        $group = '';
+        if(count($this->group) > 0) //S'il y a une partie GROUP BY
+        {
+            $group = ' GROUP BY ';
+            //Boucle sur les conditions group by
+            foreach($this->group as $val)
+            {
+                //S'il y a déjà une condition, on rajoute une virgule entre chaque
+                if($group != ' GROUP BY ') {$group .= ', ';}
+                $group .= $val;
+            } 
+        }
+        
+        return $group;
     }
 } 
 ?>

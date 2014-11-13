@@ -52,7 +52,7 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     public function __construct($host, $login, $passe, $base, $type='mysql', $utf8=true)
     {
         $this->_kernel = getKernel();
-        $this->debug = $this->_kernel->get_debug();
+        $this->debug = $this->_kernel->getDebug();
 
         $this->type = $type;
         $this->PDO = new \PDO($type.':host='.$host.';dbname='.$base, $login, $passe);
@@ -66,6 +66,8 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     
     /**
      * Permet d'utiliser la base sql en utf8
+     * 
+     * @return void
      */
     protected function set_utf8()
     {
@@ -92,7 +94,7 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     /**
      * Accesseur pour accéder à $this->PDO
      * 
-     * @return PDO Instance de la classe PDO
+     * @return \PDO Instance de la classe PDO
      */
     public function getPDO()
     {
@@ -102,7 +104,7 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     /**
      * Accesseur pour accéder à $this->nb_query
      * 
-     * @return int Le nombre de requête
+     * @return integer Le nombre de requête
      */
     public function getNbQuery()
     {
@@ -111,6 +113,8 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     
     /**
      * Incrémente le nombre de requête effectué
+     * 
+     * @return void
      */
     public function upNbQuery()
     {

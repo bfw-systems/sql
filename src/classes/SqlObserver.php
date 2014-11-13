@@ -7,6 +7,8 @@
 
 namespace BFWSql;
 
+use \Exception;
+
 /**
  * Classe gérant l'observeur des requêtes SQL pour créer le log avec les EXPLAIN
  * @package bfw-sql
@@ -18,9 +20,20 @@ class SqlObserver extends \BFW\Observer
      * 
      * @param BFW\Kernel $subject Le sujet observant
      * @param array      $action  Les actions à effectuer
+     * 
+     * @throws \Exception : Si le paramètre $subject n'est pas un objet ou n'est pas une instance de \BFW\Kernel
      */
-    public function updateWithAction(BFW\Kernel $subject, $action)
+    public function updateWithAction($subject, $action)
     {
+        if(!is_object($subject))
+        {
+            throw new Exception('Le paramètre $subject doit être un objet.');
+        }
+        elseif(is_object($subject) && get_class($subject) != '\BFW\Kernel')
+        {
+            throw new Exception('Le paramètre $subject doit être un objet de type \BFW\Kernel.');
+        }
+        
         if(is_array($action))
         {
             if(!empty($action['value']) && $action['value'] == 'REQ_SQL')

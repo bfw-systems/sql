@@ -49,7 +49,7 @@ class SqlSelect extends atoum
     public function testSqlSelect()
     {
         $mock = new MockSqlSelect($this->sql, 'array');
-        $this->string($mock->prefix)->isEqualTo($this->sql->prefix);
+        $this->string($mock->prefix)->isEqualTo($this->sql->getPrefix());
         $this->variable($mock->modeleName)->isNull();
         $this->string($mock->typeResult)->isEqualTo('array');
     }
@@ -88,10 +88,10 @@ class SqlSelect extends atoum
         $mock = new MockSqlSelect($this->sql, 'array');
         $mock->from(array('mt' => 'maTable'), array('id' => 'idTable'));
         
-        $sqlAction = new \BFWSql\SqlActions($this->sql);
-        $query = 'SELECT name FROM SqlSelect_subQuery WHERE id=1';
-        $sqlAction->query($query);
-        $mock->subQuery($sqlAction, 'myQuery');
+        $sqlsubQuery = new \BFWSql\SqlSelect($this->sql, 'array');
+        $query       = 'SELECT name FROM SqlSelect_subQuery WHERE id=1';
+        $sqlsubQuery->query($query);
+        $mock->subQuery($sqlsubQuery, 'myQuery');
         
         $mock->assembler_requete();
         $this->string($mock->RequeteAssembler)->isEqualTo('SELECT `mt`.`idTable` AS id, (SELECT name FROM SqlSelect_subQuery WHERE id=1) AS `myQuery` FROM `maTable` AS `mt`');
@@ -191,36 +191,36 @@ class SqlSelect extends atoum
     }
     
     /**
-     * Test de la méthode addChamps($champs, &$array, $as)
+     * Test de la méthode addChampsToTable($champs, &$array, $as)
      */
-    public function testAddChamps()
+    public function testAddChampsToTable()
     {
         //Test avec un alias
         $champs = array();
         
-        $this->mock->addChamps(array('id' => 'idTable'), $champs, 'maTable');
+        $this->mock->addChampsToTable(array('id' => 'idTable'), $champs, 'maTable');
         $this->array($champs[0])->isEqualTo(array('`maTable`.`idTable`', 'id'));
         
-        $this->mock->addChamps(array(0 => 'idTable'), $champs, 'maTable');
+        $this->mock->addChampsToTable(array(0 => 'idTable'), $champs, 'maTable');
         $this->array($champs[1])->isEqualTo(array('`maTable`.`idTable`'));
         
-        $this->mock->addChamps(array('nbId' => 'COUNT(id)'), $champs, 'maTable');
+        $this->mock->addChampsToTable(array('nbId' => 'COUNT(id)'), $champs, 'maTable');
         $this->array($champs[2])->isEqualTo(array('COUNT(id)', 'nbId'));
         
-        $this->mock->addChamps(array(0 => 'COUNT(id)'), $champs, 'maTable');
+        $this->mock->addChampsToTable(array(0 => 'COUNT(id)'), $champs, 'maTable');
         $this->array($champs[3])->isEqualTo(array('COUNT(id)'));
         
         
         //Test sans alias
         $champs = array();
         
-        $this->mock->addChamps('*', $champs, 'maTable');
+        $this->mock->addChampsToTable('*', $champs, 'maTable');
         $this->array($champs[0])->isEqualTo(array('`maTable`.*'));
         
-        $this->mock->addChamps('id', $champs, 'maTable');
+        $this->mock->addChampsToTable('id', $champs, 'maTable');
         $this->array($champs[1])->isEqualTo(array('`maTable`.`id`'));
         
-        $this->mock->addChamps('COUNT(id)', $champs, 'maTable');
+        $this->mock->addChampsToTable('COUNT(id)', $champs, 'maTable');
         $this->array($champs[2])->isEqualTo(array('COUNT(id)'));
     }
     
@@ -241,13 +241,13 @@ class SqlSelect extends atoum
      */
     public function testSubQuery()
     {
-        //Création de l'objet SqlActions pour la sous-requête (normalement SqlSelect)
-        $sqlAction = new \BFWSql\SqlActions($this->sql);
-        $query = 'SELECT name FROM SqlSelect_subQuery WHERE id=1';
-        $sqlAction->query($query);
+        //Création de l'objet pour la sous-requête
+        $sqlsubQuery = new \BFWSql\SqlSelect($this->sql, 'array');
+        $query       = 'SELECT name FROM SqlSelect_subQuery WHERE id=1';
+        $sqlsubQuery->query($query);
         
         //Test du retour de la méthode ($this)
-        $this->object($this->mock->subQuery($sqlAction, 'myQuery'))->isInstanceOf('\BFWSql\SqlSelect');
+        $this->object($this->mock->subQuery($sqlsubQuery, 'myQuery'))->isInstanceOf('\BFWSql\SqlSelect');
         
         //Test de la valeur de l'attribut subQuery
         $this->array($this->mock->subQuery[0])->isEqualTo(array('('.$query.')', 'myQuery'));
@@ -314,51 +314,6 @@ class SqlSelect extends atoum
     {
         $this->object($this->mock->group('id'))->isInstanceOf('\BFWSql\SqlSelect');
         $this->string($this->mock->group[0])->isEqualTo('id');
-    }
-    
-    /**
-     * Test de la méthode executeReq()
-     */
-    public function testExecuteReq()
-    {
-        //Création d'une table et ajout de valeur pour tester
-        $this->sql->query('
-            DROP TABLE IF EXISTS SqlSelect_executeReq;
-            CREATE TABLE IF NOT EXISTS SqlSelect_executeReq
-            (
-                 `id` INTEGER UNSIGNED NOT NULL,
-                 `name` VARCHAR(255),
-                 PRIMARY KEY (`id`)
-            ) ENGINE=MyISAM;
-            
-            TRUNCATE TABLE SqlSelect_executeReq;
-            INSERT INTO SqlSelect_executeReq VALUES(1, "monTest 1");
-        ');
-        
-        //Test requête préparé
-        $mock = new MockSqlSelect($this->sql, 'array');
-        $mock->from('SqlSelect_executeReq', 'name')->where('id=:id', array(':id' => 1));
-        $this->object($mock->executeReq())->isInstanceOf('\PDOStatement');
-        
-        //Test requête non préparé
-        $mock = new MockSqlSelect($this->sql, 'array');
-        $mock->no_prepare();
-        $mock->from('SqlSelect_executeReq', 'name')->where('id=1');
-        $this->object($mock->executeReq())->isInstanceOf('\PDOStatement');
-        
-        //Test sans résultats
-        $mock = new MockSqlSelect($this->sql, 'array');
-        $mock->from('SqlSelect_executeReq', 'name')->where('id=2');
-        $this->boolean($mock->executeReq())->isFalse();
-        $this->boolean($mock->no_result)->isTrue();
-        
-        //Test avec exception
-        $mock = new MockSqlSelect($this->sql, 'array');
-        $this->exception(function() use($mock)
-        {
-            $mock->from('SqlSelect_executeReq', 'name')->where('desc="mon test"');
-            $mock->executeReq();
-        })->hasMessage('You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near \'desc="mon test"\' at line 1');
     }
     
     /**
@@ -455,35 +410,6 @@ class SqlSelect extends atoum
         $mock->from('SqlSelect_fetchtAll', 'name')->where('name="test"');
         $this->boolean($mock->fetchAll())->isFalse();
     }
-    
-    /**
-     * Test de la méthode nb_result()
-     */
-    public function testNb_result()
-    {
-        //Test de la valeur par défault
-        $this->mock->req = false;
-        $this->boolean($this->mock->nb_result())->isFalse();
-        
-        //Création d'une table et ajout de valeur pour tester
-        $this->sql->query('
-            DROP TABLE IF EXISTS SqlSelect_nbResult;
-            CREATE TABLE IF NOT EXISTS SqlSelect_nbResult
-            (
-                 `id` INTEGER UNSIGNED NOT NULL,
-                 `name` VARCHAR(255),
-                 PRIMARY KEY (`id`)
-            ) ENGINE=MyISAM;
-            
-            TRUNCATE TABLE SqlSelect_nbResult;
-            INSERT INTO SqlSelect_nbResult VALUES(1, "monTest 1");
-        ');
-        
-        //Test d'une requête devant retourner 1 résultat
-        $req = $this->sql->query('SELECT name FROM SqlSelect_nbResult WHERE id=1');
-        $this->mock->req = $req;
-        $this->integer($this->mock->nb_result())->isEqualTo(1);
-    }
 }
 
 
@@ -514,5 +440,17 @@ class MockSqlSelect extends \BFWSql\SqlSelect
     public function executeReq()
     {
         return parent::executeReq();
+    }
+    
+    /**
+     * Ajoute des champs pour le select
+     * 
+     * @param array|string $champs Les champs à ajouter.
+     * @param array        &$array Le tableau auquel ajouter les champs
+     * @param string       $as     Le paramètre AS pour savoir quel table
+     */
+    public function addChampsToTable($champs, &$array, $as)
+    {
+        return parent::addChampsToTable($champs, $array, $as);
     }
 }

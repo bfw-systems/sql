@@ -37,9 +37,9 @@ class Sql extends atoum
     public function testSql()
     {
         //Test des attributs initialisé
-        $this->string($this->class->prefix)->isEqualTo('');
-        $this->object($this->class->PDO)->isInstanceOf('\PDO');
-        $this->object($this->class->SqlConnect)->isInstanceOf('\BFWSql\SqlConnect');
+        $this->string($this->class->getPrefix())->isEqualTo('');
+        $this->object($this->class->getPDO())->isInstanceOf('\PDO');
+        $this->object($this->class->getSqlConnect())->isInstanceOf('\BFWSql\SqlConnect');
         
         //Test de l'erreur si la classe ne trouve pas l'objet SqlConnect
         $this->exception(function()
@@ -55,7 +55,7 @@ class Sql extends atoum
         $bd_prefix = 'test';
         $classSql = new \BFWSql\Sql();
         
-        $this->string($classSql->prefix)->isEqualTo('test');
+        $this->string($classSql->getPrefix())->isEqualTo('test');
     }
     
     /**
@@ -66,7 +66,7 @@ class Sql extends atoum
         //Test de la définition d'un modèle
         $modele = $this->class->set_modeleName('monTest');
         $this->string($modele)->isEqualTo('monTest');
-        $this->string($this->class->modeleName)->isEqualTo('monTest');
+        $this->string($this->class->getModeleName())->isEqualTo('monTest');
         
         //Test avec prefix fait sur le test de la class Modeles
     }

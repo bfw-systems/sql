@@ -18,41 +18,40 @@ class SqlInsert extends SqlActions implements \BFWSqlInterface\ISqlInsert
      * 
      * @param Sql         $Sql    (ref) L'instance Sql
      * @param string|null $table  La table sur laquelle agir
-     * @param array       $champs Les données à ajouter : array('champSql' => 'données');
+     * @param array       $champs (default: null) Les données à ajouter : array('champSql' => 'données');
      */
     public function __construct(Sql &$Sql, $table, $champs)
     {
         parent::__construct($Sql);
         
-        $this->prefix = $Sql->prefix;
-        $this->modeleName = $Sql->modeleName;
+        //Par défault on prend le nom du modèle pour le nom de la table
+        $this->table = $this->modeleName;
         
-        if($table != null)
-        {
-            $this->table = $table;
-        }
-        else
-        {
-            $this->table = $this->modeleName;
-        }
+        //Si la table est déclaré, on prend sa valeur
+        if($table != null) {$this->table = $table;}
         
-        if($champs != null)
-        {
-            $this->champs = $champs;
-        }
+        //Si des champs à modifier sont déjà indiqué, on initialise avec
+        if($champs != null) {$this->champs = $champs;}
     }
     
     /**
      * On assemble la requête
+     * 
+     * @return void
      */
     public function assembler_requete()
     {
-        if(count($this->champs) > 0) //On vérifie qu'il y a bien des données à insérer
+        //Si des champs à modifier sont indiqués
+        if(count($this->champs) > 0)
         {
+            //Initialisation
             $lst_champ = $lst_val = '';
             $i = 0;
-            foreach($this->champs as $champ => $val) //Pour chaque donnée on sépare le champ et sa valeur pour la requête
+            
+            //Pour chaque donnée on sépare le champ et sa valeur pour la requête
+            foreach($this->champs as $champ => $val)
             {
+                //S'il y a déjà un champ, on met une , entre chacun
                 if($i > 0)
                 {
                     $lst_champ .= ',';
@@ -75,7 +74,7 @@ class SqlInsert extends SqlActions implements \BFWSqlInterface\ISqlInsert
      * @param string $table  La table sur laquelle agir
      * @param array  $champs Les données à ajouter : array('champSql' => 'données');
      * 
-     * @return Sql_Insert L'instance de l'objet courant.
+     * @return \BFWSql\SqlInsert L'instance de l'objet courant.
      */
     public function insert($table, $champs)
     {
@@ -92,23 +91,11 @@ class SqlInsert extends SqlActions implements \BFWSqlInterface\ISqlInsert
      * 
      * @throws \Exception : Erreur si colonne déjà utilisé
      * 
-     * @return Sql_Insert L'instance de l'objet courant.
+     * @return \BFWSql\SqlInsert L'instance de l'objet courant.
      */
     public function data($champs)
     {
-        foreach($champs as $column => $data)
-        {
-            if(isset($this->champs[$column]) && $this->champs[$column] != $data)
-            {
-                throw new \Exception('Une valeur pour la colonne '.$column.' est déjà déclaré.');
-            }
-            else
-            {
-                $this->champs[$column] = $data;
-            }
-        }
-        
-        return $this;
+        return $this->addChamps($champs);
     }
 } 
 ?>

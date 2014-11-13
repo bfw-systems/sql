@@ -24,17 +24,17 @@ interface ISqlConnect
     public function protect($string);
     
     /**
-     * Accesseur pour accéder à $this->PDO
-     * 
-     * @return PDO Instance de la classe PDO
-     */
-    public function getPDO();
-    
-    /**
      * Accesseur pour accéder à $this->nb_query
      * 
-     * @return int Le nombre de requête
+     * @return integer Le nombre de requête
      */
     public function getNbQuery();
+    
+    /**
+     * Incrémente le nombre de requête effectué
+     * 
+     * @return void
+     */
+    public function upNbQuery();
 }
 ?>
