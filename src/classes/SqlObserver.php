@@ -38,7 +38,7 @@ class SqlObserver extends \BFW\Observer
         {
             if(!empty($action['value']) && $action['value'] == 'REQ_SQL')
             {
-                if(!empty($action['REQ_SQL']))
+                if(!empty($action['REQ_SQL']) && isset($action['REQ_SELECT']))
                 {
                     $requete = $action['REQ_SQL'];
                     

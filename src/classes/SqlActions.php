@@ -98,6 +98,14 @@ abstract class SqlActions implements \BFWSqlInterface\ISqlActions
     }
     
     /**
+     * Getter magique
+     */
+    public function __get($name)
+    {
+        return $this->$name;
+    }
+    
+    /**
      * Permet de vérifier si la requête finale a été assemblé et si ce n'est pas le cas de lancer l'assemblage.
      * 
      * @return void
@@ -296,6 +304,29 @@ abstract class SqlActions implements \BFWSqlInterface\ISqlActions
         }
         
         return $this;
+    }
+    
+    /**
+     * Permet d'appeler l'observeur d'événement
+     * 
+     * @param array|null $params : (default: null) Permet d'ajouter des infos à passer au notifier
+     * 
+     * @return void
+     */
+    protected function callObserver($params=null)
+    {
+        $paramsNotifier = array(
+            'value' => 'REQ_SQL',
+            'REQ_SQL' => $this->RequeteAssembler,
+            'instance' => $this
+        );
+        
+        if($params !== null)
+        {
+            $paramsNotifier = array_merge($params, $paramsNotifier);
+        }
+        
+        $this->_kernel->notifyObserver($paramsNotifier);
     }
 }
 ?>

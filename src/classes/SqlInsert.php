@@ -65,6 +65,8 @@ class SqlInsert extends SqlActions implements \BFWSqlInterface\ISqlInsert
             
             //Et on créer la requête
             $this->RequeteAssembler = 'INSERT INTO '.$this->prefix.$this->table.' ('.$lst_champ.') VALUES ('.$lst_val.')';
+            
+            $this->callObserver();
         }
     }
     

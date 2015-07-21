@@ -77,6 +77,8 @@ class SqlUpdate extends SqlActions implements \BFWSqlInterface\ISqlUpdate
             
             //Et on créer la requête
             $this->RequeteAssembler = 'UPDATE '.$this->prefix.$this->table.' SET '.$lst_champ.$lst_where;
+            
+            $this->callObserver();
         }
     }
     
