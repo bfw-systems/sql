@@ -6,7 +6,7 @@
  * @version 1.0
  */
  
-require_once($rootPath.'modules/bfw-sql/src/functions/functions.php');
+require_once(__DIR__.'/functions/functions.php');
 require_once($rootPath.'configs/bfw-sql/config.php');
 
 if($bd_enabled)
@@ -24,4 +24,3 @@ else
 {
     $DB = null;
 }
-?>
