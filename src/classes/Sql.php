@@ -175,6 +175,8 @@ class Sql implements \BFWSqlInterface\ISql
         }
         
         $res = $req->fetchRow();
+        $req->closeCursor();
+        
         if($res)
         {
             return (int) $res[$champID];
@@ -247,6 +249,7 @@ class Sql implements \BFWSqlInterface\ISql
     {
         $req = $this->select()->from($table, $champ)->order($champ.' ASC')->limit(1);
         $res = $req->fetchRow();
+        $req->closeCursor();
         
         if($res)
         {
@@ -254,6 +257,7 @@ class Sql implements \BFWSqlInterface\ISql
             {
                 $req2 = $this->select()->from($table, $champ)->order($champ.' DESC')->limit(1);
                 $res2 = $req2->fetchRow();
+                $req2->closeCursor();
                 
                 //Exception levé si $res2 == false.
                 return $res2[$champ]+1;
