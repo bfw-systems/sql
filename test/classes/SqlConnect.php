@@ -84,6 +84,14 @@ class SqlConnect extends atoum
     }
     
     /**
+     * Test de la méthode getType()
+     */
+    public function testGetType()
+    {
+        $this->string($this->class->getType())->isEqualTo('mysql');
+    }
+    
+    /**
      * Test de la méthode getPDO()
      */
     public function testGetPDO()
