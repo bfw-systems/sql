@@ -183,6 +183,18 @@ abstract class SqlActions implements \BFWSqlInterface\ISqlActions
     }
     
     /**
+     * Ferme le curseur, permettant à la requête d'être de nouveau exécutée
+     * 
+     * @see http://php.net/manual/fr/pdostatement.closecursor.php
+     * 
+     * @return void
+     */
+    public function closeCursor()
+    {
+        return $this->req->closeCursor();
+    }
+    
+    /**
      * Retourne le nombre de ligne retourner par la requête
      * 
      * @return int|bool le nombre de ligne. false si ça a échoué.
