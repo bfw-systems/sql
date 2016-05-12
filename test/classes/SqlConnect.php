@@ -35,9 +35,7 @@ class SqlConnect extends atoum
     {
         include(__DIR__.'/../config.php');
         
-        $this->mock = new MockSqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
-        \BFWSql\test\setMysqlUseBufferedQuery($this->mock->getPDO());
-        
+        $this->mock    = new MockSqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
         $this->bd_host = $bd_host;
         $this->bd_user = $bd_user;
     }

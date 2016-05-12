@@ -29,7 +29,6 @@ class Sql extends atoum
     public function beforeTestMethod($testMethod)
     {
         $this->class = new \BFWSql\Sql();
-        \BFWSql\test\setMysqlUseBufferedQuery($this->class->getPDO());
     }
     
     /**

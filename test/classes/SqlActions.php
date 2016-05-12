@@ -33,9 +33,7 @@ class SqlActions extends atoum
      */
     public function beforeTestMethod($testMethod)
     {
-        $this->sql = new \BFWSql\Sql();
-        \BFWSql\test\setMysqlUseBufferedQuery($this->sql->getPDO());
-        
+        $this->sql  = new \BFWSql\Sql();
         $this->mock = new MockSqlActions($this->sql);
     }
     

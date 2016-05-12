@@ -26,7 +26,6 @@ $bd_enabled = true; //Permet d'activer ou non la partie SQL
 $bd_module = 'bfw-sql'; //suggest package: bfw-sql
 
 require_once(__DIR__.'/../vendor/bulton-fr/bfw/src/BFW_init.php');
-require_once(__DIR__.'/functions.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
