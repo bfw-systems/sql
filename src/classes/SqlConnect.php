@@ -102,6 +102,16 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     }
     
     /**
+     * Accesseur pour accéder à $this->type
+     * 
+     * @return string Le type de connexion
+     */
+    public function getType() 
+    {
+        return $this->type;
+    }
+    
+    /**
      * Accesseur pour accéder à $this->nb_query
      * 
      * @return integer Le nombre de requête
