@@ -35,8 +35,8 @@ class SqlConnect extends atoum
     {
         include(__DIR__.'/../config.php');
         
-        $this->class = new \BFWSql\SqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
-        $this->mock  = new MockSqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
+        $this->mock = new MockSqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
+        \BFWSql\test\setMysqlUseBufferedQuery($this->mock->getPDO());
         
         $this->bd_host = $bd_host;
         $this->bd_user = $bd_user;
@@ -47,13 +47,10 @@ class SqlConnect extends atoum
      */
     public function testSqlConnect()
     {
-        include(__DIR__.'/../config.php');
-        $mock  = new MockSqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
-        
         //Test des attributs initilisé
-        $this->boolean($mock->debug)->isFalse();
-        $this->string($mock->type)->isEqualTo('mysql');
-        $this->object($mock->PDO)->isInstanceOf('\PDO');
+        $this->boolean($this->mock->debug)->isFalse();
+        $this->string($this->mock->type)->isEqualTo('mysql');
+        $this->object($this->mock->PDO)->isInstanceOf('\PDO');
         
         //@TODO : Test du if pour la condition si utf8.
         
@@ -62,7 +59,7 @@ class SqlConnect extends atoum
         $this->exception(function()
         {
             include(__DIR__.'/../config.php');
-            new \BFWSql\SqlConnect($bd_host, $bd_user, 'Genial MotDePasse', $bd_name, $bd_type);            
+            new MockSqlConnect($bd_host, $bd_user, 'Genial MotDePasse', $bd_name, $bd_type);            
         })->message->contains("[1045] Access denied for user '".$this->bd_user."'@'".$this->bd_host."' (using password: YES)");
     }
     
@@ -80,7 +77,7 @@ class SqlConnect extends atoum
      */
     public function testProtect()
     {
-        $this->string($this->class->protect("It's Ok"))->isEqualTo("It\'s Ok");
+        $this->string($this->mock->protect("It's Ok"))->isEqualTo("It\'s Ok");
     }
     
     /**
@@ -88,7 +85,7 @@ class SqlConnect extends atoum
      */
     public function testGetPDO()
     {
-        $this->object($this->class->getPDO())->isInstanceOf('\PDO');
+        $this->object($this->mock->getPDO())->isInstanceOf('\PDO');
     }
     
     /**
@@ -96,7 +93,7 @@ class SqlConnect extends atoum
      */
     public function testGetNbQuery()
     {
-        $this->integer($this->class->getNbQuery())->isEqualTo(0);
+        $this->integer($this->mock->getNbQuery())->isEqualTo(0);
     }
     
     /**
@@ -104,8 +101,8 @@ class SqlConnect extends atoum
      */
     public function testUpNbQuery()
     {
-        $this->class->upNbQuery();
-        $this->integer($this->class->getNbQuery())->isEqualTo(1);
+        $this->mock->upNbQuery();
+        $this->integer($this->mock->getNbQuery())->isEqualTo(1);
     }
 }
 

@@ -38,7 +38,9 @@ class SqlInsert extends atoum
      */
     public function beforeTestMethod($testMethod)
     {
-        $this->sql   = new \BFWSql\Sql();
+        $this->sql = new \BFWSql\Sql();
+        \BFWSql\test\setMysqlUseBufferedQuery($this->sql->getPDO());
+        
         $this->class = new \BFWSql\SqlInsert($this->sql, null, null);
         $this->mock  = new MockSqlInsert($this->sql, null, null);
     }

@@ -38,7 +38,9 @@ class SqlUpdate extends atoum
      */
     public function beforeTestMethod($testMethod)
     {
-        $this->sql   = new \BFWSql\Sql();
+        $this->sql = new \BFWSql\Sql();
+        \BFWSql\test\setMysqlUseBufferedQuery($this->sql->getPDO());
+        
         $this->class = new \BFWSql\SqlUpdate($this->sql, null, null);
         $this->mock  = new MockSqlUpdate($this->sql, null, null);
     }

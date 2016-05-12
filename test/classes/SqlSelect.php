@@ -38,7 +38,9 @@ class SqlSelect extends atoum
      */
     public function beforeTestMethod($testMethod)
     {
-        $this->sql   = new \BFWSql\Sql();
+        $this->sql = new \BFWSql\Sql();
+        \BFWSql\test\setMysqlUseBufferedQuery($this->sql->getPDO());
+        
         $this->class = new \BFWSql\SqlSelect($this->sql, 'array');
         $this->mock  = new MockSqlSelect($this->sql, 'array');
     }
