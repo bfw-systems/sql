@@ -71,7 +71,7 @@ class SqlInsert extends atoum
     {
         //Sans aucun paramètre, valeur d'initialisation
         $this->mock->assembler_requete();
-        $this->string($this->mock->RequeteAssembler)->isEqualTo('');
+        $this->string($this->mock->RequeteAssembler)->isEqualTo('INSERT INTO  () VALUES ()');
         
         //Avec des paramètres
         $this->mock->data(array('id' => 1, 'name' => 'monTest'));
