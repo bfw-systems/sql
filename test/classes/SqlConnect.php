@@ -51,7 +51,7 @@ class SqlConnect extends atoum
     public function testSqlConnect()
     {
         //Test des attributs initilisé
-        $this->boolean($this->mock->debug)->isFalse();
+        $this->boolean($this->mock->debug)->isTrue();
         $this->string($this->mock->type)->isEqualTo('mysql');
         $this->object($this->mock->PDO)->isInstanceOf('\PDO');
         
