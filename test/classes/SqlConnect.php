@@ -19,14 +19,19 @@ require_once(__DIR__.'/../common.php');
 class SqlConnect extends atoum
 {
     /**
-     * @var $class : Instance de la class SqlConnect
-     */
-    protected $class;
-    
-    /**
      * @var $class : Instance du mock pour la class SqlConnect
      */
     protected $mock;
+    
+    /**
+     * @var string $bdUser : User pour la connexion sql
+     */
+    protected $bdUser;
+    
+    /**
+     * @var string $bdHost : Le host pour la connexion sql
+     */
+    protected $bdHost;
     
     /**
      * Instanciation de la class avant chaque méthode de test
@@ -36,8 +41,8 @@ class SqlConnect extends atoum
         include(__DIR__.'/../config.php');
         
         $this->mock    = new MockSqlConnect($bd_host, $bd_user, $bd_pass, $bd_name, $bd_type);
-        $this->bd_host = $bd_host;
-        $this->bd_user = $bd_user;
+        $this->bdUser = $bd_user;
+        $this->bdHost = $bd_host;
     }
     
     /**
@@ -58,7 +63,7 @@ class SqlConnect extends atoum
         {
             include(__DIR__.'/../config.php');
             new MockSqlConnect($bd_host, $bd_user, 'Genial MotDePasse', $bd_name, $bd_type);            
-        })->message->contains("[1045] Access denied for user '".$this->bd_user."'@'".$this->bd_host."' (using password: YES)");
+        })->message->contains("[1045] Access denied for user '".$this->bdUser."'@'".$this->bdHost."' (using password: YES)");
     }
     
     /**
@@ -83,7 +88,7 @@ class SqlConnect extends atoum
      */
     public function testGetType()
     {
-        $this->string($this->class->getType())->isEqualTo('mysql');
+        $this->string($this->mock->getType())->isEqualTo('mysql');
     }
     
     /**

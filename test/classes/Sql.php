@@ -226,7 +226,7 @@ class Sql extends atoum
     public function testQuery()
     {
         //Execute une requête et vérifie que le retour soit bien la class PDOStatement (PDO->query())
-        $query = $this->object($this->class->query('
+        $query = $this->class->query('
             DROP TABLE IF EXISTS Sql_query;
             CREATE TABLE IF NOT EXISTS Sql_query
             (
@@ -236,7 +236,8 @@ class Sql extends atoum
             ) ENGINE=MyISAM;
             
             TRUNCATE TABLE Sql_query;
-        '))->isInstanceOf('\PDOStatement');
+        ');
+        $this->object($query)->isInstanceOf('\PDOStatement');
         $query->closeCursor();
         
         //Test levé d'une exception car erreur dans la requête
