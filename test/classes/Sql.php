@@ -77,7 +77,7 @@ class Sql extends atoum
     public function testDer_id()
     {
         //Création d'une table pour tester les valeurs retournées
-        $this->class->query('
+        $query = $this->class->query('
             DROP TABLE IF EXISTS Sql_derId;
             CREATE TABLE IF NOT EXISTS Sql_derId
             (
@@ -89,6 +89,7 @@ class Sql extends atoum
             TRUNCATE TABLE Sql_derId;
             INSERT INTO Sql_derId VALUES(null, "monTest 1");
         ');
+        $query->closeCursor();
         
         $this->integer($this->class->der_id())->isEqualTo(1);
         
@@ -103,7 +104,7 @@ class Sql extends atoum
     public function testDer_id_noAI()
     {
         //Création d'une table pour tester les valeurs retournées
-        $this->class->query('
+        $query = $this->class->query('
             DROP TABLE IF EXISTS Sql_derIdNoAI;
             CREATE TABLE IF NOT EXISTS Sql_derIdNoAI
             (
@@ -116,6 +117,7 @@ class Sql extends atoum
             TRUNCATE TABLE Sql_derIdNoAI;
             INSERT INTO Sql_derIdNoAI VALUES(1, "monTest 1", "test 1");
         ');
+        $query->closeCursor();
         
         //test de récupération de l'id sans et avec des informations sur le where.
         $this->integer($this->class->der_id_noAI('Sql_derIdNoAI', 'id', 'id DESC'))->isEqualTo(1);
@@ -129,7 +131,8 @@ class Sql extends atoum
         )->isEqualTo(1);
         
         //Test en insérant une autre donnée en laissant un id libre
-        $this->class->query('INSERT INTO Sql_derIdNoAI VALUES(3, "monTest 2", "");');
+        $query = $this->class->query('INSERT INTO Sql_derIdNoAI VALUES(3, "monTest 2", "");');
+        $query->closeCursor();
         $this->integer($this->class->der_id_noAI('Sql_derIdNoAI', 'id', 'id DESC'))->isEqualTo(3);
         
         //Test avec une donnée qui n'existe pas dans la table
@@ -178,7 +181,7 @@ class Sql extends atoum
     public function testCreate_id()
     {
         //Création d'une table pour tester les valeurs retournées
-        $this->class->query('
+        $query = $this->class->query('
             DROP TABLE IF EXISTS Sql_createId;
             CREATE TABLE IF NOT EXISTS Sql_createId
             (
@@ -189,20 +192,24 @@ class Sql extends atoum
             
             TRUNCATE TABLE Sql_createId;
         ');
+        $query->closeCursor();
         
         //Doit retourné 1 puisqu'aucune data dans la table
         $this->integer($this->class->create_id('Sql_createId', 'id'))->isEqualTo(1);
         
         //Insertion d'une data pour id 3, retournera 2 car recherche l'id libre juste avant le dernier trouvé.
-        $this->class->query('INSERT INTO Sql_createId VALUES(3, "monTest 2");');
+        $query = $this->class->query('INSERT INTO Sql_createId VALUES(3, "monTest 2");');
+        $query->closeCursor();
         $this->integer($this->class->create_id('Sql_createId', 'id'))->isEqualTo(2);
         
         //Insertion d'une data pour id 2, retournera 1
-        $this->class->query('INSERT INTO Sql_createId VALUES(2, "monTest 3");');
+        $query = $this->class->query('INSERT INTO Sql_createId VALUES(2, "monTest 3");');
+        $query->closeCursor();
         $this->integer($this->class->create_id('Sql_createId', 'id'))->isEqualTo(1);
         
         //Insertion d'une data pour id 1, retournera 4
-        $this->class->query('INSERT INTO Sql_createId VALUES(1, "monTest 2");');
+        $query = $this->class->query('INSERT INTO Sql_createId VALUES(1, "monTest 2");');
+        $query->closeCursor();
         $this->integer($this->class->create_id('Sql_createId', 'id'))->isEqualTo(4);
         
         //Test levé d'exception.
@@ -219,7 +226,7 @@ class Sql extends atoum
     public function testQuery()
     {
         //Execute une requête et vérifie que le retour soit bien la class PDOStatement (PDO->query())
-        $this->object($this->class->query('
+        $query = $this->class->query('
             DROP TABLE IF EXISTS Sql_query;
             CREATE TABLE IF NOT EXISTS Sql_query
             (
@@ -229,7 +236,9 @@ class Sql extends atoum
             ) ENGINE=MyISAM;
             
             TRUNCATE TABLE Sql_query;
-        '))->isInstanceOf('\PDOStatement');
+        ');
+        $this->object($query)->isInstanceOf('\PDOStatement');
+        $query->closeCursor();
         
         //Test levé d'une exception car erreur dans la requête
         $class = $this->class;

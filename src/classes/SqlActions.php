@@ -98,6 +98,14 @@ abstract class SqlActions implements \BFWSqlInterface\ISqlActions
     }
     
     /**
+     * Getter magique
+     */
+    public function __get($name)
+    {
+        return $this->$name;
+    }
+    
+    /**
      * Permet de vérifier si la requête finale a été assemblé et si ce n'est pas le cas de lancer l'assemblage.
      * 
      * @return void
@@ -172,6 +180,18 @@ abstract class SqlActions implements \BFWSqlInterface\ISqlActions
         
         //Retourne false si fail ou si pas de résultat.
         return false;
+    }
+    
+    /**
+     * Ferme le curseur, permettant à la requête d'être de nouveau exécutée
+     * 
+     * @see http://php.net/manual/fr/pdostatement.closecursor.php
+     * 
+     * @return void
+     */
+    public function closeCursor()
+    {
+        return $this->req->closeCursor();
     }
     
     /**
@@ -296,6 +316,29 @@ abstract class SqlActions implements \BFWSqlInterface\ISqlActions
         }
         
         return $this;
+    }
+    
+    /**
+     * Permet d'appeler l'observeur d'événement
+     * 
+     * @param array|null $params : (default: null) Permet d'ajouter des infos à passer au notifier
+     * 
+     * @return void
+     */
+    protected function callObserver($params=null)
+    {
+        $paramsNotifier = array(
+            'value' => 'REQ_SQL',
+            'REQ_SQL' => $this->RequeteAssembler,
+            'instance' => $this
+        );
+        
+        if($params !== null)
+        {
+            $paramsNotifier = array_merge($params, $paramsNotifier);
+        }
+        
+        $this->_kernel->notifyObserver($paramsNotifier);
     }
 }
 ?>

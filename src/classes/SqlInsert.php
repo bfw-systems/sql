@@ -41,31 +41,29 @@ class SqlInsert extends SqlActions implements \BFWSqlInterface\ISqlInsert
      */
     public function assembler_requete()
     {
-        //Si des champs à modifier sont indiqués
-        if(count($this->champs) > 0)
+        //Initialisation
+        $lst_champ = $lst_val = '';
+        $i = 0;
+        
+        //Pour chaque donnée on sépare le champ et sa valeur pour la requête
+        foreach($this->champs as $champ => $val)
         {
-            //Initialisation
-            $lst_champ = $lst_val = '';
-            $i = 0;
-            
-            //Pour chaque donnée on sépare le champ et sa valeur pour la requête
-            foreach($this->champs as $champ => $val)
+            //S'il y a déjà un champ, on met une , entre chacun
+            if($i > 0)
             {
-                //S'il y a déjà un champ, on met une , entre chacun
-                if($i > 0)
-                {
-                    $lst_champ .= ',';
-                    $lst_val .= ',';
-                }
-                
-                $lst_champ .= '`'.$champ.'`';
-                $lst_val .= '\''.$val.'\'';
-                $i++;
+                $lst_champ .= ',';
+                $lst_val .= ',';
             }
             
-            //Et on créer la requête
-            $this->RequeteAssembler = 'INSERT INTO '.$this->prefix.$this->table.' ('.$lst_champ.') VALUES ('.$lst_val.')';
+            $lst_champ .= '`'.$champ.'`';
+            $lst_val .= '\''.$val.'\'';
+            $i++;
         }
+        
+        //Et on créer la requête
+        $this->RequeteAssembler = 'INSERT INTO '.$this->prefix.$this->table.' ('.$lst_champ.') VALUES ('.$lst_val.')';
+        
+        $this->callObserver();
     }
     
     /**

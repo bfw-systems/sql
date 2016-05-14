@@ -58,6 +58,8 @@ class SqlDelete extends SqlActions implements \BFWSqlInterface\ISqlDelete
         
         //Et on créer la requêtes
         $this->RequeteAssembler = 'DELETE FROM '.$this->prefix.$this->table.$lst_where;
+        
+        $this->callObserver();
     }
     
     /**
