@@ -1,77 +1,53 @@
 <?php
-/**
- * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime <bulton.fr@gmail.com>
- * @version 1.0
- */
 
-namespace BFWSql;
+namespace BfwSql;
 
 use \Exception;
 
 /**
- * Classe POO gérant la sgbd.
+ * Class to access to query writer
+ * 
  * @package bfw-sql
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
+ * @version 2.0
  */
-class Sql implements \BFWSqlInterface\ISql
+class Sql
 {
     /**
-     * @var $_kernel : L'instance du Kernel
+     * @var \BfwSql\SqlConnect $sqlConnect SqlConnect object
      */
-    protected $_kernel;
+    protected $sqlConnect;
     
     /**
-     * @var \PDO L'objet PDO
-     */
-    protected $PDO;
-    
-    /**
-     * @var \BFWSql\SqlConnect L'objet SqlConnect
-     */
-    protected $SqlConnect;
-    
-    /**
-     * @var string|null $modeleName Nom de la table si c'est un modele
-     */
-    protected $modeleName;
-    
-    /**
-     * @var string $prefix Le préfix des tables
+     * @var string $prefix Tables prefix
      */
     protected $prefix = '';
     
     /**
-     * Accesseur get vers l'attribut $PDO
+     * Constructor
      * 
-     * @return \PDO
+     * @param \BfwSql\SqlConnect $sqlConnect SqlConnect instance
+     * 
+     * @throws \Exception
      */
-    public function getPDO()
+    public function __construct($sqlConnect)
     {
-        return $this->PDO;
+        $this->sqlConnect = $sqlConnect;
+        $this->prefix     = $sqlConnect->getConnectionInfos()->tablePrefix;
     }
     
     /**
-     * Accesseur get vers l'attribut $SqlConnect
+     * Getter to the property sqlConnect
      * 
      * @return \BFWSql\SqlConnect
      */
     public function getSqlConnect()
     {
-        return $this->SqlConnect;
+        return $this->sqlConnect;
     }
     
     /**
-     * Accesseur get vers l'attribut $modeleName
-     * 
-     * @return string
-     */
-    public function getModeleName()
-    {
-        return $this->modeleName;
-    }
-    
-    /**
-     * Accesseur get vers l'attribut $prefix
+     * Getter to the property prefix
      * 
      * @return string
      */
@@ -81,240 +57,182 @@ class Sql implements \BFWSqlInterface\ISql
     }
     
     /**
-     * Constructeur de la classe.
+     * Get the id for the last item has been insert in database
      * 
-     * @param Sql_connect|null $DB_connect (ref) (default: null) L'instance de la classe Sql_connect. Si elle n'est pas indiqué, elle sera créé.
-     * 
-     * @throws \Exception
-     */
-    public function __construct(&$DB_connect=null)
-    {
-        $this->_kernel = getKernel();
-        
-        if($DB_connect === null)
-        {
-            global $DB;
-            $DB_connect = $DB;
-        }
-        
-        $this->PDO = null;
-        $this->SqlConnect = null;
-        
-        if(is_object($DB_connect))
-        {
-            $this->PDO = $DB_connect->getPDO();
-            $this->SqlConnect = &$DB_connect;
-        }
-        else {throw new Exception('La variable vers la connexion à la bdd doit être un objet.');}
-        
-        global $bd_prefix;
-        $this->prefix = $bd_prefix;
-    }
-    
-    /**
-     * Modifie le nom de la table sur laquelle on travail
-     * 
-     * @param string $name le nom de la table
-     * 
-     * @return string : Le nom réel de la table avec préfix s'il y en a un de défini.
-     */
-    public function set_modeleName($name)
-    {
-        $this->modeleName = $this->prefix.$name;
-        return $this->modeleName;
-    }
-    
-    /**
-     * Renvoi l'id du dernier élément ajouté en bdd
-     * 
-     * @param string|null $name (default: null) nom de la séquence pour l'id (pour PostgreSQL par exemple)
+     * @param string|null $name (default: null) Name of the sequence for the id
+     *  Used for SGDB like PostgreSQL. Not use it for mysql.
      * 
      * @return integer
      */
-    public function der_id($name=null)
+    public function getLastInsertedId($name=null)
     {
         return (int) $this->PDO->lastInsertId($name);
     }
     
     /**
-     * Renvoi l'id du dernier élément ajouté en bdd pour une table sans Auto Incrément
+     * Get the id for the last item has been insert in database for a table
+     * without auto-increment
      * 
-     * @param string       $table   La table
-     * @param string       $champID Le nom du champ correspondant à l'id
-     * @param string|array $order   Les champs sur lesquels se baser
-     * @param string|array $where   Clause where
+     * @param string       $table The table name
+     * @param string       $colId The column name for the ID
+     * @param string|array $order Columns to sort table content
+     * @param string|array $where All where instruction used for filter content
      * 
-     * @return integer le dernier id, 0 si aucun résultat
+     * @return integer
      */
-    public function der_id_noAI($table, $champID, $order, $where='')
-    {
-        $req = $this->select()->from($table, $champID)->limit(1);
+    public function getLastInsertedIdWithoutAI(
+        $table,
+        $colId,
+        $order,
+        $where=''
+    ) {
+        $req = $this->select()
+                    ->from($table, $colId)
+                    ->limit(1);
     
-        if(is_array($where))
-        {
-            foreach($where as $val)
-            {
+        if (is_array($where)) {
+            foreach ($where as $val) {
                 $req->where($val);
             }
-        }
-        elseif($where != '')
-        {
+        } elseif ($where != '') {
             $req->where($where);
         }
         
-        if(is_array($order))
-        {
-            foreach($order as $val)
-            {
+        if (is_array($order)) {
+            foreach ($order as $val) {
                 $req->order($val);
             }
-        }
-        else
-        {
+        } else {
             $req->order($order);
         }
         
         $res = $req->fetchRow();
         $req->closeCursor();
         
-        if($res)
-        {
-            return (int) $res[$champID];
+        if ($res) {
+            return (int) $res[$colId];
         }
         
         return 0;
     }
     
     /**
-     * Créer une instance de Sql_Select permettant de faire une requête de type SELECT
+     * Return a new instance of SqlSelect
      * 
-     * @param string $type (default: "array") Le type de retour pour les données. Valeurs possible : array|objet|object
+     * @param string $type (default: "array") Return PHP type
+     *  Possible value : "array" or "object"
      * 
-     * @return \BFWSql\SqlSelect L'instance de l'objet Sql_Select créé
+     * @return \BfwSql\SqlSelect
      */
     public function select($type='array')
     {
-        return new SqlSelect($this, $type);
+        return new SqlSelect($this->sqlConnect, $type);
     }
     
     /**
-     * Créer une instance de Sql_Insert permettant de faire une requête de type INSERT INTO
+     * Return a new instance of SqlInsert
      * 
-     * @param string $table  (default: null) La table sur laquelle agir
-     * @param array  $champs (default: null) Les données à ajouter : array('champSql' => 'données');
+     * @param string $table   The table concerned by the request
+     * @param array  $columns (default: null) All datas to add
+     *  Format is array('columnName' => 'value', ...);
      * 
-     * @return \BFWSql\SqlInsert L'instance de l'objet Sql_Select créé
+     * @return \BfwSql\SqlInsert
      */
-    public function insert($table=null, $champs=null)
+    public function insert($table, $columns=null)
     {
-        return new SqlInsert($this, $table, $champs);
+        return new SqlInsert($this->sqlConnect, $table, $columns);
     }
     
     /**
-     * Créer une instance de Sql_Update permettant de faire une requête de type UPDATE
+     * Return a new instance of SqlUpdate
      * 
-     * @param string $table  (default: null) La table sur laquelle agir
-     * @param array  $champs (default: null) Les données à ajouter : array('champSql' => 'données');
+     * @param string $table   The table concerned by the request
+     * @param array  $columns (default: null) All datas to update
+     *  Format is array('columnName' => 'newValue', ...);
      * 
-     * @return \BFWSql\SqlUpdate L'instance de l'objet Sql_Select créé
+     * @return \BfwSql\SqlUpdate
      */
-    public function update($table=null, $champs=null)
+    public function update($table, $columns=null)
     {
-        return new SqlUpdate($this, $table, $champs);
+        return new SqlUpdate($this->sqlConnect, $table, $columns);
     }
     
     /**
-     * Créer une instance de Sql_Delete permettant de faire une requête de type DELETE FROM
+     * Return a new instance of SqlDelete
      * 
-     * @param string $table (default: null) La table sur laquelle agir
+     * @param string $table The table concerned by the request
      * 
-     * @return \BFWSql\SqlDelete L'instance de l'objet Sql_Select créé
+     * @return \BfwSql\SqlDelete
      */
-    public function delete($table=null)
+    public function delete($table)
     {
-        return new SqlDelete($this, $table);
+        return new SqlDelete($this->sqlConnect, $table);
     }
     
     /**
-     * Trouve le premier id libre pour une table et pour un champ
+     * Find the first vacant id on a table and for a column
      * 
-     * @param string $table La table
-     * @param string $champ Le champ. Les valeurs du champ doivent être du type int.
+     * @param string $table  The table concerned by the request
+     * @param string $column The id column. Must be an integer..
      * 
-     * @throws \Exception Si ue erreur dans la recherche d'id s'est produite
+     * @throws \Exception If a error has been throw during the search
      * 
-     * @return integer L'id libre trouvé. False si erreur
+     * @return integer
      */
-    public function create_id($table, $champ)
+    public function create_id($table, $column)
     {
-        $req = $this->select()->from($table, $champ)->order($champ.' ASC')->limit(1);
+        $req = $this->select()
+                    ->from($table, $column)
+                    ->order($column.' ASC')
+                    ->limit(1);
+        
         $res = $req->fetchRow();
         $req->closeCursor();
         
-        if($res)
-        {
-            if($res[$champ] == 1)
-            {
-                $req2 = $this->select()->from($table, $champ)->order($champ.' DESC')->limit(1);
-                $res2 = $req2->fetchRow();
-                $req2->closeCursor();
-                
-                //Exception levé si $res2 == false.
-                return $res2[$champ]+1;
-            }
-            
-            return $res[$champ]-1;
+        if (!$res) {
+            return 1;
         }
-        // Pas de else car exception levé.
         
-        return 1;
+        if ($res[$column] > 1) {
+            return $res[$column]-1;
+        }
+        
+        $req2 = $this->select()
+                    ->from($table, $column)
+                    ->order($column.' DESC')
+                    ->limit(1);
+        
+        $res2 = $req2->fetchRow();
+        $req2->closeCursor();
+
+        return $res2[$column]+1;
     }
     
     /**
-     * Execute la requête mise en paramètre
+     * Run the query in parameter 
      * 
-     * @param string $requete La requête à exécuter
+     * @param string $request The request to run
      * 
-     * @throws \Exception Si la requête à echoué
+     * @throws \Exception If the request has failed
      * 
-     * @return \PDOStatement La ressource de la requête exécuté si elle a réussi.
+     * @return \PDOStatement
      */
-    public function query($requete)
+    public function query($request)
     {
-        $this->upNbQuery();
-        $req = $this->PDO->query($requete); //On exécute la reqête
+        $this->sqlConnect->upNbQuery();
         
-        //On récupère l'erreur
-        $erreur = $this->PDO->errorInfo();
+        $req   = $this->sqlConnect->PDO->query($request);
+        $error = $this->sqlConnect->PDO->errorInfo();
         
-        //On créé l'exception que s'il y a véritablement une erreur.
-        if(!$req && $erreur[0] != null && $erreur[0] != '00000' && isset($erreur[2])) 
-        {
-            throw new Exception($erreur[2]);
+        if(
+            !$req
+            && $error[0] != null
+            && $error[0] != '00000'
+            && isset($error[2])
+        ) {
+            throw new Exception($error[2]);
         }
         
-        //Si la requête à réussi, on retourne sa ressource
         return $req;
     }
-    
-    /**
-     * Incrémente le nombre de requête effectué
-     * 
-     * @return void
-     */
-    public function upNbQuery()
-    {
-        $this->SqlConnect->upNbQuery();
-    }
-    
-    /**
-     * Accesseur pour accéder au nombre de requête
-     * 
-     * @return integer Le nombre de requête
-     */
-    public function getNbQuery()
-    {
-        return $this->SqlConnect->getNbQuery();
-    }
 }
-?>

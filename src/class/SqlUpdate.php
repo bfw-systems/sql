@@ -1,101 +1,64 @@
 <?php
-/**
- * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime <bulton.fr@gmail.com>
- * @version 1.0
- */
 
-namespace BFWSql;
+namespace BfwSql;
 
 /**
- * Classe gérant les requêtes de type UPDATE
+ * Class to write UPDATE queries
+ * 
  * @package bfw-sql
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
+ * @version 2.0
  */
-class SqlUpdate extends SqlActions implements \BFWSqlInterface\ISqlUpdate
+class SqlUpdate extends SqlActions
 {
     /**
-     * Constructeur
+     * Constructor
      * 
-     * @param Sql         $Sql    (ref) L'instance Sql
-     * @param string|null $table  La table sur laquelle agir
-     * @param array       $champs (default: null) Les données à modifier : array('champSql' => 'données');
+     * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
+     * @param string             $tableName  The table name used for query
+     * @param array              $columns    (default: null) Datas to add
+     *  Format is array('columnName' => 'value', ...);
      */
-    public function __construct(Sql &$Sql, $table, $champs)
+    public function __construct(
+        SqlConnect $sqlConnect,
+        $tableName,
+        $columns = null
+    )
     {
-        parent::__construct($Sql);
+        parent::__construct($sqlConnect);
         
-        //Par défault on prend le nom du modèle pour le nom de la table
-        $this->table = $this->modeleName;
+        $prefix      = $sqlConnect->getConnectionInfos()->tablePrefix;
+        $this->table = $prefix.$tableName;
         
-        //Si la table est déclaré, on prend sa valeur
-        if($table != null) {$this->table = $table;}
-        
-        //Si des champs à modifier sont déjà indiqué, on initialise avec
-        if($champs != null) {$this->champs = $champs;}
-    }
-    
-    /**
-     * On assemble la requête
-     * 
-     * @return void
-     */
-    public function assembler_requete()
-    {
-        //Si des champs à modifier sont indiqués
-        if(count($this->champs) > 0)
-        {
-            //Initialisation
-            $lst_champ = $lst_where = '';
-            $i = 0;
-            
-            //On liste les données à modifier
-            foreach($this->champs as $key => $val)
-            {
-                //S'il y a déjà un champ, on met une , entre chacun
-                if($i > 0) {$lst_champ .= ', ';}
-                
-                $lst_champ .= $key.'='.$val;
-                $i++;
-            }
-            
-            //On regarde s'il y a une clause where à mettre
-            if(count($this->where) > 0)
-            {
-                $lst_where = ' WHERE ';
-                $i = 0;
-                
-                //Chaque élément du tableau est une condition
-                foreach($this->where as $val)
-                {
-                    //Idem que la virgule, si une condition est déjà présente, on met un AND
-                    if($i > 0) {$lst_where .= ' AND ';}
-                    
-                    $lst_where .= $val;
-                    $i++;
-                }
-            }
-            
-            //Et on créer la requête
-            $this->RequeteAssembler = 'UPDATE '.$this->prefix.$this->table.' SET '.$lst_champ.$lst_where;
-            
-            $this->callObserver();
+        if (is_array($columns)) {
+            $this->columns = $columns;
         }
     }
     
     /**
-     * Permet de déclarer une requête UPDATE
-     * 
-     * @param string $table  La table sur laquelle agir
-     * @param array  $champs Les données à modifier : array('champSql' => 'données');
-     * 
-     * @return \BFWSql\SqlUpdate L'instance de l'objet courant.
+     * {@inheritdoc}
      */
-    public function update($table, $champs)
+    public function assembleRequest()
     {
-        $this->table = $table;
-        $this->champs = $champs;
+        if (count($this->champs) === 0) {
+            return;
+        }
         
-        return $this;
+        $lstColumns = '';
+
+        foreach ($this->columns as $columnName => $columnValue) {
+            if ($lstColumns !== '') {
+                $lstColumns .= ', ';
+            }
+
+            $lstColumns .= $columnName.'='.$columnValue;
+        }
+
+        
+        $this->assembledRequest = 'UPDATE '.$this->table
+            .' SET '.$lstColumns
+            .$this->generateWhere();
+
+        $this->callObserver();
     }
 }
-?>

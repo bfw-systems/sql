@@ -1,292 +1,321 @@
 <?php
-/**
- * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime <bulton.fr@gmail.com>
- * @version 1.0
- */
 
-namespace BFWSql;
+namespace BfwSql;
 
 use \Exception;
 
 /**
- * Classe parent aux classes Sql_Select, Sql_Insert, Sql_Update et Sql_Delete
- * Elle stock l'instance de pdo et définie quelques méthodes.
+ * Abstract class used for all query writer class.
+ * 
  * @package bfw-sql
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
+ * @version 2.0
  */
-abstract class SqlActions implements \BFWSqlInterface\ISqlActions
+abstract class SqlActions
 {
     /**
-     * @var $_kernel L'instance du Kernel
+     * @var \BfwSql\SqlConnect $sqlConnect SqlConnect object
      */
-    protected $_kernel;
+    protected $sqlConnect;
     
     /**
-     * @var $_sql L'instance de l'objet Sql
+     * @var string $assembledRequest The request will be executed
      */
-    protected $_sql;
+    protected $assembledRequest = '';
     
     /**
-     * @var $PDO L'instance de pdo
+     * @var boolean $isPreparedRequest If is a prepared request
      */
-    protected $PDO;
+    protected $isPreparedRequest = true;
     
     /**
-     * @var $RequeteAssembler La requête final qui sera exécutée
+     * @var string $tableName The main table name for request
      */
-    protected $RequeteAssembler = '';
+    protected $tableName = '';
     
     /**
-     * @var $modeleName Le nom de la table du modele
+     * @var array $columns List of impacted columns by the request
      */
-    protected $modeleName = null;
+    protected $columns = array();
     
     /**
-     * @var $prefix Le préfix des tables
-     */
-    protected $prefix;
-    
-    /**
-     * @var $prepare Permet de savoir si on utilise les requêtes préparées ou non
-     */
-    protected $prepareBool = true;
-    
-    /**
-     * @var $table La table sur laquel agir
-     */
-    protected $table = '';
-    
-    /**
-     * @var $champs Les données à insérer
-     */
-    protected $champs = array();
-    
-    /**
-     * @var $where Les clauses where
+     * @var string[] $where All filter use in where part of the request
      */
     protected $where = array();
     
     /**
-     * @var $prepare Les arguments de la requête préparée
+     * @var string[] $preparedRequestArgs Arguments used by prepared request
      */
-    protected $prepare = array();
+    protected $preparedRequestArgs = array();
     
     /**
-     * @var $prepare_option Les options pour la requête préparée
-     */
-    protected $prepare_option = array();
-    
-    /**
-     * @var bool $no_result Permet de savoir si l'echec est du Ã  la requÃªte qui n'a rien renvoyÃ© ou une erreur
-     */
-    protected $no_result = false;
-    
-    /**
-     * Constructeur de la classe
+     * @var array $prepareDriversOptions SGBD driver option used for
+     *  prepared request
      * 
-     * @param Sql $Sql : (ref) Instance de la classe Sql
+     * @link http://php.net/manual/en/pdo.prepare.php
      */
-    public function __construct(Sql &$Sql)
+    protected $prepareDriversOptions = array();
+    
+    /**
+     * @var boolean $noResult If request has sent no result.
+     */
+    protected $noResult = false;
+    
+    /**
+     * @var \PDOStatement $lastRequestStatement The PDOStatement pour the
+     *  last request executed.
+     */
+    protected $lastRequestStatement;
+    
+    /**
+     * Constructor
+     * 
+     * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
+     */
+    public function __construct(SqlConnect $sqlConnect)
     {
-        $this->_sql = $Sql;
-        $this->PDO  = $this->_sql->getPDO();
-        
-        $this->_kernel = getKernel();
-        
-        $this->prefix     = $Sql->getPrefix();;
-        $this->modeleName = $Sql->getModeleName();
+        $this->sqlConnect = $sqlConnect;
     }
     
     /**
-     * Getter magique
+     * Getter to access at sqlConnect property
+     * 
+     * @return \BfwSql\SqlConnect
      */
-    public function __get($name)
+    public function getSqlConnect()
     {
-        return $this->$name;
+        return $this->sqlConnect;
     }
     
     /**
-     * Permet de vérifier si la requête finale a été assemblé et si ce n'est pas le cas de lancer l'assemblage.
+     * Setter to enable or disable prepared request
+     * 
+     * @param boolean $preparedRequestStatus The new status for prepared request
      * 
      * @return void
      */
-    public function is_Assembler()
+    public function setIsPreparedRequest($preparedRequestStatus)
     {
-        if($this->RequeteAssembler == '')
+        $this->isPreparedRequest = (bool) $preparedRequestStatus;
+    }
+    
+    /**
+     * Define driver options to prepared request
+     * 
+     * @link http://php.net/manual/fr/pdo.prepare.php
+     * 
+     * @param array $driverOptions Drivers options
+     * 
+     * @return void
+     */
+    public function setPrepareDriversOptions($driverOptions)
+    {
+        $this->prepareDriversOptions = $driverOptions;
+    }
+    
+    /**
+     * Check if a request is assemble or not.
+     * If not, run the method assembleRequest.
+     * 
+     * @return void
+     */
+    public function requestIsAssembled()
+    {
+        if($this->assembledRequest == '')
         {
-            $this->assembler_requete();
+            $this->assembleRequest();
         }
     }
     
     /**
-     * Retourne la requête finale
+     * Write the query
+     * 
+     * @return void
+     */
+    protected abstract function assembleRequest();
+    
+    /**
+     * Return the assembled request
      * 
      * @return string
      */
     public function assemble()
     {
-        $this->is_Assembler();
-        return $this->RequeteAssembler;
+        $this->requestIsAssembled();
+        return $this->assembledRequest;
     }
     
     /**
-     * Execute la requête (type INSERT, UPDATE et DELETE)
+     * Execute the assembled request
      * 
-     * @throws \Exception Si la requête à echoué
+     * @return array The pdo errorInfo array
+     */
+    protected function executeQuery()
+    {
+        $pdo = $this->sqlConnect->getPDO();
+        $this->sqlConnect->upNbQuery();
+        $this->requestIsAssembled();
+        
+        if ($this->isPreparedRequest) {
+            
+            $req = $pdo->prepare(
+                $this->assembledRequest,
+                $this->prepareDriversOptions
+            );
+            
+            $req->execute($this->preparedRequestArgs);
+            $error = $req->errorInfo();
+        } else {
+            $pdoMethodToCall = 'exec';
+            if (get_class($this) === '\BfwSql\SqlSelect') {
+                $pdoMethodToCall = 'query';
+            }
+            
+            $req   = $pdo->{$pdoMethodToCall}($this->assembledRequest);
+            $error = $pdo->errorInfo();
+        }
+        
+        $this->lastRequestStatement = $req;
+        
+        return $error;
+    }
+    
+    /**
+     * Execute the assembled request and check if there are errors
+     * Update property noResult
      * 
-     * @return \PDOStatement|integer|bool : La ressource de la requête exécuté si elle a réussi, false sinon.
+     * @throws \Exception If the request fail
+     * 
+     * @return \PDOStatement|integer
      */
     public function execute()
     {
-        $this->_sql->upNbQuery();
-        $this->is_Assembler(); //On vérifie que la requête est bien généré
+        $error = $this->executeQuery();
         
-        //Gestion si c'est une requête préparé
-        if($this->prepareBool)
-        {
-            //Prépare et exécute la requête.
-            $req = $this->PDO->prepare($this->RequeteAssembler, $this->prepare_option);
-            $req->execute($this->prepare);
-            $erreur = $req->errorInfo();
-        }
-        else //Requête "normal"
-        {
-            //On exécute la requête
-            $methodExecuted = 'exec';
-            if(get_class($this) == '\BFWSql\SqlSelect') {$methodExecuted = 'query';}
-            
-            $req = $this->PDO->{$methodExecuted}($this->RequeteAssembler);
-            
-            //Récupération d'une éventuelle erreur
-            $erreur = $this->PDO->errorInfo();
-        }
-        $this->req = $req;
-        
-        //S'il y a une erreur, on génère une exception.
-        if($erreur[0] != null && $erreur[0] != '00000')
-        {
-            throw new \Exception($erreur[2]);
-        }
-        else
-        {
-            //Si la requête à réussi, on retourne sa ressource
-            if($req)
-            {
-                //On vérifie le nombre de résultat. S'il y a des résultat, on retourne la requête
-                if($this->nb_result() > 0) {return $req;}
-                else {$this->no_result = true;} //Si pas de résultat, on ne note
-            }
+        //Throw an exception if they are an error with the request
+        if ($error[0] != null && $error[0] != '00000') {
+            throw new Exception($error[2]);
         }
         
-        //Retourne false si fail ou si pas de résultat.
-        return false;
+        if ($this->lastRequestStatement === false) {
+            throw new Exception(
+                'An error occurred during the execution of the request'
+            );
+        }
+        
+        $this->noResult = false;
+        if ($this->obtainImpactedRows() === 0) {
+            $this->noResult = true;
+        }
+
+        return $this->lastRequestStatement;
     }
     
     /**
-     * Ferme le curseur, permettant à la requête d'être de nouveau exécutée
+     * Closes the cursor, enabling the statement to be executed again.
      * 
-     * @see http://php.net/manual/fr/pdostatement.closecursor.php
+     * @link http://php.net/manual/fr/pdostatement.closecursor.php
      * 
      * @return void
      */
     public function closeCursor()
     {
-        return $this->req->closeCursor();
+        return $this->lastRequestStatement->closeCursor();
     }
     
     /**
-     * Retourne le nombre de ligne retourner par la requête
+     * Return the number of impacted rows by the last request
      * 
-     * @return int|bool le nombre de ligne. false si ça a échoué.
+     * @return int|bool
      */
-    public function nb_result()
+    public function obtainImpactedRows()
     {
-        //Si la requête n'a pas fail, on retourne directement le nombre de ligne
-            if($this->req != false && is_object($this->req)) {return $this->req->rowCount();}
-        elseif(is_integer($this->req)) {return $this->req;} //Si pdo->exec()
-        else {return false;} //Fail : retourne false.
+        if ($this->lastRequestStatement === false) {
+            return false;
+        }
+        
+        if (is_object($this->lastRequestStatement)) {
+            //If pdo::query or pdo::prepare
+            return $this->lastRequestStatement->rowCount();
+        } elseif (is_integer($this->lastRequestStatement)) {
+            //If pdo::exec
+            return $this->lastRequestStatement;
+        }
+        
+        //Security if call without executed a request
+        return false;
     }
     
     /**
-     * Permet d'inserer sa propre requête directement sans avoir à utiliser les méthodes from etc
+     * To call this own request without use query writer
      * 
-     * @param string $req La requête
+     * @param string $request The user request
      * 
      * @return void
      */
-    public function query($req)
+    public function query($request)
     {
-        $this->RequeteAssembler = $req;
+        $this->assembledRequest = $request;
     }
     
     /**
-     * Permet d'indiquer qu'on ne veux pas utiliser de requête préparée.
+     * Add a filter to where part of the request
+     * 
+     * @param string     $filter          The filter to add
+     * @param array|null $preparedFilters (default: null) Filters to add
+     *  in prepared request
+     * 
+     * @throws \Exception If key on prepared request is already used
+     * 
+     * @return \BfwSql\SqlActions
      */
-    public function no_prepare()
+    public function where($filter, $preparedFilters=null)
     {
-        $this->prepareBool = false;
-    }
-    
-    /**
-     * Définie les options pour la requête préparée
-     * 
-     * @param array $option Les options
-     * 
-     * @return void
-     */
-    public function set_prepare_option($option)
-    {
-        $this->prepare_option = $option;
-    }
-    
-    /**
-     * Permet d'ajouter une clause where à la requête
-     * 
-     * @param string     $cond    La condition du where
-     * @param arrya|null $prepare (default: null) Les infos pour la requête préparé
-     * 
-     * @throws \Exception : Si la clé utilisé sur la requête préparé est déjà utilisé.
-     * 
-     * @return \BFWSql\SqlActions L'instance de l'objet courant.
-     */
-    public function where($cond, $prepare=null)
-    {
-        $this->where[] = $cond;
-        if(func_num_args() > 1 && is_array($prepare))
+        $this->where[] = $filter;
+        
+        if(is_array($preparedFilters))
         {
-            foreach($prepare as $key => $val)
-            {
-                if(isset($this->prepare[$key]) && $this->prepare[$key] != $val)
-                {
-                    throw new \Exception('La clé '.$key.' pour la requête sql préparé est déjà utilisé avec une autre valeur.');
-                }
-                else
-                {
-                    $this->prepare[$key] = $val;
-                }
-            }
+            $this->addPreparedFilters($preparedFilters);
         }
         
         return $this;
     }
     
     /**
-     * Permet de générer une clause where dans les requêtes
+     * Add filters to prepared requests
      * 
-     * @return string : La clause where finale
+     * @param array $preparedFilters Filters to add in prepared request
+     * 
+     * @return void
+     */
+    protected function addPreparedFilters($preparedFilters)
+    {
+        foreach($preparedFilters as $prepareKey => $prepareValue)
+        {
+            $this->preparedRequestArgs[$prepareKey] = $prepareValue;
+        }
+    }
+    
+    /**
+     * Write the where part of a sql query and return it
+     * 
+     * @return string
      */
     protected function generateWhere()
     {
         $where = '';
-        if(count($this->where) > 0) //S'il y a une partie where à faire
-        {
+        
+        //check if there are filters to write
+        if (count($this->where) > 0) {
             $where = ' WHERE ';
-            //Boucle sur les conditions
-            foreach($this->where as $val)
-            {
-                //S'il y a déjà une condition, on rajoute le AND
-                if($where != ' WHERE ') {$where .= ' AND ';}
-                $where .= $val;
+            
+            foreach ($this->where as $filter) {
+                
+                if ($where != ' WHERE ') {
+                    $where .= ' AND ';
+                }
+                
+                $where .= $filter;
             } 
         }
         
@@ -294,51 +323,42 @@ abstract class SqlActions implements \BFWSqlInterface\ISqlActions
     }
     
     /**
-     * Permet d'ajouter d'autres données à ajouter
+     * Add datas to insert or update for a column.
+     * Used by UPDATE and INSERT requests
      * 
-     * @param array $champs Les données à ajouter : array('champSql' => 'données');
+     * @param array $columns Datas to add or update
+     *  Format : array('sqlColumnName' => 'valueForThisColumn', ...);
      * 
-     * @return \BFWSql\SqlActions L'instance de l'objet courant.
+     * @return \BfwSql\SqlActions
      */
-    public function addChamps($champs)
+    public function addDatasForColumns($columns)
     {
-        //Pour chaque champs
-        foreach($champs as $column => $data)
-        {
-            //Vérifie que le champ n'est pas déjà modifié
-            if(isset($this->champs[$column]) && $this->champs[$column] != $data)
-            {
-                throw new \Exception('Une valeur pour la colonne '.$column.' est déjà déclaré.');
+        foreach ($columns as $columnName => $data) {
+            if (
+                isset($this->columns[$columnName])
+                && $this->columns[$columnName] != $data
+            ) {
+                throw new \Exception(
+                    'A different data is already declared for the column '
+                    .$columnName
+                );
             }
             
-            //On ajoute à la liste des champs à modifier.
-            $this->champs[$column] = $data;
+            $this->columns[$columnName] = $data;
         }
         
         return $this;
     }
     
     /**
-     * Permet d'appeler l'observeur d'événement
-     * 
-     * @param array|null $params : (default: null) Permet d'ajouter des infos à passer au notifier
+     * Send a notify to application observers
      * 
      * @return void
      */
-    protected function callObserver($params=null)
+    protected function callObserver()
     {
-        $paramsNotifier = array(
-            'value' => 'REQ_SQL',
-            'REQ_SQL' => $this->RequeteAssembler,
-            'instance' => $this
-        );
-        
-        if($params !== null)
-        {
-            $paramsNotifier = array_merge($params, $paramsNotifier);
-        }
-        
-        $this->_kernel->notifyObserver($paramsNotifier);
+        $app = \BFW\Application::getInstance();
+        $app->setContext($this);
+        $app->notifyAction('BfwSqlRequest');
     }
 }
-?>

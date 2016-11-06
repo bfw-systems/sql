@@ -1,99 +1,64 @@
 <?php
-/**
- * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime <bulton.fr@gmail.com>
- * @version 1.0
- */
 
-namespace BFWSql;
+namespace BfwSql;
 
 /**
- * Classe gérant les requêtes de type INSERT INTO
+ * Class to write INSERT INTO queries
+ * 
  * @package bfw-sql
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
+ * @version 2.0
  */
-class SqlInsert extends SqlActions implements \BFWSqlInterface\ISqlInsert
+class SqlInsert extends SqlActions
 {
     /**
-     * Constructeur
+     * Constructor
      * 
-     * @param Sql         $Sql    (ref) L'instance Sql
-     * @param string|null $table  La table sur laquelle agir
-     * @param array       $champs (default: null) Les données à ajouter : array('champSql' => 'données');
+     * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
+     * @param string             $tableName  The table name used for query
+     * @param array              $columns    (default: null) Datas to add
+     *  Format is array('columnName' => 'value', ...);
      */
-    public function __construct(Sql &$Sql, $table, $champs)
+    public function __construct(
+        SqlConnect $sqlConnect,
+        $tableName,
+        $columns = null
+    )
     {
-        parent::__construct($Sql);
+        parent::__construct($sqlConnect);
         
-        //Par défault on prend le nom du modèle pour le nom de la table
-        $this->table = $this->modeleName;
+        $prefix      = $sqlConnect->getConnectionInfos()->tablePrefix;
+        $this->table = $prefix.$tableName;
         
-        //Si la table est déclaré, on prend sa valeur
-        if($table != null) {$this->table = $table;}
-        
-        //Si des champs à modifier sont déjà indiqué, on initialise avec
-        if($champs != null) {$this->champs = $champs;}
+        if (is_array($columns)) {
+            $this->columns = $columns;
+        }
     }
     
     /**
-     * On assemble la requête
-     * 
-     * @return void
+     * {@inheritdoc}
      */
-    public function assembler_requete()
+    public function assembleRequest()
     {
-        //Initialisation
-        $lst_champ = $lst_val = '';
-        $i = 0;
+        $lstColumns    = '';
+        $lstValues     = '';
+        $indexReadList = -1;
         
-        //Pour chaque donnée on sépare le champ et sa valeur pour la requête
-        foreach($this->champs as $champ => $val)
-        {
-            //S'il y a déjà un champ, on met une , entre chacun
-            if($i > 0)
-            {
-                $lst_champ .= ',';
-                $lst_val .= ',';
+        foreach ($this->columns as $columnName => $columnValue) {
+            $indexReadList++;
+            if ($indexReadList > 0) {
+                $lstColumns .= ',';
+                $lstValues  .= ',';
             }
             
-            $lst_champ .= '`'.$champ.'`';
-            $lst_val .= '\''.$val.'\'';
-            $i++;
+            $lstColumns .= '`'.$columnName.'`';
+            $lstValues  .= '\''.$columnValue.'\'';
         }
         
-        //Et on créer la requête
-        $this->RequeteAssembler = 'INSERT INTO '.$this->prefix.$this->table.' ('.$lst_champ.') VALUES ('.$lst_val.')';
+        $this->assembledRequest = 'INSERT INTO '.$this->table
+            .' ('.$lstColumns.')'
+            .' VALUES ('.$lstValues.')';
         
         $this->callObserver();
     }
-    
-    /**
-     * Permet de déclarer une requête INSERT INTO
-     * 
-     * @param string $table  La table sur laquelle agir
-     * @param array  $champs Les données à ajouter : array('champSql' => 'données');
-     * 
-     * @return \BFWSql\SqlInsert L'instance de l'objet courant.
-     */
-    public function insert($table, $champs)
-    {
-        $this->table = $table;
-        $this->champs = $champs;
-        
-        return $this;
-    }
-    
-    /**
-     * Permet d'ajouter d'autres données à ajouter
-     * 
-     * @param array $champs Les données à ajouter : array('champSql' => 'données');
-     * 
-     * @throws \Exception : Erreur si colonne déjà utilisé
-     * 
-     * @return \BFWSql\SqlInsert L'instance de l'objet courant.
-     */
-    public function data($champs)
-    {
-        return $this->addChamps($champs);
-    }
 } 
-?>

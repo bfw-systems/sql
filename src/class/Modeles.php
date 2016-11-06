@@ -1,45 +1,62 @@
 <?php
-/**
- * Classes en rapport avec les modèles
- * @author Vermeulen Maxime <bulton.fr@gmail.com>
- * @version 1.0
- */
 
-namespace BFWSql;
- 
+namespace BfwSql;
+
+use \Exception;
+
 /**
- * Gestion des modèles
+ * Abstract class for all Models class
+ * 
  * @package bfw-sql
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
+ * @version 2.0
  */
-abstract class Modeles extends \BFWSql\Sql implements \BFWSqlInterface\IModeles
+abstract class Modeles extends \BFWSql\Sql
 {
     /**
-     * @var $_name : Le nom de la table
+     * @var $tableName The table name
      */
-    protected $_name = '';
+    protected $tableName = '';
     
     /**
-     * @var $_realName : Le nom réel de la table (avec préfix)
+     * @var $tableNameWithPrefix the table name with prefix
      */
-    protected $_realName = '';
+    protected $tableNameWithPrefix = '';
     
     /**
-     * @var $DB : L'instace $Sql_connect qui gère la connexion vers la sgdb
+     * @var $baseKeyName The baseKeyName to use to connection.
+     *  Use it if they are multiple database to connect in the application.
      */
-    protected $DB;
+    protected $baseKeyName = '';
     
     /**
-     * Consntructeur: Récupère la connexion Sql_connect
+     * Constructor
      */
     public function __construct()
     {
-        global $DB;
-        $this->DB = &$DB;
-        parent::__construct($DB);
+        $app       = \BFW\Application::getInstance();
+        $listBases = $app->getModule('bfw-sql')->listBases;
         
-        if($this->_name != '')
-        {
-            $this->_realName = parent::set_modeleName($this->_name);
+        if (
+            count($listBases) > 1
+            && (
+                empty($this->baseKeyName)
+                || !isset($listBases[$this->baseKeyName])
+            )
+        ) {
+            throw new Exception(
+                'They are multiple connection, '
+                .'so the property baseKeyName must be defined'
+            );
         }
+        
+        if (count($listBases) === 1) {
+            $sqlConnect = current($listBases);
+        } else {
+            $sqlConnect = $listBases[$this->baseKeyName];
+        }
+        
+        parent::__construct($sqlConnect);
+        $this->tableNameWithPrefix = $this->prefix.$this->tableName;
     }
 }

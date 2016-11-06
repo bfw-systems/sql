@@ -1,100 +1,96 @@
 <?php
-/**
- * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime <bulton.fr@gmail.com>
- * @version 1.0
- */
 
-namespace BFWSql;
+namespace BfwSql;
 
 /**
- * Classe PDO faisait la connexion
+ * Class to initialize a connection to a SQL server with PDO
+ * 
  * @package bfw-sql
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
+ * @version 2.0
  */
-class SqlConnect implements \BFWSqlInterface\ISqlConnect
+class SqlConnect
 {
     /**
-     * @var $_kernel L'instance du Kernel
-     */
-    protected $_kernel;
-    
-    /**
-     * @var $debug Si on est en mode débug ou non 
-     * (utile pour afficher les erreurs ou non suivant si on est en prod ou pas)
-     */
-    protected $debug;
-    
-    /**
-     * @var $type Type de connexion (mysql/pgsql/etc)
-     */
-    protected $type;
-    
-    /**
-     * @var $nb_query (default: 0) Nombre de requête effectué
-     */
-    protected $nb_query = 0;
-    
-    /**
-     * @var $PDO L'objet PDO
+     * @var \PDO $PDO PDO Connexion object
      */
     protected $PDO;
     
     /**
-     * Constructeur de la classe. Créer la connexion
-     * 
-     * @param string $host  Adresse du serveur hôte
-     * @param string $login Le login de connexion
-     * @param string $passe Le mot de passe de connexion
-     * @param string $base  Le nom de la base à laquelle se connecter
-     * @param string $type  (default: "mysql") Le type de base à laquel on se connexion (pgsql/mysql/etc) au format de pdo
-     * @param bool   $utf8  (default: "true") Si on a la base en utf8 ou non (par défaut : true)
+     * @var \stdClass $connectionInfos All informations about the connection
      */
-    public function __construct($host, $login, $passe, $base, $type='mysql', $utf8=true)
+    protected $connectionInfos;
+    
+    /**
+     * @var string $type Connexion type (mysql/pgsql/etc)
+     */
+    protected $type;
+    
+    /**
+     * @var integer $nbQuery (default 0) Number of request has been done
+     */
+    protected $nbQuery = 0;
+    
+    /**
+     * Constructor
+     * Initialize the connection
+     * 
+     * @param \stdClass $connectionInfos All informations about the connection
+     * 
+     * @throw \PDOException If Connexion fail
+     */
+    public function __construct($connectionInfos)
     {
-        $this->_kernel = getKernel();
-        $this->debug = $this->_kernel->getDebug();
-
-        $this->type = $type;
-        $this->PDO = new \PDO($type.':host='.$host.';dbname='.$base, $login, $passe);
-        //PDO create \Exception if fail.
+        $this->connectionInfos = $connectionInfos;
         
-        if($utf8)
-        {
-            $this->set_utf8();
+        $host     = $connectionInfos->host;
+        $baseName = $connectionInfos->baseName;
+        
+        $this->type = $connectionInfos->baseType;
+        $this->PDO  = new \PDO(
+            $this->type.':host='.$host.';dbname='.$baseName,
+            $connectionInfos->user,
+            $connectionInfos->password
+        );
+        
+        if ($connectionInfos->useUTF8 === true) {
+            $this->setUtf8($connectionInfos->useUTF8);
         }
     }
     
     /**
-     * Permet d'utiliser la base sql en utf8
+     * Define charset to UTF-8 with mysql
      * 
      * @return void
      */
-    protected function set_utf8()
+    protected function setUtf8()
     {
         $this->PDO->exec('SET NAMES utf8');
     }
     
     /**
-     * Permet de protéger une requête contre les injections et autres.
+     * Protect a data with the system implemented by the pdo drivers used.
      * 
-     * @param string $string la requêtre sql
+     * @param string $string Data to protect
      * 
-     * @return string la requête sql protégé
+     * @return string
      */
     public function protect($string)
     {
-        $prot = $this->PDO->quote($string);
+        $protectedString = $this->PDO->quote($string);
         
-        //quote complique les requêtes et les conditions en rajoutant des guillemet 
-        //en début et fin de chaine donc on les supprime
-        $ret = substr($prot, 1, strlen($prot)-2);
-        return $ret;
+        /**
+         * The quote method add the caracter ' on the start and the end of the
+         * protected string.
+         * So we remove this quote at the start and the end of the string.
+         */
+        return substr($protectedString, 1, strlen($protectedString)-2);
     }
     
     /**
-     * Accesseur pour accéder à $this->PDO
+     * Getter to access at the property PDO
      * 
-     * @return \PDO Instance de la classe PDO
+     * @return \PDO
      */
     public function getPDO()
     {
@@ -102,9 +98,19 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     }
     
     /**
-     * Accesseur pour accéder à $this->type
+     * Getter to access at the property connectionInfos
      * 
-     * @return string Le type de connexion
+     * @return \stdClass
+     */
+    public function getConnectionInfos()
+    {
+        return $this->connectionInfos;
+    }
+    
+    /**
+     * Getter to access at the property type
+     * 
+     * @return string
      */
     public function getType() 
     {
@@ -112,23 +118,22 @@ class SqlConnect implements \BFWSqlInterface\ISqlConnect
     }
     
     /**
-     * Accesseur pour accéder à $this->nb_query
+     * Getter to access at the property nbQuery
      * 
-     * @return integer Le nombre de requête
+     * @return integer
      */
     public function getNbQuery()
     {
-        return $this->nb_query;
+        return $this->nbQuery;
     }
     
     /**
-     * Incrémente le nombre de requête effectué
+     * Increment the number of query has been done
      * 
      * @return void
      */
     public function upNbQuery()
     {
-        $this->nb_query++;
+        $this->nbQuery++;
     }
 }
-?>

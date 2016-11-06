@@ -1,78 +1,39 @@
 <?php
-/**
- * Classes en rapport avec les sgdb
- * @author Vermeulen Maxime <bulton.fr@gmail.com>
- * @version 1.0
- */
 
-namespace BFWSql;
+namespace BfwSql;
 
 /**
- * Classe gérant les requêtes de type DELETE FROM
+ * Class to write DELETE queries
+ * 
  * @package bfw-sql
+ * @author Vermeulen Maxime <bulton.fr@gmail.com>
+ * @version 2.0
  */
-class SqlDelete extends SqlActions implements \BFWSqlInterface\ISqlDelete
+class SqlDelete extends SqlActions
 {
     /**
-     * Constructeur
+     * Constructor
      * 
-     * @param Sql         $Sql   (ref) L'instance Sql
-     * @param string|null $table La table sur laquelle agir
+     * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
+     * @param string             $tableName  The table name used for query
      */
-    public function __construct(Sql &$Sql, $table)
+    public function __construct(SqlConnect $sqlConnect, $tableName)
     {
-        parent::__construct($Sql);
+        parent::__construct($sqlConnect);
         
-        //Par défault on prend le nom du modèle pour le nom de la table
-        $this->table = $this->modeleName;
-        
-        //Si la table est déclaré, on prend sa valeur
-        if($table != null) {$this->table = $table;}
+        $prefix      = $sqlConnect->getConnectionInfos()->tablePrefix;
+        $this->table = $prefix.$tableName;
     }
     
     /**
-     * On assemble la requête
-     * 
-     * @return void
+     * {@inheritdoc}
      */
-    public function assembler_requete()
+    public function assembleRequest()
     {
-        $lst_where = '';
+        $where = $this->generateWhere();
         
-        //On regarde s'il y a une clause where à mettre
-        if(count($this->where) > 0)
-        {
-            $i = 0;
-            $lst_where = ' WHERE ';
-            
-            //Chaque élément du tableau est une condition
-            foreach($this->where as $val)
-            {
-                //Idem que la virgule, si une condition est déjà présente, on met un AND
-                if($i > 0) {$lst_where .= ' AND ';}
-                
-                $lst_where .= $val;
-                $i++;
-            }
-        }
-        
-        //Et on créer la requêtes
-        $this->RequeteAssembler = 'DELETE FROM '.$this->prefix.$this->table.$lst_where;
+        $this->RequeteAssembler = 'DELETE FROM '.$this->table.$where;
         
         $this->callObserver();
     }
-    
-    /**
-     * Permet de déclarer une requête DELETE
-     * 
-     * @param string $table La table sur laquelle agir
-     * 
-     * @return \BFWSql\SqlDelete L'instance de l'objet courant.
-     */
-    public function delete($table)
-    {
-        $this->table = $table;
-        return $this;
-    }
 }
-?>
