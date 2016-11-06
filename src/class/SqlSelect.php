@@ -19,9 +19,9 @@ class SqlSelect extends SqlActions
     protected $returnType = '';
     
     /**
-     * @var object $from Informations about main table. Used for FROM part
+     * @var object $mainTable Informations about main table. Used for FROM part
      */
-    protected $table;
+    protected $mainTable;
     
     /**
      * @var array $subQueries All sub-queries
@@ -127,12 +127,12 @@ class SqlSelect extends SqlActions
             
             //If a column shortcut is declared
             if (is_string($columnShortcut)) {
-                $this->select[] = (object) [
+                $this->columns[] = (object) [
                     'column'   => $columnName,
                     'shortcut' => $columnShortcut
                 ];
             } else {
-                $this->select[] = (object) [
+                $this->columns[] = (object) [
                     'column'   => $columnName,
                     'shortcut' => null
                 ];
@@ -153,11 +153,11 @@ class SqlSelect extends SqlActions
      */
     public function from($table, $columns='*')
     {
-        $this->from = $this->obtainTableInfos($table);
+        $this->mainTable = $this->obtainTableInfos($table);
         
-        $tableName = $this->from->tableName;
-        if ($this->from->shortcut !== null) {
-            $tableName = $this->from->shortcut;
+        $tableName = $this->mainTable->tableName;
+        if ($this->mainTable->shortcut !== null) {
+            $tableName = $this->mainTable->shortcut;
         }
         
         $this->addColumnsForSelect($columns, $tableName);
@@ -336,7 +336,7 @@ class SqlSelect extends SqlActions
      */
     protected function obtainPdoFetchType()
     {
-        if ($this->typeResult === 'object') {
+        if ($this->returnType === 'object') {
             return PDO::FETCH_OBJ;
         }
         
@@ -351,7 +351,7 @@ class SqlSelect extends SqlActions
     public function fetchRow()
     {
         $req = $this->execute();
-        return $req->fetch($this->getPdoFetchType());
+        return $req->fetch($this->obtainPdoFetchType());
     }
     
     /**
@@ -364,7 +364,7 @@ class SqlSelect extends SqlActions
         $result  = [];
         $request = $this->execute(); //throw an Exception if error
         
-        while($row = $request->fetch($this->getPdoFetchType()))
+        while($row = $request->fetch($this->obtainPdoFetchType()))
         {
             $result[] = $row;
         }
@@ -410,7 +410,7 @@ class SqlSelect extends SqlActions
             }
         }
         
-        foreach($this->subQuery as $subQueryInfos)
+        foreach($this->subQueries as $subQueryInfos)
         {
             if ($select != '') {
                 $select .= ', ';

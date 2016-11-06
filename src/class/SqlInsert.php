@@ -27,8 +27,8 @@ class SqlInsert extends SqlActions
     {
         parent::__construct($sqlConnect);
         
-        $prefix      = $sqlConnect->getConnectionInfos()->tablePrefix;
-        $this->table = $prefix.$tableName;
+        $prefix          = $sqlConnect->getConnectionInfos()->tablePrefix;
+        $this->tableName = $prefix.$tableName;
         
         if (is_array($columns)) {
             $this->columns = $columns;

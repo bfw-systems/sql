@@ -54,7 +54,7 @@ class SqlConnect
         );
         
         if ($connectionInfos->useUTF8 === true) {
-            $this->setUtf8($connectionInfos->useUTF8);
+            $this->setUtf8();
         }
     }
     

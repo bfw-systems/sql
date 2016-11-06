@@ -21,8 +21,8 @@ class SqlDelete extends SqlActions
     {
         parent::__construct($sqlConnect);
         
-        $prefix      = $sqlConnect->getConnectionInfos()->tablePrefix;
-        $this->table = $prefix.$tableName;
+        $prefix          = $sqlConnect->getConnectionInfos()->tablePrefix;
+        $this->tableName = $prefix.$tableName;
     }
     
     /**
@@ -32,7 +32,7 @@ class SqlDelete extends SqlActions
     {
         $where = $this->generateWhere();
         
-        $this->RequeteAssembler = 'DELETE FROM '.$this->table.$where;
+        $this->assembledRequest = 'DELETE FROM '.$this->tableName.$where;
         
         $this->callObserver();
     }

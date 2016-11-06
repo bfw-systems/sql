@@ -66,7 +66,7 @@ class Sql
      */
     public function getLastInsertedId($name=null)
     {
-        return (int) $this->PDO->lastInsertId($name);
+        return (int) $this->sqlConnect->getPDO()->lastInsertId($name);
     }
     
     /**
@@ -221,8 +221,8 @@ class Sql
     {
         $this->sqlConnect->upNbQuery();
         
-        $req   = $this->sqlConnect->PDO->query($request);
-        $error = $this->sqlConnect->PDO->errorInfo();
+        $req   = $this->sqlConnect->getPDO()->query($request);
+        $error = $this->sqlConnect->getPDO()->errorInfo();
         
         if(
             !$req
