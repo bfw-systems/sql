@@ -1,37 +1,31 @@
 {
-	"name": "bulton-fr/bfw-sql",
-	"type": "library",
-	"description": "Module SQL pour BFW",
-	"keywords": ["PDO", "SQL", "module", "bfw"],
-	"homepage": "https://github.com/bulton-fr/bfw-sql",
-	"time": "2014-02-07",
-	"license": "LGPL-3.0",
-	"authors":
-	[
-		{
-			"name": "Vermeulen Maxime / Bulton",
-			"homepage": "http://www.bulton.fr",
-			"email": "bulton.fr@bulton.fr"
-		}
-	],
-	"support":
-	{
-		"email": "support@bulton.fr",
-		"issues": "https://github.com/bulton-fr/bfw-sql/issues",
-		"source": "https://github.com/bulton-fr/bfw-sql"
-	},
-	"require":
-	{
-		"php": ">=5.3.0",
-        "bulton-fr/bfw": "~2.1"
-	},
-	"minimum-stability": "stable",
-	"autoload":
-	{
-		"psr-4":
-		{
-			"BFWSql\\": "src/classes/",
-			"BFWSqlInterface\\": "src/interfaces/"
-		}
-	}
+    "name": "bulton-fr/bfw-sql",
+    "type": "library",
+    "description": "SQL Module for BFW",
+    "keywords": ["PDO", "SQL", "module", "bfw"],
+    "homepage": "https://github.com/bulton-fr/bfw-sql",
+    "time": "2014-02-07",
+    "license": "LGPL-3.0",
+    "authors": [
+    {
+        "name": "Vermeulen Maxime / Bulton",
+        "homepage": "http://www.bulton.fr",
+        "email": "bulton.fr@bulton.fr"
+    }
+    ],
+    "support": {
+        "email": "support@bulton.fr",
+        "issues": "https://github.com/bulton-fr/bfw-sql/issues",
+        "source": "https://github.com/bulton-fr/bfw-sql"
+    },
+    "require": {
+        "php": ">=5.6.0",
+        "bulton-fr/bfw": "3.0.x-dev"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "BfwSql\\": "src/class/"
+        }
+    }
 }
