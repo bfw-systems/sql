@@ -64,7 +64,7 @@ class Sql
      * 
      * @return integer
      */
-    public function getLastInsertedId($name=null)
+    public function getLastInsertedId($name = null)
     {
         return (int) $this->sqlConnect->getPDO()->lastInsertId($name);
     }
@@ -84,7 +84,7 @@ class Sql
         $table,
         $colId,
         $order,
-        $where=''
+        $where = ''
     ) {
         $req = $this->select()
                     ->from($table, $colId)
@@ -124,7 +124,7 @@ class Sql
      * 
      * @return \BfwSql\SqlSelect
      */
-    public function select($type='array')
+    public function select($type = 'array')
     {
         return new SqlSelect($this->sqlConnect, $type);
     }
@@ -138,7 +138,7 @@ class Sql
      * 
      * @return \BfwSql\SqlInsert
      */
-    public function insert($table, $columns=null)
+    public function insert($table, $columns = null)
     {
         return new SqlInsert($this->sqlConnect, $table, $columns);
     }
@@ -152,7 +152,7 @@ class Sql
      * 
      * @return \BfwSql\SqlUpdate
      */
-    public function update($table, $columns=null)
+    public function update($table, $columns = null)
     {
         return new SqlUpdate($this->sqlConnect, $table, $columns);
     }
@@ -194,7 +194,7 @@ class Sql
         }
         
         if ($res[$column] > 1) {
-            return $res[$column]-1;
+            return $res[$column] - 1;
         }
         
         $req2 = $this->select()
@@ -205,7 +205,7 @@ class Sql
         $res2 = $req2->fetchRow();
         $req2->closeCursor();
 
-        return $res2[$column]+1;
+        return $res2[$column] + 1;
     }
     
     /**
@@ -224,10 +224,10 @@ class Sql
         $req   = $this->sqlConnect->getPDO()->query($request);
         $error = $this->sqlConnect->getPDO()->errorInfo();
         
-        if(
+        if (
             !$req
-            && $error[0] != null
-            && $error[0] != '00000'
+            && $error[0] !== null
+            && $error[0] !== '00000'
             && isset($error[2])
         ) {
             throw new Exception($error[2]);

@@ -105,8 +105,7 @@ class SqlObserver implements \SplObserver
         $backtrace      = [];
         $backtraceInfos = debug_backtrace();
         
-        foreach($backtraceInfos as $trace)
-        {
+        foreach ($backtraceInfos as $trace) {
             $backtrace[] = $trace['file'].' : '.$trace['line'];
         }
         
@@ -164,7 +163,7 @@ class SqlObserver implements \SplObserver
         }
         
         $explainDatas = [];
-        foreach($explainFetchAll[0] as $explainKey => $explainValue) {
+        foreach ($explainFetchAll[0] as $explainKey => $explainValue) {
             if (is_numeric($explainValue)) {
                 continue;
             }
@@ -198,7 +197,7 @@ class SqlObserver implements \SplObserver
         }
         
         $statusDatas = [];
-        foreach($statusFetchAll as $statusRow) {
+        foreach ($statusFetchAll as $statusRow) {
             $statusKey   = $statusRow['Variable_name'];
             $statusValue = $statusRow['Value'];
 

@@ -84,7 +84,7 @@ class SqlConnect
          * protected string.
          * So we remove this quote at the start and the end of the string.
          */
-        return substr($protectedString, 1, strlen($protectedString)-2);
+        return substr($protectedString, 1, strlen($protectedString) - 2);
     }
     
     /**

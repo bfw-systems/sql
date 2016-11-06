@@ -151,7 +151,7 @@ class SqlSelect extends SqlActions
      * 
      * @return \BfwSql\SqlSelect
      */
-    public function from($table, $columns='*')
+    public function from($table, $columns = '*')
     {
         $this->mainTable = $this->obtainTableInfos($table);
         
@@ -243,7 +243,7 @@ class SqlSelect extends SqlActions
      * 
      * @return \BfwSql\SqlSelect
      */
-    public function join($table, $joinOn, $joinColumns='*')
+    public function join($table, $joinOn, $joinColumns = '*')
     {
         return $this->createJoin('join', $table, $joinOn, $joinColumns);
     }
@@ -259,7 +259,7 @@ class SqlSelect extends SqlActions
      * 
      * @return \BfwSql\SqlSelect
      */
-    public function joinLeft($table, $joinOn, $joinColumns='*')
+    public function joinLeft($table, $joinOn, $joinColumns = '*')
     {
         return $this->createJoin('joinLeft', $table, $joinOn, $joinColumns);
     }
@@ -275,7 +275,7 @@ class SqlSelect extends SqlActions
      * 
      * @return \BfwSql\SqlSelect
      */
-    public function joinRight($table, $joinOn, $joinColumns='*')
+    public function joinRight($table, $joinOn, $joinColumns = '*')
     {
         return $this->createJoin('joinRight', $table, $joinOn, $joinColumns);
     }
@@ -364,8 +364,7 @@ class SqlSelect extends SqlActions
         $result  = [];
         $request = $this->execute(); //throw an Exception if error
         
-        while($row = $request->fetch($this->obtainPdoFetchType()))
-        {
+        while ($row = $request->fetch($this->obtainPdoFetchType())) {
             $result[] = $row;
         }
         
@@ -398,20 +397,18 @@ class SqlSelect extends SqlActions
     protected function generateSelect()
     {
         $select = '';
-        foreach($this->select as $columnInfos)
-        {
+        foreach ($this->columns as $columnInfos) {
             if ($select != '') {
                 $select .= ', ';
             }
             
             $select .= $columnInfos->column;
             if ($columnInfos->shortcut !== null) {
-                $select. ' AS '.$columnInfos->shortcut;
+                $select.' AS '.$columnInfos->shortcut;
             }
         }
         
-        foreach($this->subQueries as $subQueryInfos)
-        {
+        foreach ($this->subQueries as $subQueryInfos) {
             if ($select != '') {
                 $select .= ', ';
             }
@@ -430,10 +427,10 @@ class SqlSelect extends SqlActions
      */
     protected function generateFrom()
     {
-        $from = '`'.$this->from->tableName.'`';
+        $from = '`'.$this->mainTable->tableName.'`';
         
-        if ($this->from->shortcut !== null) {
-            $from .= ' AS `'.$this->from->shortcut.'`';
+        if ($this->mainTable->shortcut !== null) {
+            $from .= ' AS `'.$this->mainTable->shortcut.'`';
         }
         
         return $from;
@@ -461,8 +458,7 @@ class SqlSelect extends SqlActions
             $joinSqlName = ' RIGHT JOIN ';
         }
 
-        foreach($this->{$joinProperty} as $joinInfos)
-        {
+        foreach ($this->{$joinProperty} as $joinInfos) {
             $join .= $joinSqlName.'`'.$joinInfos->tableName.'`';
             if ($joinInfos->shortcut !== null) {
                 $join .= ' AS `'.$joinInfos->shortcut.'`';
@@ -509,8 +505,7 @@ class SqlSelect extends SqlActions
         }
         
         $group = ' GROUP BY ';
-        foreach($this->group as $groupCondition)
-        {
+        foreach ($this->group as $groupCondition) {
             if ($group != ' GROUP BY ') {
                 $group .= ', ';
             }

@@ -121,8 +121,7 @@ abstract class SqlActions
      */
     public function requestIsAssembled()
     {
-        if($this->assembledRequest == '')
-        {
+        if ($this->assembledRequest === '') {
             $this->assembleRequest();
         }
     }
@@ -193,7 +192,7 @@ abstract class SqlActions
         $error = $this->executeQuery();
         
         //Throw an exception if they are an error with the request
-        if ($error[0] != null && $error[0] != '00000') {
+        if ($error[0] !== null && $error[0] !== '00000') {
             throw new Exception($error[2]);
         }
         
@@ -269,12 +268,11 @@ abstract class SqlActions
      * 
      * @return \BfwSql\SqlActions
      */
-    public function where($filter, $preparedFilters=null)
+    public function where($filter, $preparedFilters = null)
     {
         $this->where[] = $filter;
         
-        if(is_array($preparedFilters))
-        {
+        if (is_array($preparedFilters)) {
             $this->addPreparedFilters($preparedFilters);
         }
         
@@ -290,8 +288,7 @@ abstract class SqlActions
      */
     protected function addPreparedFilters($preparedFilters)
     {
-        foreach($preparedFilters as $prepareKey => $prepareValue)
-        {
+        foreach ($preparedFilters as $prepareKey => $prepareValue) {
             $this->preparedRequestArgs[$prepareKey] = $prepareValue;
         }
     }
