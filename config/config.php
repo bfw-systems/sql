@@ -1,18 +1,81 @@
 <?php
 /**
- * Fichier de configuration du module bfw-sql
+ * Config file for bfw-sql module
+ * 
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @package bfw-sql
- * @version 1.0
+ * @version 2.0
  */
 
-//*** Base De Données ***
-$bd_host     = ''; //Le serveur où est la base (ex: localhost)
-$bd_name     = ''; //Nom de la Base de donnée
-$bd_user     = ''; //Le nom d'utilisateur
-$bd_pass     = ''; //Le mot de passe
-$bd_type     = ''; //Le type de bdd (ex: mysql) (ex: pgsql)
-$bd_prefix   = ''; //Préfix en début de table
-$bd_observer = false; //Active ou non l'observeur retournant le EXPLAIN sur la requête. (erreur si requête préparé)
-$bd_enabled  = false; //Active ou non la connexion sql
-//*** Base De Données *** 
+return (object) [
+    /**
+     * @var \stdClass observer Informations about the observer
+     * This observer run an EXPLAIN request for each SELECT request executed
+     */
+    'observer' => (object) [
+        /**
+         * @var boolean enable If the observer is enabled
+         */
+        'enable' => false,
+        
+        /**
+         * @var string logfile Location of the logfile from the root server
+         */
+        'logfile' => '',
+    ],
+    
+    /**
+     * @var \stdClass[] bases All database list to connect
+     */
+    'bases' => [
+        (object) [
+            /**
+             * @var string baseKeyName Key used to identify this connection.
+             * Because there are possibility to connect at multiple databases, 
+             * we need a key to identify this base.
+             * You can keep this value empty ONLY if there are one connection.
+             */
+            'baseKeyName' => '',
+            
+            /**
+             * @var string host Datatable host to connect
+             */
+            'host'        => '',
+            
+            /**
+             * @var string baseName Database name to connect
+             */
+            'baseName'    => '',
+            
+            /**
+             * @var string user Database user used to connect
+             */
+            'user'        => '',
+            
+            /**
+             * @var string password Database password used to connect
+             */
+            'password'    => '',
+            
+            /**
+             * @var string baseType Database type used to connect
+             *  It's the name of the PDO driver
+             */
+            'baseType'    => '',
+            
+            /**
+             * @var boolean useUTF8 Force datas to be UTF-8
+             *  Used for Mysql
+             * 
+             * @link http://dev.mysql.com/doc/refman/5.7/en/charset-connection.html
+             */
+            'useUTF8'     => true,
+            
+            /**
+             * @var string tablePrefix The prefix used for all table.
+             *  Empty if not prefix to use
+             */
+            'tablePrefix' => ''
+        ]
+    ]
+];
