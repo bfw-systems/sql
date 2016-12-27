@@ -30,7 +30,7 @@ class Sql
      * 
      * @throws \Exception
      */
-    public function __construct($sqlConnect)
+    public function __construct(\BfwSql\SqlConnect $sqlConnect)
     {
         $this->sqlConnect = $sqlConnect;
         $this->prefix     = $sqlConnect->getConnectionInfos()->tablePrefix;

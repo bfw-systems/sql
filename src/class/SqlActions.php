@@ -72,7 +72,7 @@ abstract class SqlActions
      * 
      * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
      */
-    public function __construct(SqlConnect $sqlConnect)
+    public function __construct(\BfwSql\SqlConnect $sqlConnect)
     {
         $this->sqlConnect = $sqlConnect;
     }
