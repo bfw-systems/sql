@@ -21,7 +21,7 @@ class Secure
     public static function protectDatas($datas)
     {
         $app      = \BFW\Application::getInstance();
-        $dbModule = $app->getModule('bfw-api');
+        $dbModule = $app->getModule('bfw-sql');
         
         if (count($dbModule->listBases) === 0) {
             throw new Exception('No database connected to protect data');
