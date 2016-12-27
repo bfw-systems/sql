@@ -19,7 +19,7 @@ return (object) [
         'enable' => false,
         
         /**
-         * @var string logfile Location of the logfile from the root server
+         * @var string path to the logfile from the root server
          */
         'logfile' => '',
     ],
@@ -77,5 +77,7 @@ return (object) [
              */
             'tablePrefix' => ''
         ]
+        // Add object (duplicate first) into the array
+        // to add others sql connexions
     ]
 ];
