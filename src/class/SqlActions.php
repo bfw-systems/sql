@@ -229,10 +229,6 @@ abstract class SqlActions
      */
     public function obtainImpactedRows()
     {
-        if ($this->lastRequestStatement === false) {
-            return false;
-        }
-        
         if (is_object($this->lastRequestStatement)) {
             //If pdo::query or pdo::prepare
             return $this->lastRequestStatement->rowCount();
