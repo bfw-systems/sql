@@ -179,33 +179,38 @@ class Sql
      * 
      * @return integer
      */
-    public function create_id($table, $column)
+    public function createId($table, $column)
     {
-        $req = $this->select()
-                    ->from($table, $column)
-                    ->order($column.' ASC')
-                    ->limit(1);
+        //Search the first line in the table
+        $reqFirstLine = $this->select()
+            ->from($table, $column)
+            ->order($column.' ASC')
+            ->limit(1);
         
-        $res = $req->fetchRow();
-        $req->closeCursor();
+        $resFirstLine = $reqFirstLine->fetchRow();
+        $reqFirstLine->closeCursor();
         
-        if (!$res) {
+        // If nothing in the table. First AI is 1
+        if (!$resFirstLine) {
             return 1;
         }
         
-        if ($res[$column] > 1) {
-            return $res[$column] - 1;
+        // If the id for the first line is > 1
+        if ($resFirstLine[$column] > 1) {
+            return $resFirstLine[$column] - 1;
         }
         
-        $req2 = $this->select()
-                    ->from($table, $column)
-                    ->order($column.' DESC')
-                    ->limit(1);
+        //First line have ID=1, we search from the end
+        $reqLastLine = $this->select()
+            ->from($table, $column)
+            ->order($column.' DESC')
+            ->limit(1);
         
-        $res2 = $req2->fetchRow();
-        $req2->closeCursor();
+        $resLastLine = $reqLastLine->fetchRow();
+        $reqLastLine->closeCursor();
 
-        return $res2[$column] + 1;
+        //Get the last ID and add 1
+        return $resLastLine[$column] + 1;
     }
     
     /**
