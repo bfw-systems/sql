@@ -80,7 +80,7 @@ class SqlObserver implements \SplObserver
      */
     protected function runRequests()
     {
-        $this->addToLogFile('************* DEBUT OPTIMIZE SQL *************');
+        $this->addToLogFile('************* START EXPLAIN SQL *************');
         $this->addToLogFile('BackTrace   : '.print_r($this->obtainBackTrace(), true));
         $this->addToLogFile('Requête SQL : '.$this->context->assemble());
         
@@ -90,7 +90,7 @@ class SqlObserver implements \SplObserver
         $this->runExplain($requestObj);
         $this->runShowStatus($requestObj);
         
-        $this->addToLogFile('************* FIN OPTIMIZE SQL *************');
+        $this->addToLogFile('************* END EXPLAIN SQL *************');
         $this->addEmptyLineToLogFile();
     }
     
