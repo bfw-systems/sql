@@ -216,8 +216,7 @@ class SqlSelect extends SqlActions
         $table,
         $joinOn,
         $joinColumns
-    )
-    {
+    ) {
         $tableInfos     = $this->obtainTableInfos($table);
         $tableInfos->on = $joinOn;
         

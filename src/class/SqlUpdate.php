@@ -23,8 +23,7 @@ class SqlUpdate extends SqlActions
         SqlConnect $sqlConnect,
         $tableName,
         $columns = null
-    )
-    {
+    ) {
         parent::__construct($sqlConnect);
         
         $prefix          = $sqlConnect->getConnectionInfos()->tablePrefix;
