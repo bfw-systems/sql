@@ -27,8 +27,8 @@ class SqlUpdate extends SqlActions
     {
         parent::__construct($sqlConnect);
         
-        $prefix      = $sqlConnect->getConnectionInfos()->tablePrefix;
-        $this->table = $prefix.$tableName;
+        $prefix          = $sqlConnect->getConnectionInfos()->tablePrefix;
+        $this->tableName = $prefix.$tableName;
         
         if (is_array($columns)) {
             $this->columns = $columns;
@@ -40,7 +40,7 @@ class SqlUpdate extends SqlActions
      */
     public function assembleRequest()
     {
-        if (count($this->champs) === 0) {
+        if (count($this->columns) === 0) {
             return;
         }
         
@@ -55,7 +55,7 @@ class SqlUpdate extends SqlActions
         }
 
         
-        $this->assembledRequest = 'UPDATE '.$this->table
+        $this->assembledRequest = 'UPDATE '.$this->tableName
             .' SET '.$lstColumns
             .$this->generateWhere();
 
