@@ -356,18 +356,15 @@ class SqlSelect extends SqlActions
     /**
      * Fetch all rows returned by the request
      * 
-     * @return mixed
+     * @return generator
      */
     public function fetchAll()
     {
-        $result  = [];
         $request = $this->execute(); //throw an Exception if error
         
         while ($row = $request->fetch($this->obtainPdoFetchType())) {
-            $result[] = $row;
+            yield $row;
         }
-        
-        return $result;
     }
     
     /**
