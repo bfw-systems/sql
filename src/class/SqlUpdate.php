@@ -2,6 +2,8 @@
 
 namespace BfwSql;
 
+use \Exception;
+
 /**
  * Class to write UPDATE queries
  * 
@@ -40,7 +42,7 @@ class SqlUpdate extends SqlActions
     protected function assembleRequest()
     {
         if (count($this->columns) === 0) {
-            return;
+            throw new Exception('SqlUpdate : no datas to update.');
         }
         
         $lstColumns = '';
