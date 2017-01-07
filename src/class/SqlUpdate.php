@@ -49,10 +49,10 @@ class SqlUpdate extends SqlActions
 
         foreach ($this->columns as $columnName => $columnValue) {
             if ($lstColumns !== '') {
-                $lstColumns .= ', ';
+                $lstColumns .= ',';
             }
 
-            $lstColumns .= $columnName.'='.$columnValue;
+            $lstColumns .= '`'.$columnName.'`='.$columnValue;
         }
 
         
