@@ -115,8 +115,11 @@ class SqlSelect extends SqlActions
         }
         
         foreach ($columns as $columnShortcut => $columnName) {
-            //If value is a sql function, not add quote
-            if (strpos($columnName, '(') === false) {
+            //If value is a sql function or keyword, not add quote
+            if (
+                strpos($columnName, ' ') === false
+                && strpos($columnName, '(') === false
+            ) {
                 //Add quote only if a column has been declared
                 if ($columnName !== '*') {
                     $columnName = '`'.$columnName.'`';
