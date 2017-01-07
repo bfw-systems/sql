@@ -34,19 +34,46 @@ abstract class Modeles extends \BfwSql\Sql
      */
     public function __construct()
     {
-        $app       = \BFW\Application::getInstance();
-        $listBases = $app->getModule('bfw-sql')->listBases;
+        $sqlConnect = $this->obtainSqlConnect();
         
-        if (
-            count($listBases) > 1
-            && (
-                empty($this->baseKeyName)
-                || !isset($listBases[$this->baseKeyName])
-            )
-        ) {
+        parent::__construct($sqlConnect);
+        $this->tableNameWithPrefix = $this->prefix.$this->tableName;
+    }
+    
+    /**
+     * Get the BFW Application
+     * It's a dedicated method for unit test or case where App is override
+     * 
+     * @return \BFW\Application
+     */
+    protected function getApp()
+    {
+        return \BFW\Application::getInstance();
+    }
+    
+    /**
+     * Obtain SqlConnect instance for the baseKeyName
+     * 
+     * @return \BfwSql\SqlConnect
+     * 
+     * @throws \Exception If there are many connection declared and if the
+     *  property baseKeyName is empty
+     */
+    protected function obtainSqlConnect()
+    {
+        $listBases = $this->getApp()->getModule('bfw-sql')->listBases;
+        
+        if (count($listBases) > 1 && empty($this->baseKeyName)) {
             throw new Exception(
                 'They are multiple connection, '
                 .'so the property baseKeyName must be defined'
+            );
+        }
+        
+        if (count($listBases) > 1 && !isset($listBases[$this->baseKeyName])) {
+            throw new Exception(
+                'They are multiple connection, '
+                .'but the connection '.$this->baseKeyName.' is not defined.'
             );
         }
         
@@ -56,7 +83,6 @@ abstract class Modeles extends \BfwSql\Sql
             $sqlConnect = $listBases[$this->baseKeyName];
         }
         
-        parent::__construct($sqlConnect);
-        $this->tableNameWithPrefix = $this->prefix.$this->tableName;
+        return $sqlConnect;
     }
 }
