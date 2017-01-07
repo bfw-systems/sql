@@ -4,14 +4,14 @@
     "description": "SQL Module for BFW",
     "keywords": ["PDO", "SQL", "module", "bfw"],
     "homepage": "https://github.com/bulton-fr/bfw-sql",
-    "time": "2014-02-07",
+    "time": "2016-11-05",
     "license": "LGPL-3.0",
     "authors": [
-    {
-        "name": "Vermeulen Maxime / Bulton",
-        "homepage": "http://www.bulton.fr",
-        "email": "bulton.fr@bulton.fr"
-    }
+        {
+            "name": "Vermeulen Maxime / Bulton",
+            "homepage": "http://www.bulton.fr",
+            "email": "bulton.fr@bulton.fr"
+        }
     ],
     "support": {
         "email": "support@bulton.fr",
@@ -22,7 +22,6 @@
         "php": ">=5.6.0",
         "bulton-fr/bfw": "3.0.x-dev"
     },
-    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "BfwSql\\": "src/class/"
