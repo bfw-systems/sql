@@ -142,11 +142,13 @@ abstract class SqlActions
     /**
      * Return the assembled request
      * 
+     * @param boolean $force : Force to re-assemble request
+     * 
      * @return string
      */
-    public function assemble()
+    public function assemble($force = false)
     {
-        if ($this->isAssembled() === false) {
+        if ($this->isAssembled() === false || $force === true) {
             $this->assembleRequest();
         }
         
