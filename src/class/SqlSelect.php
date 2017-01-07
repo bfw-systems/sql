@@ -403,7 +403,7 @@ class SqlSelect extends SqlActions
             
             $select .= $columnInfos->column;
             if ($columnInfos->shortcut !== null) {
-                $select.' AS '.$columnInfos->shortcut;
+                $select .= ' AS `'.$columnInfos->shortcut.'`';
             }
         }
         
