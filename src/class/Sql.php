@@ -39,7 +39,7 @@ class Sql
     /**
      * Getter to the property sqlConnect
      * 
-     * @return \BFWSql\SqlConnect
+     * @return \BfwSql\SqlConnect
      */
     public function getSqlConnect()
     {

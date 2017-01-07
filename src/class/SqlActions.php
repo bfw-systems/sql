@@ -92,11 +92,13 @@ abstract class SqlActions
      * 
      * @param boolean $preparedRequestStatus The new status for prepared request
      * 
-     * @return void
+     * @return \BfwSql\SqlActions
      */
     public function setIsPreparedRequest($preparedRequestStatus)
     {
         $this->isPreparedRequest = (bool) $preparedRequestStatus;
+        
+        return $this;
     }
     
     /**
@@ -106,11 +108,13 @@ abstract class SqlActions
      * 
      * @param array $driverOptions Drivers options
      * 
-     * @return void
+     * @return \BfwSql\SqlActions
      */
     public function setPrepareDriversOptions($driverOptions)
     {
         $this->prepareDriversOptions = $driverOptions;
+        
+        return $this;
     }
     
     /**
