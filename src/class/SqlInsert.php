@@ -37,7 +37,7 @@ class SqlInsert extends SqlActions
     /**
      * {@inheritdoc}
      */
-    public function assembleRequest()
+    protected function assembleRequest()
     {
         $lstColumns    = '';
         $lstValues     = '';

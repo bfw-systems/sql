@@ -373,7 +373,7 @@ class SqlSelect extends SqlActions
     /**
      * {@inheritdoc}
      */
-    public function assembleRequest()
+    protected function assembleRequest()
     {
         $this->assembledRequest = 'SELECT '.$this->generateSelect()
             .' FROM '.$this->generateFrom()

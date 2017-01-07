@@ -28,7 +28,7 @@ class SqlDelete extends SqlActions
     /**
      * {@inheritdoc}
      */
-    public function assembleRequest()
+    protected function assembleRequest()
     {
         $where = $this->generateWhere();
         

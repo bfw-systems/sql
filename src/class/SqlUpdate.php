@@ -37,7 +37,7 @@ class SqlUpdate extends SqlActions
     /**
      * {@inheritdoc}
      */
-    public function assembleRequest()
+    protected function assembleRequest()
     {
         if (count($this->columns) === 0) {
             return;
