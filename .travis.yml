@@ -5,24 +5,19 @@ language: php
 php:
   # using major version aliases
 
-  # aliased to a recent 5.3.x version
-  - 5.3
-  # aliased to a recent 5.4.x version
-  - 5.4
-  # aliased to a recent 5.5.x version
-  - 5.5
   # aliased to a recent 5.6.x version
   - 5.6
+  # aliased to a recent 7.0.x version
+  - 7.0
 
 # execute any number of scripts before the test run, custom env's are available as variables
 before_script:
-  - mysql -e "create database IF NOT EXISTS bfw_sql_alone_test;" -uroot;
-  - wget http://downloads.atoum.org/nightly/mageekguy.atoum.phar;
-  - composer install;
-  - mkdir modules && mkdir modules/bfw-sql && mkdir configs && mkdir configs/bfw-sql;
-  - cp -R src/* modules/bfw-sql/;
-  - cp bfw_modules_info.php modules/bfw-sql/bfw_modules_info.php;
-  - cp test/config.php configs/bfw-sql/config.php;
+  - composer install
 
 script:
-  - php mageekguy.atoum.phar -d test/classes/ -c .atoum.php;
+  - ./vendor/bin/atoum -c .atoum.php -d test/unit/src -utr
+
+after_script:
+ ## Scrutinizer
+ - wget https://scrutinizer-ci.com/ocular.phar
+ - php ocular.phar code-coverage:upload --format=php-clover clover.xml
