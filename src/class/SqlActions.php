@@ -121,13 +121,15 @@ abstract class SqlActions
      * Check if a request is assemble or not.
      * If not, run the method assembleRequest.
      * 
-     * @return void
+     * @return boolean
      */
-    public function requestIsAssembled()
+    public function isAssembled()
     {
         if ($this->assembledRequest === '') {
-            $this->assembleRequest();
+            return false;
         }
+        
+        return true;
     }
     
     /**
@@ -144,7 +146,10 @@ abstract class SqlActions
      */
     public function assemble()
     {
-        $this->requestIsAssembled();
+        if ($this->isAssembled() === false) {
+            $this->assembleRequest();
+        }
+        
         return $this->assembledRequest;
     }
     
@@ -157,10 +162,9 @@ abstract class SqlActions
     {
         $pdo = $this->sqlConnect->getPDO();
         $this->sqlConnect->upNbQuery();
-        $this->requestIsAssembled();
+        $this->assemble();
         
         if ($this->isPreparedRequest) {
-            
             $req = $pdo->prepare(
                 $this->assembledRequest,
                 $this->prepareDriversOptions
