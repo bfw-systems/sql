@@ -228,7 +228,7 @@ class SqlSelect extends SqlActions
             $tableName = $tableInfos->shortcut;
         }
         
-        $this->{$joinPropertyName} = $tableInfos;
+        $this->{$joinPropertyName}[] = $tableInfos;
         $this->addColumnsForSelect($joinColumns, $tableName);
         
         return $this;
