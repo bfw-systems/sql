@@ -312,7 +312,7 @@ class SqlSelect extends SqlActions
         if (isset($limit[1])) {
             $this->limit = $limit[0].', '.$limit[1];
         } else {
-            $this->limit = $limit[0];
+            $this->limit = (string) $limit[0];
         }
         
         return $this;
