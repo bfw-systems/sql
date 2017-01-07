@@ -42,20 +42,32 @@ class SqlConnect
     public function __construct($connectionInfos)
     {
         $this->connectionInfos = $connectionInfos;
+        $this->type            = $this->connectionInfos->baseType;
         
-        $host     = $connectionInfos->host;
-        $baseName = $connectionInfos->baseName;
-        
-        $this->type = $connectionInfos->baseType;
-        $this->PDO  = new \PDO(
-            $this->type.':host='.$host.';dbname='.$baseName,
-            $connectionInfos->user,
-            $connectionInfos->password
-        );
+        $this->createConnection();
         
         if ($connectionInfos->useUTF8 === true) {
             $this->setUtf8();
         }
+    }
+    
+    /**
+     * Initialize the connection
+     * 
+     * @throw \PDOException If Connexion fail
+     * 
+     * @return void
+     */
+    protected function createConnection()
+    {
+        $host     = $this->connectionInfos->host;
+        $baseName = $this->connectionInfos->baseName;
+        
+        $this->PDO  = new \PDO(
+            $this->type.':host='.$host.';dbname='.$baseName,
+            $this->connectionInfos->user,
+            $this->connectionInfos->password
+        );
     }
     
     /**
