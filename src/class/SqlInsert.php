@@ -51,7 +51,7 @@ class SqlInsert extends SqlActions
             }
             
             $lstColumns .= '`'.$columnName.'`';
-            $lstValues  .= '\''.$columnValue.'\'';
+            $lstValues  .= $columnValue;
         }
         
         $this->assembledRequest = 'INSERT INTO '.$this->tableName
