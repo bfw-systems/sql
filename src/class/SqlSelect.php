@@ -412,7 +412,7 @@ class SqlSelect extends SqlActions
                 $select .= ', ';
             }
 
-            $select .= $subQueryInfos->query
+            $select .= '('.$subQueryInfos->query.')'
                 .' AS `'.$subQueryInfos->shortcut.'`';
         }
         
