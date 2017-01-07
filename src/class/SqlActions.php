@@ -176,7 +176,7 @@ abstract class SqlActions
             $error = $req->errorInfo();
         } else {
             $pdoMethodToCall = 'exec';
-            if (get_class($this) === '\BfwSql\SqlSelect') {
+            if ($this instanceof \BfwSql\SqlSelect) {
                 $pdoMethodToCall = 'query';
             }
             
@@ -334,7 +334,7 @@ abstract class SqlActions
      * 
      * @return \BfwSql\SqlActions
      */
-    public function addDatasForColumns($columns)
+    public function addDatasForColumns(array $columns)
     {
         foreach ($columns as $columnName => $data) {
             if (
