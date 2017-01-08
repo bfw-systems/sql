@@ -21,7 +21,7 @@ return (object) [
         /**
          * @var string path to the logfile from the root server
          */
-        'logfile' => '',
+        'logFile' => '',
     ],
     
     /**
