@@ -51,11 +51,11 @@ else
 fi
 
 echo -n '\033[0;33mCheck observer log file ... \033[0m'
-if [ ! -f install/app/logs/sql.log ]; then
+if [ ! -f app/logs/sql.log ]; then
     echo '\033[1;31mSqlObserver log file not exists\033[0m'
     exitstatus=1
 else
-    if [ -s install/app/logs/sql.log ]; then
+    if [ ! -s app/logs/sql.log ]; then
         echo '\033[1;31mSqlObserver log file is empty\033[0m'
         exitstatus=1
     else
