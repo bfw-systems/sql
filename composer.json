@@ -27,7 +27,8 @@
     },
     "autoload": {
         "psr-4": {
-            "BfwSql\\": "src/class/"
+            "BfwSql\\": "src/class/",
+            "BfwSql\\Helpers\\": "src/helpers/"
         }
     },
     "autoload-dev": {
