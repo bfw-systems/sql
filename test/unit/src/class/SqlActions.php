@@ -105,14 +105,14 @@ class SqlActions extends atoum
     /**
      * @return void
      */
-    public function testSetPrepareDriversOptions()
+    public function testGetAndSetPrepareDriversOptions()
     {
         $this->assert('test BfwSql\SqlActions::setPrepareDriversOptions')
             ->object($this->class->setPrepareDriversOptions([
                 \PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY
             ]))
                 ->isInstanceOf('\BfwSql\SqlActions')
-            ->array($this->class->prepareDriversOptions)
+            ->array($this->class->getPrepareDriversOptions())
                 ->isEqualTo([
                     \PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY
                 ]);
@@ -297,14 +297,14 @@ class SqlActions extends atoum
     /**
      * @return void
      */
-    public function testWhere()
+    public function testWhereAndGetPreparedRequestArgs()
     {
         $this->assert('test BfwSql\SqlActions::where without prepared args')
             ->object($this->class->where('active=1'))
                 ->isIdenticalTo($this->class)
             ->array($this->class->where)
                 ->isEqualTo(['active=1'])
-            ->array($this->class->preparedRequestArgs)
+            ->array($this->class->getPreparedRequestArgs())
                 ->isEqualTo([]);
         
         $this->assert('test BfwSql\SqlActions::where with prepared args')
@@ -312,7 +312,7 @@ class SqlActions extends atoum
                 ->isIdenticalTo($this->class)
             ->array($this->class->where)
                 ->isEqualTo(['active=1', 'id=:id'])
-            ->array($this->class->preparedRequestArgs)
+            ->array($this->class->getPreparedRequestArgs())
                 ->isEqualTo([':id' => 123]);
     }
     

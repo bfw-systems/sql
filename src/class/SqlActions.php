@@ -102,6 +102,26 @@ abstract class SqlActions
     }
     
     /**
+     * Getter to access at preparedRequestArgs property
+     * 
+     * @return array
+     */
+    public function getPreparedRequestArgs()
+    {
+        return $this->preparedRequestArgs;
+    }
+    
+    /**
+     * Getter to access at prepareDriversOptions property
+     * 
+     * @return array
+     */
+    public function getPrepareDriversOptions()
+    {
+        return $this->prepareDriversOptions;
+    }
+    
+    /**
      * Define driver options to prepared request
      * 
      * @link http://php.net/manual/fr/pdo.prepare.php
