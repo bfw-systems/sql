@@ -27,6 +27,6 @@ class Secure
             throw new Exception('No database connected to protect data');
         }
         
-        return $dbModule->listBases[0]->protect($datas);
+        return reset($dbModule->listBases)->protect($datas);
     }
 }
