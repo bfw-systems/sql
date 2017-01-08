@@ -12,7 +12,7 @@ php:
 
 # execute any number of scripts before the test run, custom env's are available as variables
 before_script:
-  - mysql -e "CREATE DATABASE IF NOT EXISTS `bfw_sql_tests` CHARACTER SET utf8 COLLATE utf8_general_ci;" -uroot;
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS `bfw_sql_tests` CHARACTER SET utf8 COLLATE utf8_general_ci;' -uroot;
   - composer install
 
 script:
