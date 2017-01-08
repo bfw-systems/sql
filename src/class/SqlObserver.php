@@ -66,7 +66,7 @@ class SqlObserver implements \SplObserver
             return;
         }
         
-        if (get_class($this->context) !== '\BfwSql\SqlSelect') {
+        if (get_class($this->context) !== 'BfwSql\SqlSelect') {
             return;
         }
         
@@ -147,27 +147,30 @@ class SqlObserver implements \SplObserver
     protected function runExplain(\BfwSql\Sql $requestObj)
     {
         $requestObj->query('FLUSH STATUS;');
+        $pdo = $requestObj->getSqlConnect()->getPDO();
         
         $explainQuery  = 'EXPLAIN '.$this->context->assemble();
-        $explainResult = $requestObj->query($explainQuery);
+        $request       = $pdo->prepare(
+            $explainQuery,
+            $this->context->getPrepareDriversOptions()
+        );
+        $explainResult = $request->execute(
+            $this->context->getPreparedRequestArgs()
+        );
         
         if ($explainResult === false) {
             $this->addToLogFile('EXPLAIN failed');
             return;
         }
         
-        $explainFetchAll = $explainResult->fetchAll();
-        if (!isset($explainFetchAll[0])) {
+        $explainFetch = $request->fetch(\PDO::FETCH_ASSOC);
+        if ($explainFetch === false) {
             $this->addToLogFile('EXPLAIN VIDE');
             return;
         }
         
         $explainDatas = [];
-        foreach ($explainFetchAll[0] as $explainKey => $explainValue) {
-            if (is_numeric($explainValue)) {
-                continue;
-            }
-            
+        foreach ($explainFetch as $explainKey => $explainValue) {
             $explainDatas[$explainKey] = $explainValue;
         }
         
