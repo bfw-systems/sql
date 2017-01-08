@@ -23,7 +23,7 @@ mv install/app/config/bfw/config.php install/app/config/bfw/config.php.original
 cp -Rf skeleton/app/* install/app/
 cp -Rf skeleton/src/* install/src/
 mkdir install/app/logs/
-chmod 664 install/app/logs
+chmod 775 install/app/logs
 
 echo '\033[0;33mRun php integrated web server\033[0m'
 cd install
