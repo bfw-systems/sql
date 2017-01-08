@@ -1,5 +1,0 @@
-<?php
-
-return [
-    'useClass' => true
-];
