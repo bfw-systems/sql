@@ -15,11 +15,14 @@ return (object) [
     'bases'    => [
         (object) [
             'baseKeyName' => 'travis',
+            'filePath'    => '',
             'host'        => 'localhost',
+            'port'        => 3306,
             'baseName'    => 'bfw_sql_tests',
             'user'        => 'travis',
             'password'    => '',
             'baseType'    => 'mysql',
+            'pdoOptions'  => [],
             'useUTF8'     => true,
             'tablePrefix' => 'test_'
         ]

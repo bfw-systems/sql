@@ -38,9 +38,21 @@ return (object) [
             'baseKeyName' => '',
             
             /**
+             * @var string filePath Path to the file used for db
+             * Used by sqlite driver for example. Keep empty if not used.
+             */
+            'filePath'    => '',
+            
+            /**
              * @var string host Datatable host to connect
              */
             'host'        => '',
+            
+            /**
+             * @var int port Datatable port to connect
+             * Mysql default is 3306
+             */
+            'port'        => 0,
             
             /**
              * @var string baseName Database name to connect
@@ -62,6 +74,14 @@ return (object) [
              *  It's the name of the PDO driver
              */
             'baseType'    => '',
+            
+            /**
+             * @var array pdoOptions Options passed to 4th arguments
+             * of PDO::__construct
+             * 
+             * @link http://php.net/manual/en/pdo.construct.php
+             */
+            'pdoOptions'  => [],
             
             /**
              * @var boolean useUTF8 Force datas to be UTF-8

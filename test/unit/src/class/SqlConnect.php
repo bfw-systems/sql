@@ -34,11 +34,14 @@ class SqlConnect extends atoum
     {
         return (object) [
             'baseKeyName' => 'unit_test',
+            'filePath'    => '',
             'host'        => 'localhost',
+            'port'        => 3306,
             'baseName'    => 'unittest',
             'user'        => 'unit',
             'password'    => 'test',
             'baseType'    => 'mysql',
+            'pdoOptions'  => [],
             'useUTF8'     => true,
             'tablePrefix' => 'unit_'
         ];

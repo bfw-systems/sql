@@ -60,13 +60,17 @@ class SqlConnect
      */
     protected function createConnection()
     {
-        $host     = $this->connectionInfos->host;
-        $baseName = $this->connectionInfos->baseName;
+        if (!method_exists('\BfwSql\CreatePdoDsn', $this->type)) {
+            throw new Exception(
+                'No method to generate DSN find on \BfwSql\CreatePdoDsn class.'
+            );
+        }
         
         $this->PDO  = new \PDO(
-            $this->type.':host='.$host.';dbname='.$baseName,
+            \BfwSql\CreatePdoDsn::{$this->type}($this->connectionInfos),
             $this->connectionInfos->user,
-            $this->connectionInfos->password
+            $this->connectionInfos->password,
+            $this->connectionInfos->pdoOptions
         );
     }
     
