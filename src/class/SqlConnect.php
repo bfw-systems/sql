@@ -2,6 +2,8 @@
 
 namespace BfwSql;
 
+use \Exception;
+
 /**
  * Class to initialize a connection to a SQL server with PDO
  * 
