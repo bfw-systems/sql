@@ -63,6 +63,10 @@ abstract class Modeles extends \BfwSql\Sql
     {
         $listBases = $this->getApp()->getModule('bfw-sql')->listBases;
         
+        if (count($listBases) === 0) {
+            throw new Exception('There is no connection configured.');
+        }
+        
         if (count($listBases) > 1 && empty($this->baseKeyName)) {
             throw new Exception(
                 'There are multiple connection, '

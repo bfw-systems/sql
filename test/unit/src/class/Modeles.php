@@ -45,6 +45,21 @@ class Modeles extends atoum
     /**
      * @return void
      */
+    public function testConstructForNoBase()
+    {
+        $this->assert('test BfwSql\Modeles::__construct for no base')
+            ->if($this->class->listBases = [])
+            ->given($class = $this->class)
+            ->then
+            ->exception(function() use ($class) {
+                $class->callParentConstructor();
+            })
+                ->hasMessage('There is no connection configured.');
+    }
+    
+    /**
+     * @return void
+     */
     public function testConstructForOneBase()
     {
         $this->assert('test BfwSql\Modeles::__construct for one base')
