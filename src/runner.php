@@ -17,6 +17,10 @@ if (
 }
 
 foreach ($configListBases as $baseInfos) {
+    if (empty($baseInfos->baseType)) {
+        continue;
+    }
+    
     $baseKey = $baseInfos->baseKeyName;
 
     if (empty($baseKey) && $configNbBases > 1) {
