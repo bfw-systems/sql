@@ -75,7 +75,7 @@ class Modeles extends atoum
             ->exception(function() use ($class) {
                 $class->callParentConstructor();
             })
-                ->hasMessage('They are multiple connection, so the property baseKeyName must be defined');
+                ->hasMessage('There are multiple connection, so the property baseKeyName must be defined');
 
         $this->assert('test BfwSql\Modeles::__construct for many bases with error')
             ->given($class = $this->class)
@@ -84,7 +84,7 @@ class Modeles extends atoum
             ->exception(function() use ($class) {
                 $class->callParentConstructor();
             })
-                ->hasMessage('They are multiple connection, but the connection test3 is not defined.');
+                ->hasMessage('There are multiple connection, but the connection test3 is not defined.');
         
         $this->assert('test BfwSql\Modeles::__construct for many bases without error')
             ->if($this->class->baseKeyName = 'test2')

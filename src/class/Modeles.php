@@ -65,14 +65,14 @@ abstract class Modeles extends \BfwSql\Sql
         
         if (count($listBases) > 1 && empty($this->baseKeyName)) {
             throw new Exception(
-                'They are multiple connection, '
+                'There are multiple connection, '
                 .'so the property baseKeyName must be defined'
             );
         }
         
         if (count($listBases) > 1 && !isset($listBases[$this->baseKeyName])) {
             throw new Exception(
-                'They are multiple connection, '
+                'There are multiple connection, '
                 .'but the connection '.$this->baseKeyName.' is not defined.'
             );
         }
