@@ -53,7 +53,9 @@ class SqlInsert extends atoum
             ->if($this->class = new \BfwSql\test\unit\mocks\SqlInsert($this->sqlConnect, 'table_name'))
             ->then
             ->object($this->class->sqlConnect)
-                ->isIdenticalTo($this->sqlConnect);
+                ->isIdenticalTo($this->sqlConnect)
+            ->variable($this->class->quoteStatus)
+                ->isEqualTo(\BfwSql\SqlInsert::QUOTE_ALL);
     }
     
     /**
@@ -65,13 +67,36 @@ class SqlInsert extends atoum
             ->if($this->class = new \BfwSql\test\unit\mocks\SqlInsert(
                 $this->sqlConnect,
                 'table_name',
-                ['title' => '"unit test"']
+                ['title' => 'unit test']
             ))
             ->then
             ->object($this->class->sqlConnect)
                 ->isIdenticalTo($this->sqlConnect)
             ->array($this->class->columns)
-                ->isEqualTo(['title' => '"unit test"']);
+                ->isEqualTo(['title' => 'unit test'])
+            ->variable($this->class->quoteStatus)
+                ->isEqualTo(\BfwSql\SqlInsert::QUOTE_ALL);
+    }
+    
+    /**
+     * @return void
+     */
+    public function testConstructForQuoteStatus()
+    {
+        $this->assert('test BfwSql\SqlInsert::__construct for quote status')
+            ->if($this->class = new \BfwSql\test\unit\mocks\SqlInsert(
+                $this->sqlConnect,
+                'table_name',
+                ['title' => 'unit test'],
+                \BfwSql\SqlInsert::QUOTE_PARTIALLY
+            ))
+            ->then
+            ->object($this->class->sqlConnect)
+                ->isIdenticalTo($this->sqlConnect)
+            ->array($this->class->columns)
+                ->isEqualTo(['title' => 'unit test'])
+            ->variable($this->class->quoteStatus)
+                ->isEqualTo(\BfwSql\SqlInsert::QUOTE_PARTIALLY);
     }
     
     public function testAssembleRequestWithoutDatas()
@@ -83,11 +108,28 @@ class SqlInsert extends atoum
     
     public function testAssembleRequestWithDatas()
     {
-        $this->assert('test BfwSql\SqlInsert::assembleRequest with datas')
-            ->if($this->class->addDatasForColumns(['title' => '"unit test"']))
+        $this->assert('test BfwSql\SqlInsert::assembleRequest with datas and default quoted status')
+            ->if($this->class->addDatasForColumns(['title' => 'unit test']))
+            ->then
+            ->string($this->class->callAssembleRequest())
+                ->isEqualTo('INSERT INTO unit_table_name (`title`) VALUES ("unit test")');
+        
+        $this->assert('test BfwSql\SqlInsert::assembleRequest with datas and partially quoted status')
+            ->if($this->class->setQuoteStatus(\BfwSql\SqlInsert::QUOTE_PARTIALLY))
+            ->then
+            ->string($this->class->callAssembleRequest())
+                ->isEqualTo('INSERT INTO unit_table_name (`title`) VALUES (unit test)')
+            ->if($this->class->addNotQuotedColumns('title'))
+            ->then
+            ->string($this->class->callAssembleRequest())
+                ->isEqualTo('INSERT INTO unit_table_name (`title`) VALUES (unit test)')
+            ->if($this->class->setNotQuotedColumns([]))
+            ->and($this->class->addQuotedColumns('title'))
+            ->then
             ->string($this->class->callAssembleRequest())
                 ->isEqualTo('INSERT INTO unit_table_name (`title`) VALUES ("unit test")')
             ->if($this->class->addDatasForColumns(['active' => 1]))
+            ->then
             ->string($this->class->callAssembleRequest())
                 ->isEqualTo('INSERT INTO unit_table_name (`title`,`active`) VALUES ("unit test",1)');
     }

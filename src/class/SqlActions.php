@@ -14,6 +14,24 @@ use \Exception;
 abstract class SqlActions
 {
     /**
+     * @const QUOTE_ALL To automatic quote all string values.
+     * Used by SqlInsert and SqlUpdate.
+     */
+    const QUOTE_ALL = 'all';
+    
+    /**
+     * @const QUOTE_ALL To not automatic quote string values.
+     * Used by SqlInsert and SqlUpdate.
+     */
+    const QUOTE_NONE = 'none';
+    
+    /**
+     * @const QUOTE_ALL To automatic quote string values only for somes columns
+     * Used by SqlInsert and SqlUpdate.
+     */
+    const QUOTE_PARTIALLY = 'partially';
+    
+    /**
      * @var \BfwSql\SqlConnect $sqlConnect SqlConnect object
      */
     protected $sqlConnect;
@@ -37,6 +55,23 @@ abstract class SqlActions
      * @var array $columns List of impacted columns by the request
      */
     protected $columns = array();
+    
+    /**
+     * @var string $quoteStatus The current automic quote status.
+     */
+    protected $quoteStatus = self::QUOTE_ALL;
+    
+    /**
+     * @var array $quotedColumns List of columns where value will be quoted if
+     * is string.
+     */
+    protected $quotedColumns = [];
+    
+    /**
+     * @var array $notQuotedColumns List of columns where value will not be
+     * quoted if is string.
+     */
+    protected $notQuotedColumns = [];
     
     /**
      * @var string[] $where All filter use in where part of the request
@@ -371,6 +406,105 @@ abstract class SqlActions
         }
         
         return $this;
+    }
+    
+    /**
+     * Declare columns should be automatic quoted if value is string.
+     * 
+     * @param string ...$columns Columns name
+     * 
+     * @throws Exception If the column is already declared to be not quoted
+     * 
+     * @return \BfwSql\SqlActions
+     */
+    public function addQuotedColumns(...$columns)
+    {
+        if ($this instanceof SqlSelect || $this instanceof SqlDelete) {
+            throw new Exception(
+                'Sorry, automatic quoted value is not supported into '
+                .get_called_class().' class'
+            );
+        }
+        
+        foreach ($columns as $columnName) {
+            if (isset($this->notQuotedColumns[$columnName])) {
+                throw new Exception(
+                    'The column '.$columnName.' is already declared to be a'
+                    .' not quoted value.'
+                );
+            }
+            
+            $this->quotedColumns[$columnName] = true;
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Declare columns should not be automatic quoted if value is string.
+     * 
+     * @param string ...$columns Columns name
+     * 
+     * @throws Exception If the column is already declared to be quoted
+     * 
+     * @return \BfwSql\SqlActions
+     */
+    public function addNotQuotedColumns(...$columns)
+    {
+        if ($this instanceof SqlSelect || $this instanceof SqlDelete) {
+            throw new Exception(
+                'Sorry, automatic quoted value is not supported into '
+                .get_called_class().' class'
+            );
+        }
+        
+        foreach ($columns as $columnName) {
+            if (isset($this->quotedColumns[$columnName])) {
+                throw new Exception(
+                    'The column '.$columnName.' is already declared to be a'
+                    .' quoted value.'
+                );
+            }
+            
+            $this->notQuotedColumns[$columnName] = true;
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Quote a value if need, else return the value passed in parameter
+     * 
+     * @param string $columnName The column corresponding to the value
+     * @param string $value      The value to quote
+     * 
+     * @return string
+     */
+    protected function quoteValue($columnName, $value)
+    {
+        if ($this->quoteStatus === self::QUOTE_NONE) {
+            return $value;
+        }
+        
+        /**
+         * If the status allow to quote partially, check if the column is
+         * not declared to be quoted or is declared to be not quote.
+         */
+        if (
+            (
+                !isset($this->quotedColumns[$columnName])
+                || isset($this->notQuotedColumns[$columnName])
+            )
+            && $this->quoteStatus === self::QUOTE_PARTIALLY
+        ) {
+            return $value;
+        }
+        
+        if (!is_string($value)) {
+            return $value;
+        }
+        
+        return '"'.$value.'"';
     }
     
     /**

@@ -468,4 +468,24 @@ class SqlSelect extends atoum
                     .' LIMIT 20, 10'
                 );
     }
+    
+    public function testAddQuotedColumns()
+    {
+        $this->assert('test BfwSql\SqlSelect::addQuotedColumns')
+            ->given($class = $this->class)
+            ->exception(function() use ($class) {
+                $class->addNotQuotedColumns('column1');
+            })
+                ->hasMessage('Sorry, automatic quoted value is not supported into BfwSql\test\unit\mocks\SqlSelect class');
+    }
+    
+    public function testAddNotQuotedColumns()
+    {
+        $this->assert('test BfwSql\SqlSelect::addNotQuotedColumns')
+            ->given($class = $this->class)
+            ->exception(function() use ($class) {
+                $class->addNotQuotedColumns('column1');
+            })
+                ->hasMessage('Sorry, automatic quoted value is not supported into BfwSql\test\unit\mocks\SqlSelect class');
+    }
 }

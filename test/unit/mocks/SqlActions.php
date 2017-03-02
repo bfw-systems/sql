@@ -34,4 +34,9 @@ class SqlActions extends \BfwSql\SqlActions
     {
         return parent::generateWhere();
     }
+    
+    public function callQuoteValue($columnName, $value)
+    {
+        return parent::quoteValue($columnName, $value);
+    }
 }

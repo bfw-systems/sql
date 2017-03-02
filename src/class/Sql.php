@@ -135,12 +135,14 @@ class Sql
      * @param string $table   The table concerned by the request
      * @param array  $columns (default: null) All datas to add
      *  Format is array('columnName' => 'value', ...);
+     * @param string $quoteStatus (default: QUOTE_ALL) Status to automatic
+     *  quoted string value system.
      * 
      * @return \BfwSql\SqlInsert
      */
-    public function insert($table, $columns = null)
+    public function insert($table, $columns = null, $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL)
     {
-        return new SqlInsert($this->sqlConnect, $table, $columns);
+        return new SqlInsert($this->sqlConnect, $table, $columns, $quoteStatus);
     }
     
     /**
@@ -149,12 +151,14 @@ class Sql
      * @param string $table   The table concerned by the request
      * @param array  $columns (default: null) All datas to update
      *  Format is array('columnName' => 'newValue', ...);
+     * @param string $quoteStatus (default: QUOTE_ALL) Status to automatic
+     *  quoted string value system.
      * 
      * @return \BfwSql\SqlUpdate
      */
-    public function update($table, $columns = null)
+    public function update($table, $columns = null, $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL)
     {
-        return new SqlUpdate($this->sqlConnect, $table, $columns);
+        return new SqlUpdate($this->sqlConnect, $table, $columns, $quoteStatus);
     }
     
     /**

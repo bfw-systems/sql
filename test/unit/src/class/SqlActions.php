@@ -50,6 +50,20 @@ class SqlActions extends atoum
     /**
      * @return void
      */
+    public function testConstants()
+    {
+        $this->assert('test BfwSql\SqlActions constants')
+            ->string(\BfwSql\SqlActions::QUOTE_ALL)
+                ->isEqualTo('all')
+            ->string(\BfwSql\SqlActions::QUOTE_NONE)
+                ->isEqualTo('none')
+            ->string(\BfwSql\SqlActions::QUOTE_PARTIALLY)
+                ->isEqualTo('partially');
+    }
+    
+    /**
+     * @return void
+     */
     public function testConstruct()
     {
         $this->assert('test BfwSql\SqlActions::__construct')
@@ -66,6 +80,12 @@ class SqlActions extends atoum
             ->string($this->class->tableName)
                 ->isEmpty()
             ->array($this->class->columns)
+                ->isEmpty()
+            ->variable($this->class->quoteStatus)
+                ->isEqualTo(\BfwSql\SqlActions::QUOTE_ALL)
+            ->array($this->class->quotedColumns)
+                ->isEmpty()
+            ->array($this->class->notQuotedColumns)
                 ->isEmpty()
             ->array($this->class->where)
                 ->isEmpty()
@@ -388,5 +408,112 @@ class SqlActions extends atoum
                 $class->addDatasForColumns(['title' => 'test']);
             })
                 ->hasMessage('A different data is already declared for the column title');
+    }
+    
+    public function testAddQuotedColumns()
+    {
+        $this->assert('test BfwSql\SqlActions::addQuotedColumns with one value')
+            ->object($this->class->addQuotedColumns('column1'))
+                ->isIdenticalTo($this->class)
+            ->array($this->class->quotedColumns)
+                ->isEqualTo(['column1' => true]);
+        
+        $this->assert('test BfwSql\SqlActions::addQuotedColumns with many values')
+            ->object($this->class->addQuotedColumns('column2', 'column3'))
+                ->isIdenticalTo($this->class)
+            ->array($this->class->quotedColumns)
+                ->isEqualTo([
+                    'column1' => true,
+                    'column2' => true,
+                    'column3' => true
+                ]);
+        
+        $this->assert('test BfwSql\SqlActions::addQuotedColumns with a column declared to be not quoted')
+            ->if($this->class->notQuotedColumns = ['column4' => true])
+            ->then
+            ->given($class = $this->class)
+            ->exception(function() use ($class) {
+                $class->addQuotedColumns('column4');
+            })
+                ->hasMessage('The column column4 is already declared to be a not quoted value.');
+    }
+    
+    public function testAddNotQuotedColumns()
+    {
+        $this->assert('test BfwSql\SqlActions::addNotQuotedColumns with one value')
+            ->object($this->class->addNotQuotedColumns('column1'))
+                ->isIdenticalTo($this->class)
+            ->array($this->class->notQuotedColumns)
+                ->isEqualTo(['column1' => true]);
+        
+        $this->assert('test BfwSql\SqlActions::addNotQuotedColumns with many values')
+            ->object($this->class->addNotQuotedColumns('column2', 'column3'))
+                ->isIdenticalTo($this->class)
+            ->array($this->class->notQuotedColumns)
+                ->isEqualTo([
+                    'column1' => true,
+                    'column2' => true,
+                    'column3' => true
+                ]);
+        
+        $this->assert('test BfwSql\SqlActions::addNotQuotedColumns with a column declared to be quoted')
+            ->if($this->class->quotedColumns = ['column4' => true])
+            ->then
+            ->given($class = $this->class)
+            ->exception(function() use ($class) {
+                $class->addNotQuotedColumns('column4');
+            })
+                ->hasMessage('The column column4 is already declared to be a quoted value.');
+    }
+    
+    public function testQuoteValue()
+    {
+        $this->assert('test BfwSql\SqlActions::quoteValue for not quoted status')
+            ->if($this->class->quoteStatus = \BfwSql\SqlActions::QUOTE_NONE)
+            ->then
+            ->string($this->class->callQuoteValue('column1', 'test'))
+                ->isEqualTo('test');
+        
+        $this->assert('test BfwSql\SqlActions::quoteValue for a not declared column')
+            ->if($this->class->quoteStatus = \BfwSql\SqlActions::QUOTE_PARTIALLY)
+            ->then
+            ->string($this->class->callQuoteValue('column1', 'test'))
+                ->isEqualTo('test');
+        
+        $this->assert('test BfwSql\SqlActions::quoteValue for a declared not quoted column')
+            ->if($this->class->quoteStatus = \BfwSql\SqlActions::QUOTE_PARTIALLY)
+            ->and($this->class->addNotQuotedColumns('column1'))
+            ->then
+            ->string($this->class->callQuoteValue('column1', 'test'))
+                ->isEqualTo('test');
+        
+        $this->assert('test BfwSql\SqlActions::quoteValue for a declared quoted column')
+            ->if($this->class->quoteStatus = \BfwSql\SqlActions::QUOTE_PARTIALLY)
+            ->and($this->class->notQuotedColumns = [])
+            ->and($this->class->addQuotedColumns('column1'))
+            ->then
+            ->string($this->class->callQuoteValue('column1', 'test'))
+                ->isEqualTo('"test"');
+        
+        $this->assert('test BfwSql\SqlActions::quoteValue for partially quoted status but not string value')
+            ->if($this->class->quoteStatus = \BfwSql\SqlActions::QUOTE_PARTIALLY)
+            ->and($this->class->quotedColumns = [])
+            ->and($this->class->addQuotedColumns('column1'))
+            ->then
+            ->integer($this->class->callQuoteValue('column1', 10))
+                ->isEqualTo(10);
+        
+        $this->assert('test BfwSql\SqlActions::quoteValue for all quoted status')
+            ->if($this->class->quoteStatus = \BfwSql\SqlActions::QUOTE_ALL)
+            ->and($this->class->quotedColumns = [])
+            ->then
+            ->string($this->class->callQuoteValue('column1', 'test'))
+                ->isEqualTo('"test"');
+        
+        $this->assert('test BfwSql\SqlActions::quoteValue for all quoted status but not string value')
+            ->if($this->class->quoteStatus = \BfwSql\SqlActions::QUOTE_ALL)
+            ->then
+            ->integer($this->class->callQuoteValue('column1', 10))
+                ->isEqualTo(10);
     }
 }

@@ -18,13 +18,18 @@ class SqlInsert extends SqlActions
      * @param string             $tableName  The table name used for query
      * @param array              $columns    (default: null) Datas to add
      *  Format is array('columnName' => 'value', ...);
+     * @param string $quoteStatus (default: QUOTE_ALL) Status to automatic
+     *  quoted string value system.
      */
     public function __construct(
         SqlConnect $sqlConnect,
         $tableName,
-        $columns = null
+        $columns = null,
+        $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL
     ) {
         parent::__construct($sqlConnect);
+        
+        $this->quoteStatus = $quoteStatus;
         
         $prefix          = $sqlConnect->getConnectionInfos()->tablePrefix;
         $this->tableName = $prefix.$tableName;
@@ -51,7 +56,7 @@ class SqlInsert extends SqlActions
             }
             
             $lstColumns .= '`'.$columnName.'`';
-            $lstValues  .= $columnValue;
+            $lstValues  .= $this->quoteValue($columnName, $columnValue);
         }
         
         $this->assembledRequest = 'INSERT INTO '.$this->tableName;

@@ -70,4 +70,24 @@ class SqlDelete extends atoum
             ->string($this->class->callAssembleRequest())
                 ->isEqualTo('DELETE FROM unit_table_name WHERE id=123');
     }
+    
+    public function testAddQuotedColumns()
+    {
+        $this->assert('test BfwSql\SqlDelete::addQuotedColumns')
+            ->given($class = $this->class)
+            ->exception(function() use ($class) {
+                $class->addNotQuotedColumns('column1');
+            })
+                ->hasMessage('Sorry, automatic quoted value is not supported into BfwSql\test\unit\mocks\SqlDelete class');
+    }
+    
+    public function testAddNotQuotedColumns()
+    {
+        $this->assert('test BfwSql\SqlDelete::addNotQuotedColumns')
+            ->given($class = $this->class)
+            ->exception(function() use ($class) {
+                $class->addNotQuotedColumns('column1');
+            })
+                ->hasMessage('Sorry, automatic quoted value is not supported into BfwSql\test\unit\mocks\SqlDelete class');
+    }
 }

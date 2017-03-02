@@ -20,13 +20,18 @@ class SqlUpdate extends SqlActions
      * @param string             $tableName  The table name used for query
      * @param array              $columns    (default: null) Datas to add
      *  Format is array('columnName' => 'value', ...);
+     * @param string $quoteStatus (default: QUOTE_ALL) Status to automatic
+     *  quoted string value system.
      */
     public function __construct(
         SqlConnect $sqlConnect,
         $tableName,
-        $columns = null
+        $columns = null,
+        $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL
     ) {
         parent::__construct($sqlConnect);
+        
+        $this->quoteStatus = $quoteStatus;
         
         $prefix          = $sqlConnect->getConnectionInfos()->tablePrefix;
         $this->tableName = $prefix.$tableName;
@@ -52,9 +57,9 @@ class SqlUpdate extends SqlActions
                 $lstColumns .= ',';
             }
 
-            $lstColumns .= '`'.$columnName.'`='.$columnValue;
+            $lstColumns .= '`'.$columnName.'`='
+                .$this->quoteValue($columnName, $columnValue);
         }
-
         
         $this->assembledRequest = 'UPDATE '.$this->tableName
             .' SET '.$lstColumns
