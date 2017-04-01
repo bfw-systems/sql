@@ -133,4 +133,22 @@ class SqlInsert extends atoum
             ->string($this->class->callAssembleRequest())
                 ->isEqualTo('INSERT INTO unit_table_name (`title`,`active`) VALUES ("unit test",1)');
     }
+    
+    public function testFixDatasIsNull()
+    {
+        $this->assert('test BfwSql\SqlInsert::assembleRequest for fix when datas is null')
+            ->if($this->class->addDatasForColumns([
+                'title' => 'unit test',
+                'desc'  => null,
+                'time'  => '2017-04-01'
+            ]))
+            ->then
+            ->string($this->class->callAssembleRequest())
+                ->isEqualTo(
+                    'INSERT INTO unit_table_name'
+                    .' (`title`,`desc`,`time`)'
+                    .' VALUES'
+                    .' ("unit test",null,"2017-04-01")'
+                );
+    }
 }

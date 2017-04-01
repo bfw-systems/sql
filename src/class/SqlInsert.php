@@ -56,7 +56,13 @@ class SqlInsert extends SqlActions
             }
             
             $lstColumns .= '`'.$columnName.'`';
-            $lstValues  .= $this->quoteValue($columnName, $columnValue);
+            
+            if ($columnValue === null) {
+                $lstValues .= 'null';
+                continue;
+            }
+            
+            $lstValues .= $this->quoteValue($columnName, $columnValue);
         }
         
         $this->assembledRequest = 'INSERT INTO '.$this->tableName;

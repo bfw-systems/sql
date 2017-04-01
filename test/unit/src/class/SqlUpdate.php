@@ -136,4 +136,22 @@ class SqlUpdate extends atoum
             ->string($this->class->callAssembleRequest())
                 ->isEqualTo('UPDATE unit_table_name SET `title`="unit test",`active`=1');
     }
+    
+    public function testFixDatasIsNull()
+    {
+        $this->assert('test BfwSql\SqlUpdate::assembleRequest for fix when datas is null')
+            ->if($this->class->addDatasForColumns([
+                'title' => 'unit test',
+                'desc'  => null,
+                'time'  => '2017-04-01'
+            ]))
+            ->then
+            ->string($this->class->callAssembleRequest())
+                ->isEqualTo(
+                    'UPDATE unit_table_name SET '
+                    .'`title`="unit test"'
+                    .',`desc`=null'
+                    .',`time`="2017-04-01"'
+                );
+    }
 }

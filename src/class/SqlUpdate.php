@@ -56,9 +56,14 @@ class SqlUpdate extends SqlActions
             if ($lstColumns !== '') {
                 $lstColumns .= ',';
             }
+            
+            if ($columnValue === null) {
+                $fieldValue = 'null';
+            } else {
+                $fieldValue = $this->quoteValue($columnName, $columnValue);
+            }
 
-            $lstColumns .= '`'.$columnName.'`='
-                .$this->quoteValue($columnName, $columnValue);
+            $lstColumns .= '`'.$columnName.'`='.$fieldValue;
         }
         
         $this->assembledRequest = 'UPDATE '.$this->tableName
