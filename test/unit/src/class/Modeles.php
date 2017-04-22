@@ -112,4 +112,25 @@ class Modeles extends atoum
                 ->isNotIdenticalTo($sqlConnects['test1'])
             ;
     }
+    
+    /**
+     * @return void
+     */
+    public function testGetters()
+    {
+        $this->assert('test BfwSql\Modeles::get... with one base')
+            ->if($this->class->callParentConstructor())
+            ->then
+            ->string($this->class->getTableName())
+                ->isEqualTo('table_name')
+            ->string($this->class->getTableNameWithPrefix())
+                ->isEqualTo('unit_table_name')
+            ->string($this->class->getBaseKeyName())
+                ->isEqualTo('')
+            ->if($this->class->baseKeyName = 'test2')
+            ->then
+            ->string($this->class->getBaseKeyName())
+                ->isEqualTo('test2')
+            ;
+    }
 }

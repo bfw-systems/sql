@@ -41,6 +41,36 @@ abstract class Modeles extends \BfwSql\Sql
     }
     
     /**
+     * Getter to property tableName
+     * 
+     * @return string
+     */
+    public function getTableName()
+    {
+        return $this->tableName;
+    }
+    
+    /**
+     * Getter to property tableNameWithPrefix
+     * 
+     * @return string
+     */
+    public function getTableNameWithPrefix()
+    {
+        return $this->tableNameWithPrefix;
+    }
+    
+    /**
+     * Getter to property baseKeyName
+     * 
+     * @return string
+     */
+    public function getBaseKeyName()
+    {
+        return $this->baseKeyName;
+    }
+    
+    /**
      * Get the BFW Application
      * It's a dedicated method for unit test or case where App is override
      * 
