@@ -1,11 +1,11 @@
 <?php
 
-$moduleConfig      = $module->getConfig();
-$configListBases   = $moduleConfig->getConfig('bases');
-$configNbBases     = count($configListBases);
-$module->listBases = [];
+$moduleConfig    = $this->getConfig();
+$configListBases = $moduleConfig->getValue('bases');
+$configNbBases   = count($configListBases);
+$this->listBases = [];
 
-$observerConfig  = $moduleConfig->getConfig('observer');
+$observerConfig  = $moduleConfig->getValue('observer');
 $observerLogFile = $observerConfig->logFile;
 
 if (
@@ -30,5 +30,5 @@ foreach ($configListBases as $baseInfos) {
         );
     }
     
-    $module->listBases[$baseKey] = new \BfwSql\SqlConnect($baseInfos);
+    $this->listBases[$baseKey] = new \BfwSql\SqlConnect($baseInfos);
 }
