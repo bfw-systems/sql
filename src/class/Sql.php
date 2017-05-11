@@ -140,9 +140,17 @@ class Sql
      * 
      * @return \BfwSql\SqlInsert
      */
-    public function insert($table, $columns = null, $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL)
-    {
-        return new SqlInsert($this->sqlConnect, $table, $columns, $quoteStatus);
+    public function insert(
+        $table,
+        $columns = null,
+        $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL
+    ) {
+        return new SqlInsert(
+            $this->sqlConnect,
+            $table,
+            $columns,
+            $quoteStatus
+        );
     }
     
     /**
@@ -156,9 +164,17 @@ class Sql
      * 
      * @return \BfwSql\SqlUpdate
      */
-    public function update($table, $columns = null, $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL)
-    {
-        return new SqlUpdate($this->sqlConnect, $table, $columns, $quoteStatus);
+    public function update(
+        $table,
+        $columns = null,
+        $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL
+    ) {
+        return new SqlUpdate(
+            $this->sqlConnect,
+            $table,
+            $columns,
+            $quoteStatus
+        );
     }
     
     /**

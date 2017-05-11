@@ -82,7 +82,9 @@ class SqlSelect extends SqlActions
     protected function obtainTableInfos($table)
     {
         if (!is_array($table) && !is_string($table)) {
-            throw new Exception('Table information is not in the right format.');
+            throw new Exception(
+                'Table information is not in the right format.'
+            );
         }
         
         if (is_array($table)) {
