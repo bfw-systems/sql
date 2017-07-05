@@ -515,7 +515,6 @@ abstract class SqlActions
     protected function callObserver()
     {
         $app = \BFW\Application::getInstance();
-        $app->setContext($this);
-        $app->notifyAction('BfwSqlRequest');
+        $app->addNotification('BfwSqlRequest', $this);
     }
 }
