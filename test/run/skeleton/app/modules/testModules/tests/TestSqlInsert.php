@@ -22,8 +22,8 @@ trait TestSqlInsert
         $this->insert(
             $this->tableName,
             [
-                'title' => '"test SqlInsert"',
-                'date'  => '"'.$dateSql.'"'
+                'title' => 'test SqlInsert',
+                'date'  => $dateSql
             ]
         )->execute();
         

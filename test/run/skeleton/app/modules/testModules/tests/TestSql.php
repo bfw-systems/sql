@@ -20,8 +20,8 @@ trait TestSql
     {
         $this->newTest('test \BfwSql\Sql::getLastInsertedId');
         
-        $insertedId = $this->sqlConnect->getPDO()->exec(
-            'INSERT INTO test_runner'
+        $insertedId = $this->runExec(
+            'INSERT INTO test_runner VALUES ()'
         );
         
         $sqlInsertedId = $this->getLastInsertedId();
@@ -37,13 +37,15 @@ trait TestSql
     {
         $this->newTest('test \BfwSql\Sql::getLastInsertedIdWithoutAI');
         
-        $insertedId = $this->sqlConnect->getPDO()->exec(
+        $this->runExec(
             'INSERT INTO test_runner'
             .' (`title`, `date`, `enabled`)'
             .' VALUES'
             .' (\'test_unitaire\', NOW(), 1)'
         );
-        $this->sqlConnect->getPDO()->exec(
+        $insertedId = $this->sqlConnect->getPDO()->lastInsertId();
+        
+        $this->runExec(
             'INSERT INTO test_runner'
             .' (`title`, `date`, `enabled`)'
             .' VALUES'
@@ -66,7 +68,7 @@ trait TestSql
     
     protected function testSqlCreateId()
     {
-        $this->sqlConnect->getPDO()->exec('TRUNCATE TABLE test_runner');
+        $this->runExec('TRUNCATE TABLE test_runner');
         
         $this->newTest('test \BfwSql\Sql::createId for id=1');
         if ($this->createId('runner', 'id') !== 1) {
@@ -74,14 +76,16 @@ trait TestSql
         }
         
         $this->newTest('test \BfwSql\Sql::createId for id=3');
-        $this->sqlConnect->getPDO()->exec('INSERT INTO test_runner SET id=1');
+        $this->runExec('DELETE FROM test_runner WHERE id=1');
+        $this->runExec('INSERT INTO test_runner SET id=3');
         if ($this->createId('runner', 'id') !== 2) {
             return false;
         }
         
         $this->newTest('test \BfwSql\Sql::createId for id=5');
-        $this->sqlConnect->getPDO()->exec('INSERT INTO test_runner SET id=2');
-        $this->sqlConnect->getPDO()->exec('INSERT INTO test_runner SET id=4');
+        $this->runExec('INSERT INTO test_runner SET id=1');
+        $this->runExec('INSERT INTO test_runner SET id=2');
+        $this->runExec('INSERT INTO test_runner SET id=4');
         if ($this->createId('runner', 'id') !== 5) {
             return false;
         }

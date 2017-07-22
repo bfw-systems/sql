@@ -22,8 +22,8 @@ trait TestSqlUpdate
         $this->update(
             $this->tableName,
             [
-                'title' => '"test SqlUpdate"',
-                'date'  => '"'.$dateSql.'"'
+                'title' => 'test SqlUpdate',
+                'date'  => $dateSql
             ]
         )
         ->where('id=:id', [':id' => 2])

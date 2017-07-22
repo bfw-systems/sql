@@ -18,7 +18,7 @@ trait TestSqlSelect
     {
         $this->newTest('test \BfwSql\SqlSelect::fetchRow');
         
-        $this->sqlConnect->getPDO()->exec(
+        $this->runExec(
             'UPDATE `test_runner`'
             . ' SET `title`=\'test_unitaire\', `enabled`=1'
             . ' WHERE `id`=2'

@@ -15,7 +15,7 @@ trait TestHelperSecure
     
     protected function testHelperSecureProtect()
     {
-        $dataToUpdate  = 'test HelperSecureProtect;\'DELETE FROM test_runner WHERE id=1;';
+        $dataToUpdate  = 'test HelperSecureProtect";DELETE FROM test_runner WHERE id=1;';
         $dataProtected = \BfwSql\Helpers\Secure::protectDatas($dataToUpdate);
         
         $date    = new \BFW\Dates;
@@ -25,14 +25,14 @@ trait TestHelperSecure
         $this->update(
             $this->tableName,
             [
-                'title' => '"'.$dataProtected.'"',
-                'date'  => '"'.$dateSql.'"'
+                'date'  => $dateSql,
+                'title' => $dataProtected
             ]
         )
         ->where('id=:id', [':id' => 2])
         ->execute();
         
-        $this->newTest('test BfwSql\Helpers\Secure::protectDatas - check line id=1 already exist');
+        $this->newTest('test BfwSql\Helpers\Secure::protectDatas - check line id=1 always exist');
         $reqCheckLineExist = $this->sqlConnect->getPDO()->query(
             'SELECT `title`, `date`'
             .' FROM test_runner'
