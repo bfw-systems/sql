@@ -28,6 +28,7 @@
     "autoload": {
         "psr-4": {
             "BfwSql\\": "src/class/",
+            "BfwSql\\Runners\\": "src/class/runners/",
             "BfwSql\\Helpers\\": "src/helpers/"
         }
     },
