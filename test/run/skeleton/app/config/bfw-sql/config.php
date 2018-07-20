@@ -23,7 +23,7 @@ return (object) [
             'password'    => '',
             'baseType'    => 'mysql',
             'pdoOptions'  => [],
-            'useUTF8'     => true,
+            'useUtf8'     => true,
             'tablePrefix' => 'test_'
         ]
     ]

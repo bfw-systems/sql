@@ -9,22 +9,6 @@
 
 return (object) [
     /**
-     * @var \stdClass observer Informations about the observer
-     * This observer run an EXPLAIN request for each SELECT request executed
-     */
-    'observer' => (object) [
-        /**
-         * @var boolean enable If the observer is enabled
-         */
-        'enable' => false,
-        
-        /**
-         * @var string path to the logfile from the root server
-         */
-        'logFile' => '',
-    ],
-    
-    /**
      * @var \stdClass[] bases All database list to connect
      */
     'bases' => [
@@ -84,12 +68,12 @@ return (object) [
             'pdoOptions'  => [],
             
             /**
-             * @var boolean useUTF8 Force datas to be UTF-8
+             * @var boolean useUtf8 Force datas to be UTF-8
              *  Used for Mysql
              * 
              * @link http://dev.mysql.com/doc/refman/5.7/en/charset-connection.html
              */
-            'useUTF8'     => true,
+            'useUtf8'     => true,
             
             /**
              * @var string tablePrefix The prefix used for all table.
