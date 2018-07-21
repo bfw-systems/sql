@@ -44,13 +44,7 @@ class SqlConnect
     public function __construct($connectionInfos)
     {
         $this->connectionInfos = $connectionInfos;
-        $this->type            = $this->connectionInfos->baseType;
-        
-        $this->createConnection();
-        
-        if ($connectionInfos->useUTF8 === true) {
-            $this->setUtf8();
-        }
+        $this->type            = &$this->connectionInfos->baseType;
     }
     
     /**
@@ -60,20 +54,28 @@ class SqlConnect
      * 
      * @return void
      */
-    protected function createConnection()
+    public function createConnection()
     {
-        if (!method_exists('\BfwSql\CreatePdoDsn', $this->type)) {
+        $usedClass          = \BfwSql\UsedClass::getInstance();
+        $createDsnClassName = $usedClass->obtainClassNameToUse('CreatePdoDsn');
+        $pdoClassName       = $usedClass->obtainClassNameToUse('PDO');
+        
+        if (!method_exists($createDsnClassName, $this->type)) {
             throw new Exception(
                 'No method to generate DSN find on \BfwSql\CreatePdoDsn class.'
             );
         }
         
-        $this->PDO  = new \PDO(
-            \BfwSql\CreatePdoDsn::{$this->type}($this->connectionInfos),
+        $this->PDO = new $pdoClassName(
+            $createDsnClassName::{$this->type}($this->connectionInfos),
             $this->connectionInfos->user,
             $this->connectionInfos->password,
             $this->connectionInfos->pdoOptions
         );
+            
+        if ($this->connectionInfos->useUtf8 === true) {
+            $this->useUtf8();
+        }
     }
     
     /**
