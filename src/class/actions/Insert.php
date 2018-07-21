@@ -35,7 +35,7 @@ class Insert extends AbstractActions
         $this->tableName = $prefix.$tableName;
         
         if (is_array($columns)) {
-            $this->columns = $columns;
+            $this->addDatasForColumns($columns);
         }
     }
     
