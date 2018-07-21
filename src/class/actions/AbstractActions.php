@@ -391,7 +391,7 @@ abstract class AbstractActions
             );
             
             $req->execute($this->preparedRequestArgs);
-            $error = $req->errorInfo();
+            $error = $pdo->errorInfo();
         } else {
             $pdoMethodToCall = 'exec';
             if ($this instanceof \BfwSql\Actions\Select) {
