@@ -164,7 +164,7 @@ class Basic implements \SplObserver
      */
     protected function addQueryToMonoLog($query, $error)
     {
-        $this->monolog->getMonolog()->debug(
+        $this->monolog->getLogger()->debug(
             'Type: '.$this->action.' ; '
             .'Query: '.$query. ' ; '
             .'Errors: '.print_r($error, true)
