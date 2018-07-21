@@ -261,6 +261,16 @@ class Sql
         $req   = $this->sqlConnect->getPDO()->query($request);
         $error = $this->sqlConnect->getPDO()->errorInfo();
         
+        $app     = \BFW\Application::getInstance();
+        $subject = $app->getSubjectList()->getSubjectForName('bfw-sql');
+        $subject->addNotification(
+            'user query',
+            (object) [
+                'request' => $request,
+                'error'   => $error
+            ]
+        );
+        
         if (
             !$req
             && $error[0] !== null
