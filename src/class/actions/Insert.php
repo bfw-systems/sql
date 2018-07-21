@@ -71,7 +71,5 @@ class Insert extends AbstractActions
             $this->assembledRequest .= ' ('.$lstColumns.')'
                 .' VALUES ('.$lstValues.')';
         }
-        
-        $this->callObserver();
     }
 } 

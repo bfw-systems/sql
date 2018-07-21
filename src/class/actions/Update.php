@@ -69,7 +69,5 @@ class Update extends AbstractActions
         $this->assembledRequest = 'UPDATE '.$this->tableName
             .' SET '.$lstColumns
             .$this->generateWhere();
-
-        $this->callObserver();
     }
 }

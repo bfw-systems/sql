@@ -404,6 +404,7 @@ abstract class AbstractActions
         
         $this->lastRequestStatement = $req;
         $this->lastErrorInfos       = $error;
+        $this->callObserver();
         
         return $error;
     }

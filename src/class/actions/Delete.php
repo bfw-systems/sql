@@ -33,7 +33,5 @@ class Delete extends AbstractActions
         $where = $this->generateWhere();
         
         $this->assembledRequest = 'DELETE FROM '.$this->tableName.$where;
-        
-        $this->callObserver();
     }
 }

@@ -477,8 +477,6 @@ class Select extends AbstractActions
             .$this->generateGroupBy()
             .$this->generateOrderBy()
             .$this->generateLimit();
-        
-        $this->callObserver();
     }
     
     /**
