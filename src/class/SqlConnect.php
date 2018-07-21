@@ -14,6 +14,12 @@ use \Exception;
 class SqlConnect
 {
     /**
+     * @const ERR_DSN_METHOD_NOT_FOUND Exception code if there is no method to
+     * generate the dsn used by PDO.
+     */
+    const ERR_DSN_METHOD_NOT_FOUND = 2104001;
+    
+    /**
      * @var \PDO $PDO PDO Connexion object
      */
     protected $PDO;
@@ -62,7 +68,8 @@ class SqlConnect
         
         if (!method_exists($createDsnClassName, $this->type)) {
             throw new Exception(
-                'No method to generate DSN find on \BfwSql\CreatePdoDsn class.'
+                'No method to generate DSN find on \BfwSql\CreatePdoDsn class.',
+                self::ERR_DSN_METHOD_NOT_FOUND
             );
         }
         

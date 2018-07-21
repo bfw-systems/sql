@@ -46,6 +46,46 @@ abstract class AbstractActions
     const PARTIALLY_MODE_NOTQUOTE = 'not quote';
     
     /**
+     * @const ERR_EXECUTE_BAD_REQUEST Exception code if a request has fail
+     * during execution
+     */
+    const ERR_EXECUTE_BAD_REQUEST = 2301001;
+    
+    /**
+     * @const ERR_EXECUTED_UNKNOWN_ERROR Exception code if a request has fail
+     * but when the error has not been returned by PDO::errorInfos()
+     */
+    const ERR_EXECUTED_UNKNOWN_ERROR = 2301002;
+    
+    /**
+     * @const ERR_DATA_ALREADY_DECLARED_FOR_COLUMN Exception code if the user
+     * try to define a data for a column which has already been defined with
+     * another data. Used for insert and update.
+     */
+    const ERR_DATA_ALREADY_DECLARED_FOR_COLUMN = 2301003;
+    
+    /**
+     * @const ERR_QUOTED_COLUMN_NOT_SUPPORTED Exception code if we try to
+     * declare a column to quote or not quote with a select or delete request.
+     * The system can be used only with insert or update.
+     */
+    const ERR_QUOTED_COLUMN_NOT_SUPPORTED = 2301004;
+    
+    /**
+     * @const ERR_COLUMN_ALREADY_DEFINE_NOT_QUOTED Exception code if the user
+     * try to declare a column to be quoted, but the column is already declared
+     * to be not quoted.
+     */
+    const ERR_COLUMN_ALREADY_DEFINE_NOT_QUOTED = 2301005;
+    
+    /**
+     * @const ERR_COLUMN_ALREADY_DEFINE_QUOTED Exception code if the user try
+     * to declared a column to be not quoted, but the column is already
+     * declared to be quoted.
+     */
+    const ERR_COLUMN_ALREADY_DEFINE_QUOTED = 2301006;
+    
+    /**
      * @var \BfwSql\SqlConnect $sqlConnect SqlConnect object
      */
     protected $sqlConnect;
@@ -423,12 +463,16 @@ abstract class AbstractActions
         
         //Throw an exception if they are an error with the request
         if ($error[0] !== null && $error[0] !== '00000') {
-            throw new Exception($error[2]);
+            throw new Exception(
+                $error[2],
+                self::ERR_EXECUTE_BAD_REQUEST
+            );
         }
         
         if ($this->lastRequestStatement === false) {
             throw new Exception(
-                'An error occurred during the execution of the request'
+                'An error occurred during the execution of the request',
+                self::ERR_EXECUTED_UNKNOWN_ERROR
             );
         }
         
@@ -567,7 +611,8 @@ abstract class AbstractActions
             ) {
                 throw new \Exception(
                     'A different data is already declared for the column '
-                    .$columnName
+                    .$columnName,
+                    self::ERR_DATA_ALREADY_DECLARED_FOR_COLUMN
                 );
             }
             
@@ -591,7 +636,8 @@ abstract class AbstractActions
         if ($this instanceof Select || $this instanceof Delete) {
             throw new Exception(
                 'Sorry, automatic quoted value is not supported into '
-                .get_called_class().' class'
+                .get_called_class().' class',
+                self::ERR_QUOTED_COLUMN_NOT_SUPPORTED
             );
         }
         
@@ -599,7 +645,8 @@ abstract class AbstractActions
             if (isset($this->notQuotedColumns[$columnName])) {
                 throw new Exception(
                     'The column '.$columnName.' is already declared to be a'
-                    .' not quoted value.'
+                    .' not quoted value.',
+                    self::ERR_COLUMN_ALREADY_DEFINE_NOT_QUOTED
                 );
             }
             
@@ -623,7 +670,8 @@ abstract class AbstractActions
         if ($this instanceof Select || $this instanceof Delete) {
             throw new Exception(
                 'Sorry, automatic quoted value is not supported into '
-                .get_called_class().' class'
+                .get_called_class().' class',
+                self::ERR_QUOTED_COLUMN_NOT_SUPPORTED
             );
         }
         
@@ -631,7 +679,8 @@ abstract class AbstractActions
             if (isset($this->quotedColumns[$columnName])) {
                 throw new Exception(
                     'The column '.$columnName.' is already declared to be a'
-                    .' quoted value.'
+                    .' quoted value.',
+                    self::ERR_COLUMN_ALREADY_DEFINE_QUOTED
                 );
             }
             

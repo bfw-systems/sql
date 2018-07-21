@@ -14,6 +14,12 @@ use \Exception;
 class Sql
 {
     /**
+     * @const ERR_QUERY_BAD_REQUEST Exception code if the request executed
+     * on query method have an error.
+     */
+    const ERR_QUERY_BAD_REQUEST = 2103001;
+    
+    /**
      * @var \BfwSql\SqlConnect $sqlConnect SqlConnect object
      */
     protected $sqlConnect;
@@ -277,7 +283,10 @@ class Sql
             && $error[0] !== '00000'
             && isset($error[2])
         ) {
-            throw new Exception($error[2]);
+            throw new Exception(
+                $error[2],
+                self::ERR_QUERY_BAD_REQUEST
+            );
         }
         
         return $req;

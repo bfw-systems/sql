@@ -9,6 +9,8 @@ use \Exception;
  */
 class Secure
 {
+    const ERR_NO_DATABASE_CONNECTED = 2201001;
+    
     /**
      * Protect datas with sql protect method
      * 
@@ -24,7 +26,10 @@ class Secure
         $dbModule = $app->getModule('bfw-sql');
         
         if (count($dbModule->listBases) === 0) {
-            throw new Exception('No database connected to protect data');
+            throw new Exception(
+                'No database connected to protect data',
+                self::ERR_NO_DATABASE_CONNECTED
+            );
         }
         
         return reset($dbModule->listBases)->protect($datas);

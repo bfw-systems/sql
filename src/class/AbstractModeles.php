@@ -14,6 +14,24 @@ use \Exception;
 abstract class AbstractModeles extends \BfwSql\Sql
 {
     /**
+     * @const ERR_NO_CONNECTION_CONFIGURED Exception code if no connection
+     * is configured.
+     */
+    const ERR_NO_CONNECTION_CONFIGURED = 2101001;
+    
+    /**
+     * @const ERR_NEED_BASEKEYNAME_DEFINED Exception code if the baseKeyName
+     * should be defined (multiple connection) but it's not.
+     */
+    const ERR_NEED_BASEKEYNAME_DEFINED = 2101002;
+    
+    /**
+     * @const ERR_UNKNOWN_CONNECTION_FOR_BASEKEYNAME Exception code if the
+     * baseKeyName defined corresponding to no defined connection.
+     */
+    const ERR_UNKNOWN_CONNECTION_FOR_BASEKEYNAME = 2101003;
+    
+    /**
      * @var $tableName The table name
      */
     protected $tableName = '';
@@ -96,20 +114,25 @@ abstract class AbstractModeles extends \BfwSql\Sql
             ->listBases;
         
         if (count($listBases) === 0) {
-            throw new Exception('There is no connection configured.');
+            throw new Exception(
+                'There is no connection configured.',
+                self::ERR_NO_CONNECTION_CONFIGURED
+            );
         }
         
         if (count($listBases) > 1 && empty($this->baseKeyName)) {
             throw new Exception(
                 'There are multiple connection, '
-                .'so the property baseKeyName must be defined'
+                .'so the property baseKeyName must be defined',
+                self::ERR_NEED_BASEKEYNAME_DEFINED
             );
         }
         
         if (count($listBases) > 1 && !isset($listBases[$this->baseKeyName])) {
             throw new Exception(
                 'There are multiple connection, '
-                .'but the connection '.$this->baseKeyName.' is not defined.'
+                .'but the connection '.$this->baseKeyName.' is not defined.',
+                self::ERR_UNKNOWN_CONNECTION_FOR_BASEKEYNAME
             );
         }
         

@@ -15,6 +15,18 @@ use \PDO;
 class Select extends AbstractActions
 {
     /**
+     * @const ERR_TABLE_INFOS_BAD_FORMAT Exception code if table structure is
+     * not correct.
+     */
+    const ERR_TABLE_INFOS_BAD_FORMAT = 2304001;
+    
+    /**
+     * @const ERR_SUB_QUERY_FORMAT Exception code if the sub-query has not the
+     * correct format (string or AbstractAction object).
+     */
+    const ERR_SUB_QUERY_FORMAT = 2304002;
+    
+    /**
      * @var string $returnType PHP Type used for return result
      */
     protected $returnType = '';
@@ -173,7 +185,8 @@ class Select extends AbstractActions
     {
         if (!is_array($table) && !is_string($table)) {
             throw new Exception(
-                'Table information is not in the right format.'
+                'Table information is not in the right format.',
+                self::ERR_TABLE_INFOS_BAD_FORMAT
             );
         }
         
@@ -282,7 +295,8 @@ class Select extends AbstractActions
         } else {
             throw new Exception(
                 'subRequest passed in parameters must be an instance of '
-                .'BfwSql System or a string.'
+                .'\BfwSql\Actions\AbstractActions or a string.',
+                self::ERR_SUB_QUERY_FORMAT
             );
         }
         

@@ -14,6 +14,11 @@ use \Exception;
 class Update extends AbstractActions
 {
     /**
+     * @const ERR_ASSEMBLE_NO_DATAS Exception code if no data to update.
+     */
+    const ERR_ASSEMBLE_NO_DATAS = 2305001;
+    
+    /**
      * Constructor
      * 
      * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
@@ -47,7 +52,10 @@ class Update extends AbstractActions
     protected function assembleRequest()
     {
         if (count($this->columns) === 0) {
-            throw new Exception('SqlUpdate : no datas to update.');
+            throw new Exception(
+                'SqlUpdate : no datas to update.',
+                self::ERR_ASSEMBLE_NO_DATAS
+            );
         }
         
         $lstColumns = '';

@@ -11,6 +11,11 @@ use \Exception;
 class CreatePdoDsn
 {
     /**
+     * @const ERR_UNKNOWN_FORMAT Exception code if the format is unknown.
+     */
+    const ERR_UNKNOWN_FORMAT = 2102001;
+    
+    /**
      * @throws \Exception Unknown DSN format
      */
     protected static function unknownDsn()
@@ -19,7 +24,8 @@ class CreatePdoDsn
             'Sorry, the DSN drivers string is not declared in bfw-sql module.'
             .'The main raison is the author don\'t know dsn format.'
             .'You can create an issue on github and give the correct format or'
-            .', better, create a pull-request.'
+            .', better, create a pull-request.',
+            self::ERR_UNKNOWN_FORMAT
         );
     }
     
