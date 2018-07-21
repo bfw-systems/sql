@@ -1,6 +1,6 @@
 <?php
 
-namespace BfwSql;
+namespace BfwSql\Actions;
 
 /**
  * Class to write INSERT INTO queries
@@ -9,7 +9,7 @@ namespace BfwSql;
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
  */
-class SqlInsert extends SqlActions
+class Insert extends AbstractActions
 {
     /**
      * Constructor
@@ -22,10 +22,10 @@ class SqlInsert extends SqlActions
      *  quoted string value system.
      */
     public function __construct(
-        SqlConnect $sqlConnect,
+        \BfwSql\SqlConnect $sqlConnect,
         $tableName,
         $columns = null,
-        $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL
+        $quoteStatus = \BfwSql\Actions\AbstractActions::QUOTE_ALL
     ) {
         parent::__construct($sqlConnect);
         

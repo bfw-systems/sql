@@ -11,7 +11,7 @@ use \Exception;
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
  */
-abstract class Modeles extends \BfwSql\Sql
+abstract class AbstractModeles extends \BfwSql\Sql
 {
     /**
      * @var $tableName The table name

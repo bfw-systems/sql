@@ -1,6 +1,6 @@
 <?php
 
-namespace BfwSql;
+namespace BfwSql\Actions;
 
 use \Exception;
 
@@ -11,7 +11,7 @@ use \Exception;
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
  */
-class SqlUpdate extends SqlActions
+class Update extends AbstractActions
 {
     /**
      * Constructor
@@ -24,10 +24,10 @@ class SqlUpdate extends SqlActions
      *  quoted string value system.
      */
     public function __construct(
-        SqlConnect $sqlConnect,
+        \BfwSql\SqlConnect $sqlConnect,
         $tableName,
         $columns = null,
-        $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL
+        $quoteStatus = \BfwSql\Actions\AbstractActions::QUOTE_ALL
     ) {
         parent::__construct($sqlConnect);
         

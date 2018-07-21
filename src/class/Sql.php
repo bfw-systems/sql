@@ -143,7 +143,7 @@ class Sql
     public function insert(
         $table,
         $columns = null,
-        $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL
+        $quoteStatus = \BfwSql\Actions\AbstractActions::QUOTE_ALL
     ) {
         return new SqlInsert(
             $this->sqlConnect,
@@ -167,7 +167,7 @@ class Sql
     public function update(
         $table,
         $columns = null,
-        $quoteStatus = \BfwSql\SqlActions::QUOTE_ALL
+        $quoteStatus = \BfwSql\Actions\AbstractActions::QUOTE_ALL
     ) {
         return new SqlUpdate(
             $this->sqlConnect,

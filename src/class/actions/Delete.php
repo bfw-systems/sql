@@ -1,6 +1,6 @@
 <?php
 
-namespace BfwSql;
+namespace BfwSql\Actions;
 
 /**
  * Class to write DELETE queries
@@ -9,7 +9,7 @@ namespace BfwSql;
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
  */
-class SqlDelete extends SqlActions
+class Delete extends AbstractActions
 {
     /**
      * Constructor
@@ -17,7 +17,7 @@ class SqlDelete extends SqlActions
      * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
      * @param string             $tableName  The table name used for query
      */
-    public function __construct(SqlConnect $sqlConnect, $tableName)
+    public function __construct(\BfwSql\SqlConnect $sqlConnect, $tableName)
     {
         parent::__construct($sqlConnect);
         

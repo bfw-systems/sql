@@ -1,6 +1,6 @@
 <?php
 
-namespace BfwSql;
+namespace BfwSql\Actions;
 
 use \Exception;
 
@@ -11,7 +11,7 @@ use \Exception;
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
  */
-abstract class SqlActions
+abstract class AbstractActions
 {
     /**
      * @const QUOTE_ALL To automatic quote all string values.
@@ -127,7 +127,7 @@ abstract class SqlActions
      * 
      * @param boolean $preparedRequestStatus The new status for prepared request
      * 
-     * @return \BfwSql\SqlActions
+     * @return \BfwSql\Actions\AbstractActions
      */
     public function setIsPreparedRequest($preparedRequestStatus)
     {
@@ -163,7 +163,7 @@ abstract class SqlActions
      * 
      * @param array $driverOptions Drivers options
      * 
-     * @return \BfwSql\SqlActions
+     * @return \BfwSql\Actions\AbstractActions
      */
     public function setPrepareDriversOptions($driverOptions)
     {
@@ -231,7 +231,7 @@ abstract class SqlActions
             $error = $req->errorInfo();
         } else {
             $pdoMethodToCall = 'exec';
-            if ($this instanceof \BfwSql\SqlSelect) {
+            if ($this instanceof \BfwSql\Actions\Select) {
                 $pdoMethodToCall = 'query';
             }
             
@@ -327,7 +327,7 @@ abstract class SqlActions
      * 
      * @throws \Exception If key on prepared request is already used
      * 
-     * @return \BfwSql\SqlActions
+     * @return \BfwSql\Actions\AbstractActions
      */
     public function where($filter, $preparedFilters = null)
     {
@@ -387,7 +387,7 @@ abstract class SqlActions
      * @param array $columns Datas to add or update
      *  Format : array('sqlColumnName' => 'valueForThisColumn', ...);
      * 
-     * @return \BfwSql\SqlActions
+     * @return \BfwSql\Actions\AbstractActions
      */
     public function addDatasForColumns(array $columns)
     {
@@ -415,11 +415,11 @@ abstract class SqlActions
      * 
      * @throws Exception If the column is already declared to be not quoted
      * 
-     * @return \BfwSql\SqlActions
+     * @return \BfwSql\Actions\AbstractActions
      */
     public function addQuotedColumns(...$columns)
     {
-        if ($this instanceof SqlSelect || $this instanceof SqlDelete) {
+        if ($this instanceof Select || $this instanceof Delete) {
             throw new Exception(
                 'Sorry, automatic quoted value is not supported into '
                 .get_called_class().' class'
@@ -447,11 +447,11 @@ abstract class SqlActions
      * 
      * @throws Exception If the column is already declared to be quoted
      * 
-     * @return \BfwSql\SqlActions
+     * @return \BfwSql\Actions\AbstractActions
      */
     public function addNotQuotedColumns(...$columns)
     {
-        if ($this instanceof SqlSelect || $this instanceof SqlDelete) {
+        if ($this instanceof Select || $this instanceof Delete) {
             throw new Exception(
                 'Sorry, automatic quoted value is not supported into '
                 .get_called_class().' class'

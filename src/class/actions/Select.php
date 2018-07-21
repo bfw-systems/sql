@@ -1,6 +1,6 @@
 <?php
 
-namespace BfwSql;
+namespace BfwSql\Actions;
 
 use \Exception;
 use \PDO;
@@ -12,7 +12,7 @@ use \PDO;
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
  */
-class SqlSelect extends SqlActions
+class Select extends AbstractActions
 {
     /**
      * @var string $returnType PHP Type used for return result
@@ -65,7 +65,7 @@ class SqlSelect extends SqlActions
      * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
      * @param string             $returnType PHP type used for return result
      */
-    public function __construct(SqlConnect $sqlConnect, $returnType)
+    public function __construct(\BfwSql\SqlConnect $sqlConnect, $returnType)
     {
         parent::__construct($sqlConnect);
         $this->returnType = $returnType;
@@ -174,8 +174,8 @@ class SqlSelect extends SqlActions
     /**
      * Add a sub-query in the SELECT part on the request
      * 
-     * @param \BfwSql\SqlActions|string $subRequest The sub-request
-     * @param string                    $shortcut   The shortcut to use for
+     * @param \BfwSql\Actions\AbstractActions|string $subRequest The sub-request
+     * @param string  $shortcut The shortcut to use for
      *  this query in SELECT part
      * 
      * @return \BfwSql\SqlSelect
@@ -184,7 +184,7 @@ class SqlSelect extends SqlActions
     {
         if (
             is_object($subRequest)
-            && $subRequest instanceof \BfwSql\SqlActions
+            && $subRequest instanceof \BfwSql\Actions\AbstractActions
         ) {
             $subQuery = $subRequest->assemble();
         } elseif (is_string($subRequest)) {
