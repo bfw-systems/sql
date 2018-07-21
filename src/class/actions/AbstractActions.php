@@ -669,7 +669,7 @@ abstract class AbstractActions
             return $value;
         }
         
-        return '"'.$value.'"';
+        return $this->sqlConnect->getPDO()->quote($value);
     }
     
     /**
