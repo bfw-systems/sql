@@ -32,6 +32,20 @@ abstract class AbstractActions
     const QUOTE_PARTIALLY = 'partially';
     
     /**
+     * @const PARTIALLY_MODE_QUOTE Used by automatic quote system when is equal
+     * to QUOTE_PARTIALLY. Define default quote mode to quote all columns which
+     * is not define to not be quoted.
+     */
+    const PARTIALLY_MODE_QUOTE = 'quote';
+    
+    /**
+     * @const PARTIALLY_MODE_NOTQUOTE Used by automatic quote system when is
+     * equal to QUOTE_PARTIALLY. Define default quote mode to not quote all
+     * columns which is not define to be quoted.
+     */
+    const PARTIALLY_MODE_NOTQUOTE = 'not quote';
+    
+    /**
      * @var \BfwSql\SqlConnect $sqlConnect SqlConnect object
      */
     protected $sqlConnect;
@@ -60,6 +74,13 @@ abstract class AbstractActions
      * @var string $quoteStatus The current automic quote status.
      */
     protected $quoteStatus = self::QUOTE_ALL;
+    
+    /**
+     * @var string $partiallyPreferedMode The default mode to use on column
+     * when quoteStatus is declared to be PARTIALLY.
+     * Value is self::PARTIALLY_MODE_QUOTE or self::PARTIALLY_MODE_NOTQUOTE
+     */
+    protected $partiallyPreferedMode = self::PARTIALLY_MODE_QUOTE;
     
     /**
      * @var array $quotedColumns List of columns where value will be quoted if
@@ -187,6 +208,30 @@ abstract class AbstractActions
     }
     
     /**
+     * Getter to access to partiallyPreferedMode property
+     * 
+     * @return string
+     */
+    public function getPartiallyPreferedMode()
+    {
+        return $this->partiallyPreferedMode;
+    }
+
+    /**
+     * Getter to access to partiallyPreferedMode property
+     * Value should be self::PARTIALLY_MODE_QUOTE or
+     * self::PARTIALLY_MODE_NOTQUOTE
+     * 
+     * @param string $partiallyPreferedMode The new prefered mode
+     * 
+     * @return $this
+     */
+    public function setPartiallyPreferedMode($partiallyPreferedMode)
+    {
+        $this->partiallyPreferedMode = $partiallyPreferedMode;
+        
+        return $this;
+    }
     
     /**
      * Getter to access to quotedColumns property
@@ -586,20 +631,17 @@ abstract class AbstractActions
     {
         if ($this->quoteStatus === self::QUOTE_NONE) {
             return $value;
-        }
-        
-        /**
-         * If the status allow to quote partially, check if the column is
-         * not declared to be quoted or is declared to be not quote.
-         */
-        if (
-            (
-                !isset($this->quotedColumns[$columnName])
-                || isset($this->notQuotedColumns[$columnName])
-            )
-            && $this->quoteStatus === self::QUOTE_PARTIALLY
-        ) {
-            return $value;
+        } elseif ($this->quoteStatus === self::QUOTE_PARTIALLY) {
+            if (array_key_exists($columnName, $this->notQuotedColumns)) {
+                return $value;
+            }
+            
+            if (
+                $this->partiallyPreferedMode === self::PARTIALLY_MODE_NOTQUOTE &&
+                array_key_exists($columnName, $this->quotedColumns) === false
+            ) {
+                return $value;
+            }
         }
         
         if (!is_string($value)) {
