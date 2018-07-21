@@ -475,11 +475,13 @@ abstract class AbstractActions
      * 
      * @param string $request The user request
      * 
-     * @return void
+     * @return \BfwSql\Actions\AbstractActions
      */
     public function query($request)
     {
         $this->assembledRequest = $request;
+        
+        return $this;
     }
     
     /**
@@ -509,13 +511,15 @@ abstract class AbstractActions
      * 
      * @param array $preparedRequestArgs Filters to add in prepared request
      * 
-     * @return void
+     * @return \BfwSql\Actions\AbstractActions
      */
     protected function addPreparedRequestArgs(array $preparedRequestArgs)
     {
         foreach ($preparedRequestArgs as $prepareKey => $prepareValue) {
             $this->preparedRequestArgs[$prepareKey] = $prepareValue;
         }
+        
+        return $this;
     }
     
     /**
