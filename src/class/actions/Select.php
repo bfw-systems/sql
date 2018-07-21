@@ -72,6 +72,96 @@ class Select extends AbstractActions
     }
     
     /**
+     * Getter accessor to returnType property
+     * 
+     * @return string
+     */
+    public function getReturnType()
+    {
+        return $this->returnType;
+    }
+
+    /**
+     * Getter accessor to mainTable property
+     * 
+     * @return \stdClass
+     */
+    public function getMainTable()
+    {
+        return $this->mainTable;
+    }
+
+    /**
+     * Getter accessor to subQueries property
+     * 
+     * @return array
+     */
+    public function getSubQueries()
+    {
+        return $this->subQueries;
+    }
+
+    /**
+     * Getter accessor to join property
+     * 
+     * @return array
+     */
+    public function getJoin()
+    {
+        return $this->join;
+    }
+
+    /**
+     * Getter accessor to joinLeft property
+     * 
+     * @return array
+     */
+    public function getJoinLeft()
+    {
+        return $this->joinLeft;
+    }
+
+    /**
+     * Getter accessor to joinRight property
+     * 
+     * @return array
+     */
+    public function getJoinRight()
+    {
+        return $this->joinRight;
+    }
+
+    /**
+     * Getter accessor to order property
+     * 
+     * @return string[]
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Getter accessor to limit property
+     * 
+     * @return string
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * Getter accessor to group property
+     * 
+     * @return string[]
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+    
+    /**
      * Define object used to save informations about a table
      * This object will be used to write query
      * 

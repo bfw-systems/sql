@@ -123,6 +123,26 @@ abstract class AbstractActions
     }
     
     /**
+     * Getter to access to assembledRequest property
+     * 
+     * @return string
+     */
+    public function getAssembledRequest()
+    {
+        return $this->assembledRequest;
+    }
+
+    /**
+     * Getter to access to isPreparedRequest property
+     * 
+     * @return boolean
+     */
+    public function getIsPreparedRequest()
+    {
+        return $this->isPreparedRequest;
+    }
+    
+    /**
      * Setter to enable or disable prepared request
      * 
      * @param boolean $preparedRequestStatus The new status for prepared request
@@ -134,6 +154,68 @@ abstract class AbstractActions
         $this->isPreparedRequest = (bool) $preparedRequestStatus;
         
         return $this;
+    }
+
+    /**
+     * Getter to access to tableName property
+     * 
+     * @return string
+     */
+    public function getTableName()
+    {
+        return $this->tableName;
+    }
+
+    /**
+     * Getter to access to columns property
+     * 
+     * @return array
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+
+    /**
+     * Getter to access to quoteStatus property
+     * 
+     * @return string
+     */
+    public function getQuoteStatus()
+    {
+        return $this->quoteStatus;
+    }
+    
+    /**
+    
+    /**
+     * Getter to access to quotedColumns property
+     * 
+     * @return array
+     */
+    public function getQuotedColumns()
+    {
+        return $this->quotedColumns;
+    }
+
+    /**
+     * Getter to access to notQuotedColumns property
+     * 
+     * @return array
+     */
+    public function getNotQuotedColumns()
+    {
+        return $this->notQuotedColumns;
+    }
+
+    /**
+     * Getter to access to where property
+     * 
+     * @return string[]
+     */
+    public function getWhere()
+    {
+        return $this->where;
     }
     
     /**
@@ -170,6 +252,26 @@ abstract class AbstractActions
         $this->prepareDriversOptions = $driverOptions;
         
         return $this;
+    }
+
+    /**
+     * Getter to access to noResult property
+     * 
+     * @return boolean
+     */
+    public function getNoResult()
+    {
+        return $this->noResult;
+    }
+
+    /**
+     * Getter to access to lastRequestStatement property
+     * 
+     * @return \PDOStatement|null
+     */
+    public function getLastRequestStatement()
+    {
+        return $this->lastRequestStatement;
     }
     
     /**
