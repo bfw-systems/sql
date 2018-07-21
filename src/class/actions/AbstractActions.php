@@ -298,7 +298,7 @@ abstract class AbstractActions
      * 
      * @return \BfwSql\Actions\AbstractActions
      */
-    public function setPrepareDriversOptions($driverOptions)
+    public function setPrepareDriversOptions(array $driverOptions)
     {
         $this->prepareDriversOptions = $driverOptions;
         
