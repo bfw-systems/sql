@@ -126,7 +126,10 @@ class Sql
      */
     public function select($type = 'array')
     {
-        return new SqlSelect($this->sqlConnect, $type);
+        $usedClass       = \BfwSql\UsedClass::getInstance();
+        $selectClassName = $usedClass->obtainClassNameToUse('ActionsSelect');
+        
+        return new $selectClassName($this->sqlConnect, $type);
     }
     
     /**
@@ -145,7 +148,10 @@ class Sql
         $columns = null,
         $quoteStatus = \BfwSql\Actions\AbstractActions::QUOTE_ALL
     ) {
-        return new SqlInsert(
+        $usedClass       = \BfwSql\UsedClass::getInstance();
+        $insertClassName = $usedClass->obtainClassNameToUse('ActionsInsert');
+        
+        return new $insertClassName(
             $this->sqlConnect,
             $table,
             $columns,
@@ -169,7 +175,10 @@ class Sql
         $columns = null,
         $quoteStatus = \BfwSql\Actions\AbstractActions::QUOTE_ALL
     ) {
-        return new SqlUpdate(
+        $usedClass       = \BfwSql\UsedClass::getInstance();
+        $updateClassName = $usedClass->obtainClassNameToUse('ActionsUpdate');
+        
+        return new $updateClassName(
             $this->sqlConnect,
             $table,
             $columns,
@@ -186,7 +195,10 @@ class Sql
      */
     public function delete($table)
     {
-        return new SqlDelete($this->sqlConnect, $table);
+        $usedClass       = \BfwSql\UsedClass::getInstance();
+        $deleteClassName = $usedClass->obtainClassNameToUse('ActionsDelete');
+        
+        return new $deleteClassName($this->sqlConnect, $table);
     }
     
     /**
