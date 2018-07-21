@@ -64,7 +64,7 @@ class Sql
      * 
      * @return integer
      */
-    public function getLastInsertedId($name = null)
+    public function obtainLastInsertedId($name = null)
     {
         return (int) $this->sqlConnect->getPDO()->lastInsertId($name);
     }
@@ -80,7 +80,7 @@ class Sql
      * 
      * @return integer
      */
-    public function getLastInsertedIdWithoutAI(
+    public function obtainLastInsertedIdWithoutAI(
         $table,
         $colId,
         $order,

@@ -334,7 +334,7 @@ abstract class AbstractActions
         $this->where[] = $filter;
         
         if (is_array($preparedFilters)) {
-            $this->addPreparedFilters($preparedFilters);
+            $this->addPreparedRequestArgs($preparedFilters);
         }
         
         return $this;
@@ -343,13 +343,13 @@ abstract class AbstractActions
     /**
      * Add filters to prepared requests
      * 
-     * @param array $preparedFilters Filters to add in prepared request
+     * @param array $preparedRequestArgs Filters to add in prepared request
      * 
      * @return void
      */
-    protected function addPreparedFilters($preparedFilters)
+    protected function addPreparedRequestArgs(array $preparedRequestArgs)
     {
-        foreach ($preparedFilters as $prepareKey => $prepareValue) {
+        foreach ($preparedRequestArgs as $prepareKey => $prepareValue) {
             $this->preparedRequestArgs[$prepareKey] = $prepareValue;
         }
     }

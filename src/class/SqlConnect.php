@@ -81,7 +81,7 @@ class SqlConnect
      * 
      * @return void
      */
-    protected function setUtf8()
+    protected function useUtf8()
     {
         $this->PDO->exec('SET NAMES utf8');
     }

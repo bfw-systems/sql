@@ -76,7 +76,7 @@ abstract class AbstractModeles extends \BfwSql\Sql
      * 
      * @return \BFW\Application
      */
-    protected function getApp()
+    protected function obtainApp()
     {
         return \BFW\Application::getInstance();
     }
@@ -91,7 +91,9 @@ abstract class AbstractModeles extends \BfwSql\Sql
      */
     protected function obtainSqlConnect()
     {
-        $listBases = $this->getApp()->getModule('bfw-sql')->listBases;
+        $listBases = $this->obtainApp()
+            ->getModuleForName('bfw-sql')
+            ->listBases;
         
         if (count($listBases) === 0) {
             throw new Exception('There is no connection configured.');
