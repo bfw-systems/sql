@@ -27,6 +27,12 @@ class Select extends AbstractActions
     const ERR_SUB_QUERY_FORMAT = 2304002;
     
     /**
+     * @const ERR_GENERATE_FROM_MISSING_TABLE_NAME Exception code if the user
+     * try to generate a request without table name.
+     */
+    const ERR_GENERATE_FROM_MISSING_TABLE_NAME = 2304003;
+    
+    /**
      * @var string $returnType PHP Type used for return result
      */
     protected $returnType = '';
@@ -531,6 +537,14 @@ class Select extends AbstractActions
      */
     protected function generateFrom()
     {
+        if ($this->mainTable === null) {
+            throw new Exception(
+                'The "FROM" part of the request can not be generate because'
+                .' the table name as not been declared.',
+                self::ERR_GENERATE_FROM_MISSING_TABLE_NAME
+            );
+        }
+        
         $from = '`'.$this->mainTable->tableName.'`';
         
         if ($this->mainTable->shortcut !== null) {
