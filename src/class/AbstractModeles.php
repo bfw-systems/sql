@@ -114,7 +114,7 @@ abstract class AbstractModeles extends \BfwSql\Sql
         }
         
         if (count($listBases) === 1) {
-            $sqlConnect = current($listBases);
+            $sqlConnect = reset($listBases);
         } else {
             $sqlConnect = $listBases[$this->baseKeyName];
         }
