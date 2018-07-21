@@ -579,13 +579,13 @@ abstract class AbstractActions
     /**
      * Declare columns should be automatic quoted if value is string.
      * 
-     * @param string ...$columns Columns name
+     * @param string[] $columns Columns name
      * 
      * @throws Exception If the column is already declared to be not quoted
      * 
      * @return \BfwSql\Actions\AbstractActions
      */
-    public function addQuotedColumns(...$columns)
+    public function addQuotedColumns(array $columns)
     {
         if ($this instanceof Select || $this instanceof Delete) {
             throw new Exception(
@@ -611,13 +611,13 @@ abstract class AbstractActions
     /**
      * Declare columns should not be automatic quoted if value is string.
      * 
-     * @param string ...$columns Columns name
+     * @param string[] $columns Columns name
      * 
      * @throws Exception If the column is already declared to be quoted
      * 
      * @return \BfwSql\Actions\AbstractActions
      */
-    public function addNotQuotedColumns(...$columns)
+    public function addNotQuotedColumns(array $columns)
     {
         if ($this instanceof Select || $this instanceof Delete) {
             throw new Exception(
