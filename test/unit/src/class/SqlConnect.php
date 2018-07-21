@@ -4,152 +4,157 @@ namespace BfwSql\test\unit;
 
 use \atoum;
 
-require_once(__DIR__.'/../../../../vendor/autoload.php');
+$vendorPath = realpath(__DIR__.'/../../../../vendor');
+require_once($vendorPath.'/autoload.php');
+require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/ObserverArray.php');
 
-class SqlConnect extends atoum
+class SqlConnect extends Atoum
 {
-    /**
-     * @var $class : Instance de la class
-     */
-    protected $class;
+    use \BfwSql\Test\Helpers\CreateModule;
     
-    /**
-     * Instanciation de la class avant chaque méthode de test
-     */
+    protected $mock;
+    protected $baseInfos;
+    
     public function beforeTestMethod($testMethod)
     {
-        if (strpos($testMethod, 'testConstruct') !== false) {
-            return;
-        }
+        $this->initModule();
         
-        $connectionInfos          = $this->generateConnectionInfos();
-        $connectionInfos->useUTF8 = false;
-            
-        $this->class = new \BfwSql\test\unit\mocks\SqlConnect(
-            $connectionInfos
-        );
-    }
-    
-    protected function generateConnectionInfos()
-    {
-        return (object) [
-            'baseKeyName' => 'unit_test',
+        $this->mockGenerator
+            ->orphanize('__construct')
+            ->generate('PDO')
+        ;
+        $this->app
+            ->getModuleForName('bfw-sql')
+            ->getConfig()
+            ->setConfigKeyForFile('class.php', 'PDO', '\mock\PDO')
+        ;
+        
+        $this->mockGenerator
+            ->makeVisible('useUtf8')
+            ->generate('BfwSql\SqlConnect')
+        ;
+        
+        $this->baseInfos = (object) [
+            'baseKeyName' => 'myBase',
             'filePath'    => '',
             'host'        => 'localhost',
             'port'        => 3306,
-            'baseName'    => 'unittest',
-            'user'        => 'unit',
-            'password'    => 'test',
+            'baseName'    => 'atoum',
+            'user'        => 'atoum',
+            'password'    => '',
             'baseType'    => 'mysql',
             'pdoOptions'  => [],
-            'useUTF8'     => true,
-            'tablePrefix' => 'unit_'
+            'useUtf8'     => false,
+            'tablePrefix' => 'test_'
         ];
-    }
-    
-    public function testConstructWithUtf8()
-    {
-        $connectionInfos = $this->generateConnectionInfos();
         
-        $this->assert('test BfwSql\SqlConnect::__construct with UTF-8')
-            ->if($this->class = new \BfwSql\test\unit\mocks\SqlConnect($connectionInfos))
-            ->then
-            ->object($this->class)
-                ->isInstanceOf('\BfwSql\SqlConnect')
-            ->object($this->class->connectionInfos)
-                ->isIdenticalTo($connectionInfos)
-            ->string($this->class->type)
-                ->isEqualTo($connectionInfos->baseType)
-            ->given($lastStatement = $this->class->PDO->getLastStatements())
-            ->string($lastStatement->getStatement())
-                ->isEqualTo('SET NAMES utf8');
-    }
-    
-    public function testConstructWithoutUtf8()
-    {
-        $connectionInfos = $this->generateConnectionInfos();
+        if ($testMethod === 'testConstructAndGetters') {
+            return;
+        }
         
-        $this->assert('test BfwSql\SqlConnect::__construct without UTF-8')
-            ->if($connectionInfos->useUTF8 = false)
-            ->and($this->class = new \BfwSql\test\unit\mocks\SqlConnect($connectionInfos))
-            ->then
-            ->object($this->class)
-                ->isInstanceOf('\BfwSql\SqlConnect')
-            ->object($this->class->connectionInfos)
-                ->isIdenticalTo($connectionInfos)
-            ->string($this->class->type)
-                ->isEqualTo($connectionInfos->baseType)
-            ->boolean($this->class->PDO->getLastStatements())
-                ->isFalse();
+        $this->mock = new \mock\BfwSql\SqlConnect($this->baseInfos);
     }
     
-    /**
-     * Tested by runner test.
-     */
+    public function testConstructAndGetters()
+    {
+        $this->assert('test SqlConnect::__construct')
+            ->object($this->mock = new \mock\BfwSql\SqlConnect($this->baseInfos))
+                ->isInstanceOf('\BfwSql\SqlConnect')
+        ;
+        
+        $this->assert('test SqlConnect::getConnectionInfos')
+            ->object($this->mock->getConnectionInfos())
+                ->isIdenticalTo($this->baseInfos)
+        ;
+        
+        $this->assert('test SqlConnect::getType')
+            ->string($this->mock->getType())
+                ->isEqualTo('mysql')
+        ;
+    }
+    
     public function testCreateConnection()
     {
+        $this->assert('test SqlConnect::createConnection - prepare')
+            ->if($this->calling($this->mock)->useUtf8 = null)
+        ;
         
+        $this->assert('test SqlConnect::createConnection with non-existent dsn')
+            ->if($this->baseInfos->baseType = 'fake')
+            ->then
+            ->exception(function() {
+                $this->mock->createConnection();
+            })
+                ->hasCode(\BfwSql\SqlConnect::ERR_DSN_METHOD_NOT_FOUND)
+        ;
+        
+        $this->assert('test SqlConnect::createConnection with existing dsn and without utf8')
+            ->if($this->baseInfos->baseType = 'mysql')
+            ->then
+            ->variable($this->mock->createConnection())
+                ->isNull()
+            ->object($this->mock->getPDO())
+                ->isInstanceOf('\PDO')
+            ->mock($this->mock)
+                ->call('useUtf8')
+                    ->never()
+        ;
+        
+        $this->assert('test SqlConnect::createConnection with existing dsn and with utf8')
+            ->if($this->baseInfos->useUtf8 = true)
+            ->then
+            ->variable($this->mock->createConnection())
+                ->isNull()
+            ->object($this->mock->getPDO())
+                ->isInstanceOf('\PDO')
+            ->mock($this->mock)
+                ->call('useUtf8')
+                    ->once()
+        ;
     }
     
-    /**
-     * Test method BfwSql::protect
-     * We only test if quote around string is remove
-     * 
-     * Test if PDO::quote is call will be run with runner test because it
-     * requires a sql connection
-     * 
-     * @return void
-     */
+    public function testUseUtf8()
+    {
+        $this->assert('test SqlConnect::useUtf8')
+            ->if($this->mock->createConnection()) //To have a pdo instance
+            ->and($this->calling($this->mock->getPDO())->exec = null)
+            ->then
+            ->variable($this->mock->useUtf8())
+                ->isNull()
+            ->mock($this->mock->getPDO())
+                ->call('exec')
+                    ->withArguments('SET NAMES utf8')
+                    ->once()
+        ;
+    }
+    
     public function testProtect()
     {
-        $this->assert('test BfwSql\SqlConnect::protect')
-            ->string($this->class->protect('unit_test'))
-                ->isEqualTo('unit_test');
-    }
-    
-    public function testGetPDO()
-    {
-        $this->assert('test BfwSql\SqlConnect::getPDO')
-            ->object($this->class->getPDO())
-                ->isInstanceOf('\PDO');
-    }
-    
-    public function testGetConnectionInfos()
-    {
-        $this->assert('test BfwSql\SqlConnect::getConnectionInfos')
-            ->given($connectionInfos = $this->generateConnectionInfos())
-            ->and($connectionInfos->useUTF8 = false)
+        $this->assert('test SqlConnect::protect')
+            ->if($this->mock->createConnection()) //To have a pdo instance
+            ->and($this->calling($this->mock->getPDO())->quote = function($string) {
+                return '\''.$string.'\'';
+            })
             ->then
-            ->object($this->class->getConnectionInfos())
-                ->isEqualTo($connectionInfos);
+            ->string($this->mock->protect('atoum'))
+                ->isEqualTo('atoum') //Check there is no quote at begin or end of the string
+            ->mock($this->mock->getPDO())
+                ->call('quote')
+                    ->withArguments('atoum')
+                    ->once()
+            ;
+        ;
     }
     
-    public function testGetType()
+    public function testGetAndUpNbQuery()
     {
-        $this->assert('test BfwSql\SqlConnect::getType')
-            ->given($connectionInfos = $this->generateConnectionInfos())
-            ->string($this->class->getType())
-                ->isEqualTo($connectionInfos->baseType);
-    }
-    
-    public function testGetNbQuery()
-    {
-        $this->assert('test BfwSql\SqlConnect::getNbQuery')
-            ->integer($this->class->getNbQuery())
-                ->isEqualTo(0);
-    }
-    
-    public function testUpNbQuery()
-    {
-        $this->assert('test BfwSql\SqlConnect::upNbQuery')
-            ->if($this->class->upNbQuery())
-            ->then
-            ->integer($this->class->getNbQuery())
+        $this->assert('test SqlConnect::getNbQuery and SqlConnect::upNbQuery')
+            ->integer($this->mock->getNbQuery())
+                ->isEqualTo(0)
+            ->variable($this->mock->upNbQuery())
+                ->isNull()
+            ->integer($this->mock->getNbQuery())
                 ->isEqualTo(1)
-            ->then
-            ->if($this->class->upNbQuery())
-            ->then
-            ->integer($this->class->getNbQuery())
-                ->isEqualTo(2);
+        ;
     }
 }

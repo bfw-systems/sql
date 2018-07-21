@@ -16,23 +16,14 @@ use \mageekguy\atoum;
 // CODE COVERAGE SETUP
 if(!file_exists('/home/travis'))
 {
-    /* Atoum Logo (add slash to start of this line for enable/disable)
     $report = $script->addDefaultReport();
-    $report->addField(new atoum\report\fields\runner\atoum\logo()); //Start
-    $report->addField(new atoum\report\fields\runner\result\logo()); //End status
-    /*/
-    //Nyancat
-    $stdout = new \mageekguy\atoum\writers\std\out;
-    $report = new \mageekguy\atoum\reports\realtime\nyancat;
-    $script->addReport($report->addWriter($stdout));
-    /**/
-
-    $coverageField = new atoum\report\fields\runner\coverage\html('BFW Api', '/home/bfw/www/reports/bfw-sql-v2');
-    $coverageField->setRootUrl('http://bfw.test.bulton.fr/reports/bfw-sql-v2/');
+    
+    $coverageField = new atoum\report\fields\runner\coverage\html('BFW Sql', '/home/bfw-website/www_reports/bfw-sql-v2/test-unit');
+    $coverageField->setRootUrl('http://bfw.bulton.fr/reports/bfw-sql-v2/test-unit/index.html');
     $report->addField($coverageField);
     
-    $treemapField = new atoum\report\fields\runner\coverage\treemap('BFW Api', '/home/bfw/www/treemap/bfw-sql-v2');
-    $treemapField->setHtmlReportBaseUrl('http://bfw.test.bulton.fr/treemap/bfw-sql-v2/');
+    $treemapField = new atoum\report\fields\runner\coverage\treemap('BFW Sql', '/home/bfw-website/www_reports/bfw-sql-v2/treemap');
+    $treemapField->setHtmlReportBaseUrl('http://bfw.bulton.fr/reports/bfw-sql-v2/treemap/index.html');
     $report->addField($treemapField);
 }
 /**/
@@ -50,6 +41,8 @@ $script->getRunner()->addTestsFromDirectory(__DIR__.'/test/unit/src/class/memcac
 
 if(file_exists('/home/travis'))
 {
+    $script->addDefaultReport();
+    
     // Publish code coverage report on coveralls.io
     $sources = './src';
     $token = '9bfQpxPIGH2q85EvtfvIWSFldHWpcNcWk';

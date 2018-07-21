@@ -4,171 +4,150 @@ namespace BfwSql\test\unit;
 
 use \atoum;
 
-require_once(__DIR__.'/../../../../vendor/autoload.php');
+$vendorPath = realpath(__DIR__.'/../../../../vendor');
+require_once($vendorPath.'/autoload.php');
+//require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/Application.php');
 
-class CreatePdoDsn extends atoum
+class CreatePdoDsn extends Atoum
 {
-    /**
-     * @var \stdClass $connectionInfos
-     */
-    protected $connectionInfos;
+    //use \BFW\Test\Helpers\Application;
     
-    /**
-     * @var string $unknownDriverMsg
-     */
-    protected $unknownDriverMsg;
+    //protected $mock;
     
-    /**
-     * Instanciation de la class avant chaque méthode de test
-     */
     public function beforeTestMethod($testMethod)
     {
-        $this->connectionInfos = (object) [
-            'baseKeyName' => 'unit_test',
-            'filePath'    => '/app/db/app.sqlite',
-            'host'        => 'localhost',
-            'port'        => 3306,
-            'baseName'    => 'unittest',
-            'user'        => 'unit',
-            'password'    => 'test',
-            'baseType'    => 'mysql',
-            'pdoOptions'  => [],
-            'useUTF8'     => true,
-            'tablePrefix' => 'unit_'
-        ];
+        //$this->setRootDir(__DIR__.'/../../../..');
+        //$this->createApp();
+        //$this->initApp();
         
-        $this->unknownDriverMsg = 'Sorry, the DSN drivers string is not'
-            .' declared in bfw-sql module.'
-            .'The main raison is the author don\'t know dsn format.'
-            .'You can create an issue on github and give the correct format or'
-            .', better, create a pull-request.';
+        //$this->mock = new \mock\BfwSql\CreatePdoDsn;
     }
     
-    /**
-     * @return void
-     */
     public function testMysql()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::mysql')
-            ->string(\BfwSql\CreatePdoDsn::mysql($this->connectionInfos))
-                ->isEqualTo('mysql:host=localhost;port=3306;dbname=unittest');
+        $this->assert('test CreatePdoDsn::mysql')
+            ->given($infos = (object) [
+                'host'     => 'localhost',
+                'port'     => 3306,
+                'baseName' => 'atoum'
+            ])
+            ->then
+            ->string(\BfwSql\CreatePdoDsn::mysql($infos))
+                ->isEqualTo('mysql:host=localhost;port=3306;dbname=atoum')
+        ;
     }
     
-    /**
-     * @return void
-     */
     public function testSqlite()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::sqlite')
-            ->string(\BfwSql\CreatePdoDsn::sqlite($this->connectionInfos))
-                ->isEqualTo('sqlite:/app/db/app.sqlite');
+        $this->assert('test CreatePdoDsn::sqlite')
+            ->given($infos = (object) [
+                'filePath' => '/app/db/myapp.db'
+            ])
+            ->then
+            ->string(\BfwSql\CreatePdoDsn::sqlite($infos))
+                ->isEqualTo('sqlite:/app/db/myapp.db')
+        ;
     }
     
-    /**
-     * @return void
-     */
     public function testPgsql()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::pgsql')
-            ->string(\BfwSql\CreatePdoDsn::pgsql($this->connectionInfos))
-                ->isEqualTo('pgsql:host=localhost;port=3306;dbname=unittest');
+        $this->assert('test CreatePdoDsn::pgsql')
+            ->given($infos = (object) [
+                'host'     => 'localhost',
+                'port'     => 3306,
+                'baseName' => 'atoum'
+            ])
+            ->then
+            ->string(\BfwSql\CreatePdoDsn::pgsql($infos))
+                ->isEqualTo('pgsql:host=localhost;port=3306;dbname=atoum')
+        ;
     }
     
-    /**
-     * @return void
-     */
     public function testCubrid()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::cubrid')
-            ->string(\BfwSql\CreatePdoDsn::cubrid($this->connectionInfos))
-                ->isEqualTo('cubrid:dbname=unittest;host=localhost;port=3306');
+        $this->assert('test CreatePdoDsn::cubrid')
+            ->given($infos = (object) [
+                'host'     => 'localhost',
+                'port'     => 3306,
+                'baseName' => 'atoum'
+            ])
+            ->then
+            ->string(\BfwSql\CreatePdoDsn::cubrid($infos))
+                ->isEqualTo('cubrid:dbname=atoum;host=localhost;port=3306')
+        ;
     }
     
-    /**
-     * @return void
-     */
     public function testDblib()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::dblib')
-            ->string(\BfwSql\CreatePdoDsn::dblib($this->connectionInfos))
-                ->isEqualTo('dblib:host=localhost:3306;dbname=unittest');
+        $this->assert('test CreatePdoDsn::dblib')
+            ->given($infos = (object) [
+                'host'     => 'localhost',
+                'port'     => 3306,
+                'baseName' => 'atoum'
+            ])
+            ->then
+            ->string(\BfwSql\CreatePdoDsn::dblib($infos))
+                ->isEqualTo('dblib:host=localhost:3306;dbname=atoum')
+        ;
     }
     
-    /**
-     * @return void
-     */
     public function testFirebird()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::firebird')
-            ->given($connectionInfos = $this->connectionInfos)
-            ->exception(function() use ($connectionInfos) {
-                \BfwSql\CreatePdoDsn::firebird($connectionInfos);
+        $this->assert('test CreatePdoDsn::firebird')
+            ->exception(function() {
+                \BfwSql\CreatePdoDsn::firebird((object) []);
             })
-                ->hasMessage($this->unknownDriverMsg);
+                ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
+        ;
     }
     
-    /**
-     * @return void
-     */
     public function testIbm()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::ibm')
-            ->given($connectionInfos = $this->connectionInfos)
-            ->exception(function() use ($connectionInfos) {
-                \BfwSql\CreatePdoDsn::ibm($connectionInfos);
+        $this->assert('test CreatePdoDsn::ibm')
+            ->exception(function() {
+                \BfwSql\CreatePdoDsn::ibm((object) []);
             })
-                ->hasMessage($this->unknownDriverMsg);
+                ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
+        ;
     }
     
-    /**
-     * @return void
-     */
     public function testInformix()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::informix')
-            ->given($connectionInfos = $this->connectionInfos)
-            ->exception(function() use ($connectionInfos) {
-                \BfwSql\CreatePdoDsn::informix($connectionInfos);
+        $this->assert('test CreatePdoDsn::informix')
+            ->exception(function() {
+                \BfwSql\CreatePdoDsn::informix((object) []);
             })
-                ->hasMessage($this->unknownDriverMsg);
+                ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
+        ;
     }
     
-    /**
-     * @return void
-     */
     public function testSqlsrv()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::sqlsrv')
-            ->given($connectionInfos = $this->connectionInfos)
-            ->exception(function() use ($connectionInfos) {
-                \BfwSql\CreatePdoDsn::sqlsrv($connectionInfos);
+        $this->assert('test CreatePdoDsn::sqlsrv')
+            ->exception(function() {
+                \BfwSql\CreatePdoDsn::sqlsrv((object) []);
             })
-                ->hasMessage($this->unknownDriverMsg);
+                ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
+        ;
     }
     
-    /**
-     * @return void
-     */
     public function testOci()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::oci')
-            ->given($connectionInfos = $this->connectionInfos)
-            ->exception(function() use ($connectionInfos) {
-                \BfwSql\CreatePdoDsn::oci($connectionInfos);
+        $this->assert('test CreatePdoDsn::oci')
+            ->exception(function() {
+                \BfwSql\CreatePdoDsn::oci((object) []);
             })
-                ->hasMessage($this->unknownDriverMsg);
+                ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
+        ;
     }
     
-    /**
-     * @return void
-     */
     public function testOdbc()
     {
-        $this->assert('test BfwSql\CreatePdoDsn::odbc')
-            ->given($connectionInfos = $this->connectionInfos)
-            ->exception(function() use ($connectionInfos) {
-                \BfwSql\CreatePdoDsn::odbc($connectionInfos);
+        $this->assert('test CreatePdoDsn::odbc')
+            ->exception(function() {
+                \BfwSql\CreatePdoDsn::odbc((object) []);
             })
-                ->hasMessage($this->unknownDriverMsg);
+                ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
+        ;
     }
 }
