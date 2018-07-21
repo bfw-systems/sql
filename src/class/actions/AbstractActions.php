@@ -124,6 +124,12 @@ abstract class AbstractActions
     protected $lastRequestStatement;
     
     /**
+     * @var array $lastErrorInfos The PDO::errorInfos return for the last
+     * query executed. Empty if no request has been executed.
+     */
+    protected $lastErrorInfos = [];
+    
+    /**
      * Constructor
      * 
      * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
@@ -320,6 +326,16 @@ abstract class AbstractActions
     }
     
     /**
+     * Getter to access to lastErrorInfos property
+     * 
+     * @return array
+     */
+    public function getLastErrorInfos()
+    {
+        return $this->lastErrorInfos;
+    }
+    
+    /**
      * Check if a request is assemble or not.
      * If not, run the method assembleRequest.
      * 
@@ -387,6 +403,7 @@ abstract class AbstractActions
         }
         
         $this->lastRequestStatement = $req;
+        $this->lastErrorInfos       = $error;
         
         return $error;
     }
