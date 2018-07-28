@@ -195,10 +195,6 @@ class Observers extends Atoum
     public function testAddMonologForObserver()
     {
         $this->assert('test Runners\Observers::addMonologForObserver - prepare')
-            ->if($this->module->monolog->addNewHandler((object) [
-                'name' => '\Monolog\Handler\TestHandler',
-                'args' => []
-            ]))
             ->given($observerInfos = (object) [
                 'className'       => '\BfwSql\Observers\Basic',
                 'monologHandlers' => (object) [

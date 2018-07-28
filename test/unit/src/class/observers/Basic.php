@@ -72,15 +72,15 @@ class Basic extends Atoum
     {
         $this->assert('test Observers\Basic::haveMonologHandler without handler')
             ->array($this->monolog->getHandlers())
-                ->isEmpty()
+                ->size->isEqualTo(1)
             ->boolean($this->mock->haveMonologHandler())
-                ->isFalse()
+                ->isTrue()
         ;
         
         $this->assert('test Observers\Basic::haveMonologHandler with an handler')
             ->if($this->addMonologTestHandler())
             ->array($this->monolog->getHandlers())
-                ->isNotEmpty()
+                ->size->isGreaterThan(1)
             ->boolean($this->mock->haveMonologHandler())
                 ->isTrue()
         ;
