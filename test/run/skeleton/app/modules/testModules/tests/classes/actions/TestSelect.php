@@ -1,22 +1,22 @@
 <?php
 
-namespace Modules\testModules\tests;
+namespace Modules\testModules\tests\classes\actions;
 
-trait TestSqlSelect
+trait TestSelect
 {
-    protected function testSqlSelectRun()
+    protected function testSelectRun()
     {
-        echo 'Run TestSqlSelect'."\n";
+        echo 'Run TestSelect'."\n";
         
-        $this->checkTest([$this, 'testSqlSelectFetchRow']);
-        $this->checkTest([$this, 'testSqlSelectFetchAll']);
+        $this->checkTest([$this, 'testSelectFetchRow']);
+        $this->checkTest([$this, 'testSelectFetchAll']);
         
         echo "\n";
     }
     
-    protected function testSqlSelectFetchRow()
+    protected function testSelectFetchRow()
     {
-        $this->newTest('test \BfwSql\SqlSelect::fetchRow');
+        $this->newTest('test \BfwSql\Actions\Select::fetchRow');
         
         $this->runExec(
             'UPDATE `test_runner`'
@@ -43,18 +43,18 @@ trait TestSqlSelect
         return true;
     }
     
-    protected function testSqlSelectFetchAll()
+    protected function testSelectFetchAll()
     {
         $req = $this->select('object')
                     ->from($this->tableName, ['id', 'title']);
         $res = $req->fetchAll();
         
-        $this->newTest('test \BfwSql\SqlSelect::fetchAll is a generator');
+        $this->newTest('test \BfwSql\Actions\Select::fetchAll is a generator');
         if (!$res instanceof \Generator) {
             return false;
         }
         
-        $testNameStart  = 'test \BfwSql\SqlSelect::fetchAll generator content';
+        $testNameStart  = 'test \BfwSql\Actions\Select::fetchAll generator content';
         $this->newTest($testNameStart);
         
         foreach ($res as $index => $sqlLine) {

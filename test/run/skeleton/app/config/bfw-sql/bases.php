@@ -8,11 +8,7 @@
  */
 
 return (object) [
-    'observer' => (object) [
-        'enable'  => true,
-        'logFile' => 'app/logs/sql.log',
-    ],
-    'bases'    => [
+    'bases' => [
         (object) [
             'baseKeyName' => 'travis',
             'filePath'    => '',

@@ -1,21 +1,21 @@
 <?php
 
-namespace Modules\testModules\tests;
+namespace Modules\testModules\tests\helpers;
 
-trait TestHelperSecure
+trait TestSecure
 {
-    protected function testHelperSecureRun()
+    protected function testSecureRun()
     {
         echo 'Run TestHelperSecure'."\n";
         
-        $this->checkTest([$this, 'testHelperSecureProtect']);
+        $this->checkTest([$this, 'testSecureProtect']);
         
         echo "\n";
     }
     
-    protected function testHelperSecureProtect()
+    protected function testSecureProtect()
     {
-        $dataToUpdate  = 'test HelperSecureProtect";DELETE FROM test_runner WHERE id=1;';
+        $dataToUpdate  = 'test SecureProtect";DELETE FROM test_runner WHERE id=1;';
         $dataProtected = \BfwSql\Helpers\Secure::protectDatas($dataToUpdate);
         
         $date    = new \BFW\Dates;
@@ -59,7 +59,7 @@ trait TestHelperSecure
         }
         
         $this->newTest('test BfwSql\Helpers\Secure::protectDatas - check title for line updated');
-        if ($resCheckLine->title !== $dataToUpdate) {
+        if ($resCheckLine->title !== addslashes($dataToUpdate)) {
             return false;
         }
         

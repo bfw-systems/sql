@@ -2,7 +2,7 @@
 
 namespace Modeles;
 
-class Tests extends \BfwSql\Modeles
+class Tests extends \BfwSql\AbstractModeles
 {
     use \Modules\testModules\CheckTests;
     

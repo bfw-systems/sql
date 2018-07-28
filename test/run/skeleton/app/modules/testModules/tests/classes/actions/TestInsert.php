@@ -1,37 +1,37 @@
 <?php
 
-namespace Modules\testModules\tests;
+namespace Modules\testModules\tests\classes\actions;
 
-trait TestSqlInsert
+trait TestInsert
 {
-    protected function testSqlInsertRun()
+    protected function testInsertRun()
     {
-        echo 'Run TestSqlInsert'."\n";
+        echo 'Run TestInsert'."\n";
         
-        $this->checkTest([$this, 'testSqlInsertExecute']);
+        $this->checkTest([$this, 'testInsertExecute']);
         
         echo "\n";
     }
     
-    protected function testSqlInsertExecute()
+    protected function testInsertExecute()
     {
         $date    = new \BFW\Dates;
         $dateSql = $date->getSqlFormat();
         
-        $this->newTest('test BfwSql\SqlInsert - add a line');
+        $this->newTest('test BfwSql\Actions\Insert - add a line');
         $this->insert(
             $this->tableName,
             [
-                'title' => 'test SqlInsert',
+                'title' => 'test Insert',
                 'date'  => $dateSql
             ]
         )->execute();
         
-        $this->newTest('test BfwSql\SqlInsert - check line inserted exist');
+        $this->newTest('test BfwSql\Actions\Insert - check line inserted exist');
         $reqCheckLine = $this->sqlConnect->getPDO()->query(
             'SELECT `id`'
             .' FROM test_runner'
-            .' WHERE `title`=\'test SqlInsert\' AND `date`=\''.$dateSql.'\''
+            .' WHERE `title`=\'test Insert\' AND `date`=\''.$dateSql.'\''
         );
         
         if ($reqCheckLine->fetch() === false) {

@@ -6,12 +6,12 @@ use \Exception;
 
 trait CheckTests
 {
-    use \Modules\testModules\tests\TestSql;
-    use \Modules\testModules\tests\TestSqlSelect;
-    use \Modules\testModules\tests\TestSqlInsert;
-    use \Modules\testModules\tests\TestSqlUpdate;
-    use \Modules\testModules\tests\TestSqlDelete;
-    use \Modules\testModules\tests\TestHelperSecure;
+    use \Modules\testModules\tests\classes\TestSql;
+    use \Modules\testModules\tests\classes\actions\TestSelect;
+    use \Modules\testModules\tests\classes\actions\TestInsert;
+    use \Modules\testModules\tests\classes\actions\TestUpdate;
+    use \Modules\testModules\tests\classes\actions\TestDelete;
+    use \Modules\testModules\tests\helpers\TestSecure;
     
     protected $testName = '';
     protected $testStatus = true;
@@ -21,11 +21,11 @@ trait CheckTests
         try {
             //$this->debugTable();
             $this->testSqlRun();
-            $this->testSqlSelectRun();
-            $this->testSqlInsertRun();
-            $this->testSqlUpdateRun();
-            $this->testSqlDeleteRun();
-            $this->testHelperSecureRun();
+            $this->testSelectRun();
+            $this->testInsertRun();
+            $this->testUpdateRun();
+            $this->testDeleteRun();
+            $this->testSecureRun();
         } catch (Exception $e) {
             http_response_code(500);
             echo "\n\033[1;31m".$e->getMessage()."\033[0m\n";

@@ -1,29 +1,29 @@
 <?php
 
-namespace Modules\testModules\tests;
+namespace Modules\testModules\tests\classes\actions;
 
-trait TestSqlDelete
+trait TestDelete
 {
-    protected function testSqlDeleteRun()
+    protected function testDeleteRun()
     {
-        echo 'Run TestSqlDelete'."\n";
+        echo 'Run TestDelete'."\n";
         
-        $this->checkTest([$this, 'testSqlDeleteExecute']);
+        $this->checkTest([$this, 'testDeleteExecute']);
         
         echo "\n";
     }
     
-    protected function testSqlDeleteExecute()
+    protected function testDeleteExecute()
     {
         $date    = new \BFW\Dates;
         $dateSql = $date->getSqlFormat();
         
-        $this->newTest('test BfwSql\SqlDelete - update a line');
+        $this->newTest('test BfwSql\Actions\Delete - update a line');
         $this->delete($this->tableName)
             ->where('id=:id', [':id' => 4])
             ->execute();
         
-        $this->newTest('test BfwSql\SqlDelete - check line deleted');
+        $this->newTest('test BfwSql\Actions\Delete - check line deleted');
         $reqCheckLine = $this->sqlConnect->getPDO()->query(
             'SELECT `id`'
             .' FROM test_runner'

@@ -1,35 +1,35 @@
 <?php
 
-namespace Modules\testModules\tests;
+namespace Modules\testModules\tests\classes\actions;
 
-trait TestSqlUpdate
+trait TestUpdate
 {
-    protected function testSqlUpdateRun()
+    protected function testUpdateRun()
     {
-        echo 'Run TestSqlUpdate'."\n";
+        echo 'Run TestUpdate'."\n";
         
-        $this->checkTest([$this, 'testSqlUpdateExecute']);
+        $this->checkTest([$this, 'testUpdateExecute']);
         
         echo "\n";
     }
     
-    protected function testSqlUpdateExecute()
+    protected function testUpdateExecute()
     {
         $date    = new \BFW\Dates;
         $dateSql = $date->getSqlFormat();
         
-        $this->newTest('test BfwSql\SqlUpdate - update a line');
+        $this->newTest('test BfwSql\Actions\Update - update a line');
         $this->update(
             $this->tableName,
             [
-                'title' => 'test SqlUpdate',
+                'title' => 'test Update',
                 'date'  => $dateSql
             ]
         )
         ->where('id=:id', [':id' => 2])
         ->execute();
         
-        $this->newTest('test BfwSql\SqlUpdate - check line updated');
+        $this->newTest('test BfwSql\Actions\Update - check line updated');
         $reqCheckLine = $this->sqlConnect->getPDO()->query(
             'SELECT `title`, `date`'
             .' FROM test_runner'
@@ -41,7 +41,7 @@ trait TestSqlUpdate
             return false;
         }
         
-        if ($resCheckLine->title !== 'test SqlUpdate') {
+        if ($resCheckLine->title !== 'test Update') {
             return false;
         }
         if ($resCheckLine->date !== $dateSql) {

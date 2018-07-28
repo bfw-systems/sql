@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\testModules\tests;
+namespace Modules\testModules\tests\classes;
 
 trait TestSql
 {
@@ -8,34 +8,34 @@ trait TestSql
     {
         echo 'Run TestSql'."\n";
         
-        $this->checkTest([$this, 'testSqlGetLastInsertedId']);
-        $this->checkTest([$this, 'testSqlGetLastInsertedIdWithoutAI']);
+        $this->checkTest([$this, 'testSqlObtainLastInsertedId']);
+        $this->checkTest([$this, 'testSqlObtainLastInsertedIdWithoutAI']);
         $this->checkTest([$this, 'testSqlCreateId']);
         $this->checkTest([$this, 'testSqlQuery']);
         
         echo "\n";
     }
     
-    protected function testSqlGetLastInsertedId()
+    protected function testSqlObtainLastInsertedId()
     {
-        $this->newTest('test \BfwSql\Sql::getLastInsertedId');
+        $this->newTest('test \BfwSql\Sql::obtainLastInsertedId');
         
-        $insertedId = $this->runExec(
+        $this->runExec(
             'INSERT INTO test_runner VALUES ()'
         );
         
-        $sqlInsertedId = $this->getLastInsertedId();
+        $sqlInsertedId = $this->obtainLastInsertedId();
         
-        if ((int) $insertedId === (int) $sqlInsertedId) {
+        if ((int) $sqlInsertedId > 0) {
             return true;
         }
         
         return false;
     }
     
-    protected function testSqlGetLastInsertedIdWithoutAI()
+    protected function testSqlObtainLastInsertedIdWithoutAI()
     {
-        $this->newTest('test \BfwSql\Sql::getLastInsertedIdWithoutAI');
+        $this->newTest('test \BfwSql\Sql::obtainLastInsertedIdWithoutAI');
         
         $this->runExec(
             'INSERT INTO test_runner'
@@ -52,7 +52,7 @@ trait TestSql
             .' (\'tests\', NOW(), 0)'
         );
         
-        $sqlSearchInsertedId = $this->getLastInsertedIdWithoutAI(
+        $sqlSearchInsertedId = $this->obtainLastInsertedIdWithoutAI(
             'runner',
             'id',
             'date DESC',

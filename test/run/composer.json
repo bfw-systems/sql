@@ -2,6 +2,5 @@
     "require": {
         "bulton-fr/bfw": "3.0.0-rc.6",
         "bulton-fr/bfw-sql": "2.0.x-dev"
-    },
-    "minimum-stability": "RC"
+    }
 }
