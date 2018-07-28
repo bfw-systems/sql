@@ -18,7 +18,7 @@
 return [
     'RunnerMonolog'   => '\BfwSql\Runners\Monolog',
     'RunnerObservers' => '\BfwSql\Runners\Observers',
-    'RunnerConnectDb' => '\BfwSql\Runners\ConnectDb',
+    'RunnerConnectDB' => '\BfwSql\Runners\ConnectDB',
     'CreatePdoDsn'    => '\BfwSql\CreatePdoDsn',
     'SqlConnect'      => '\BfwSql\SqlConnect',
     'ActionsDelete'   => '\BfwSql\Actions\Delete',

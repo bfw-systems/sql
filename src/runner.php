@@ -8,7 +8,7 @@ $usedClass    = \BfwSql\UsedClass::getInstance($moduleConfig);
 $runnerClasses = [
     $usedClass->obtainClassNameToUse('RunnerMonolog'),
     $usedClass->obtainClassNameToUse('RunnerObservers'),
-    $usedClass->obtainClassNameToUse('RunnerConnectDb')
+    $usedClass->obtainClassNameToUse('RunnerConnectDB')
 ];
 
 foreach ($runnerClasses as $runnerClassName) {
