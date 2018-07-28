@@ -22,8 +22,10 @@ class Secure
      */
     public static function protectDatas($datas)
     {
-        $app      = \BFW\Application::getInstance();
-        $dbModule = $app->getModule('bfw-sql');
+        $dbModule = \BFW\Application::getInstance()
+            ->getModuleList()
+            ->getModuleForName('bfw-sql')
+        ;
         
         if (count($dbModule->listBases) === 0) {
             throw new Exception(
