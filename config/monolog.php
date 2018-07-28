@@ -18,6 +18,11 @@ return (object) [
      * Second is "args" (array), the list of argument passed to the constructor
      */
     'handlers' => [
+        //1.x Monolog always send to stdout if no handler is define :/
+        (object) [
+            'name' => '\Monolog\Handler\TestHandler',
+            'args' => []
+        ]
         /**
          * Value example:
         (object) [
