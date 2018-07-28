@@ -37,7 +37,7 @@ class AbstractModeles extends Atoum
     
     protected function createModule()
     {
-        $this->app->getModules()->addModule('bfw-sql');
+        $this->app->getModuleList()->addModule('bfw-sql');
         
         $module = $this->app->getModuleForName('bfw-sql');
         $config = new \BFW\Config('bfw-sql');

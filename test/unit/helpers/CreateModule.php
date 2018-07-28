@@ -29,7 +29,7 @@ trait CreateModule
     
     protected function generateModule()
     {
-        $this->app->getModules()->addModule('bfw-sql');
+        $this->app->getModuleList()->addModule('bfw-sql');
         
         $module = $this->app->getModuleForName('bfw-sql');
         $config = $this->declareConfig();
