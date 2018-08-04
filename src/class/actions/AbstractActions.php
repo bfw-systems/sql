@@ -730,7 +730,7 @@ abstract class AbstractActions
     protected function callObserver()
     {
         $app     = \BFW\Application::getInstance();
-        $subject = $app->getSubjectList()->getSubjectForName('bfw-sql');
+        $subject = $app->getSubjectList()->getSubjectByName('bfw-sql');
         $subject->addNotification('system query', clone $this);
     }
 }

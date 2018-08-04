@@ -24,7 +24,7 @@ class Secure
     {
         $dbModule = \BFW\Application::getInstance()
             ->getModuleList()
-            ->getModuleForName('bfw-sql')
+            ->getModuleByName('bfw-sql')
         ;
         
         if (count($dbModule->listBases) === 0) {

@@ -27,7 +27,7 @@ class ConnectDB extends Atoum
             ->generate('BfwSql\Runners\ConnectDB')
         ;
         
-        $this->module = $this->app->getModuleForName('bfw-sql');
+        $this->module = $this->app->getModuleList()->getModuleByName('bfw-sql');
         
         if ($testMethod === 'testConstruct') {
             return;
@@ -77,7 +77,7 @@ class ConnectDB extends Atoum
                 'useUtf8'     => true,
                 'tablePrefix' => 'test_'
             ])
-            ->if($config->setConfigKeyForFile('bases.php', 'bases', [$newBase]))
+            ->if($config->setConfigKeyForFilename('bases.php', 'bases', [$newBase]))
             ->then
             ->variable($this->mock->run())
                 ->isNull()
@@ -112,7 +112,7 @@ class ConnectDB extends Atoum
         ;
         
         $this->assert('test Runners\ConnectDB::connectToDatabase without baseName when many database')
-            ->if($this->module->getConfig()->setConfigKeyForFile(
+            ->if($this->module->getConfig()->setConfigKeyForFilename(
                 'bases.php',
                 'bases',
                 [
@@ -163,12 +163,12 @@ class ConnectDB extends Atoum
         ;
         
         $this->assert('test Runners\ConnectDB::connectToDatabase with correct database')
-            ->if($this->module->getConfig()->setConfigKeyForFile(
+            ->if($this->module->getConfig()->setConfigKeyForFilename(
                 'class.php',
                 'SqlConnect',
                 '\mock\BfwSql\SqlConnect'
             ))
-            ->and($this->module->getConfig()->setConfigKeyForFile(
+            ->and($this->module->getConfig()->setConfigKeyForFilename(
                 'bases.php',
                 'bases',
                 [

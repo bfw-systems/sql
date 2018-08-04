@@ -809,7 +809,7 @@ class AbstractActions extends Atoum
         $this->assert('test Actions\AbstractActions::callObserver')
             ->given($observer = new \BFW\Test\Helpers\ObserverArray)
             ->given($subjectList = $this->app->getSubjectList())
-            ->given($sqlSubject = $subjectList->getSubjectForName('bfw-sql'))
+            ->given($sqlSubject = $subjectList->getSubjectByName('bfw-sql'))
             ->given($sqlSubject->attach($observer))
             ->then
             

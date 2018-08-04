@@ -31,7 +31,7 @@ trait CreateModule
     {
         $this->app->getModuleList()->addModule('bfw-sql');
         
-        $module = $this->app->getModuleForName('bfw-sql');
+        $module = $this->app->getModuleList()->getModuleByName('bfw-sql');
         $config = $this->declareConfig();
         
         $module->setConfig($config);
@@ -47,23 +47,23 @@ trait CreateModule
         $bases = (object) [
             'bases' => []
         ];
-        $config->setConfigForFile('bases.php', $bases);
+        $config->setConfigForFilename('bases.php', $bases);
         
         $class = require(ROOT_DIR.'config/class.php');
-        $config->setConfigForFile('class.php', $class);
+        $config->setConfigForFilename('class.php', $class);
         
         $monolog = require(ROOT_DIR.'config/monolog.php');
-        $config->setConfigForFile('monolog.php', $monolog);
+        $config->setConfigForFilename('monolog.php', $monolog);
         
         $observers = require(ROOT_DIR.'config/observers.php');
-        $config->setConfigForFile('observers.php', $observers);
+        $config->setConfigForFilename('observers.php', $observers);
         
         return $config;
     }
     
     protected function callModuleRunners()
     {
-        $module = $this->app->getModuleForName('bfw-sql');
+        $module = $this->app->getModuleList()->getModuleByName('bfw-sql');
         
         $runnerMonolog = new \BfwSql\Runners\Monolog($module);
         $runnerMonolog->run();

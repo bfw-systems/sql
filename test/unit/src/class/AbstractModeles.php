@@ -39,7 +39,7 @@ class AbstractModeles extends Atoum
     {
         $this->app->getModuleList()->addModule('bfw-sql');
         
-        $module = $this->app->getModuleForName('bfw-sql');
+        $module = $this->app->getModuleList()->getModuleByName('bfw-sql');
         $config = new \BFW\Config('bfw-sql');
         
         $module->setConfig($config);
@@ -50,7 +50,7 @@ class AbstractModeles extends Atoum
     
     protected function addBase($baseName)
     {
-        $module    = $this->app->getModuleForName('bfw-sql');
+        $module    = $this->app->getModuleList()->getModuleByName('bfw-sql');
         $baseInfos = (object) [
             'baseKeyName' => $baseName,
             'filePath'    => '',
@@ -149,7 +149,7 @@ class AbstractModeles extends Atoum
         
         $this->assert('test AbstractModeles::obtainSqlConnect with one base')
             ->if($modele->setBaseKeyName('myBase'))
-            ->and($this->app->getModuleForName('bfw-sql')->listBases = [])
+            ->and($this->app->getModuleList()->getModuleByName('bfw-sql')->listBases = [])
             ->and($this->addBase('myBase'))
             ->then
             ->object($this->invoke($modele)->obtainSqlConnect())

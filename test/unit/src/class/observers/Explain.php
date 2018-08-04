@@ -34,7 +34,7 @@ class Explain extends Atoum
             ->generate('BfwSql\Observers\Explain')
         ;
         
-        $this->monolog = $this->app->getModuleForName('bfw-sql')->monolog;
+        $this->monolog = $this->app->getModuleList()->getModuleByName('bfw-sql')->monolog;
         $this->addMonologTestHandler();
         
         $this->mock = new \mock\BfwSql\Observers\Explain($this->monolog);

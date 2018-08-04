@@ -30,7 +30,7 @@ class Observers extends Atoum
             ->generate('BfwSql\Runners\Observers')
         ;
         
-        $this->module = $this->app->getModuleForName('bfw-sql');
+        $this->module = $this->app->getModuleList()->getModuleByName('bfw-sql');
         
         if ($testMethod === 'testConstruct') {
             return;
@@ -64,7 +64,7 @@ class Observers extends Atoum
             ->object(
                 $subject = \BFW\Application::getInstance()
                     ->getSubjectList()
-                    ->getSubjectForName('bfw-sql')
+                    ->getSubjectByName('bfw-sql')
             )
                 ->isInstanceOf('\BFW\Subject')
         ;
@@ -77,7 +77,7 @@ class Observers extends Atoum
                     'others'    => []
                 ]
             ])
-            ->if($this->module->getConfig()->setConfigKeyForFile(
+            ->if($this->module->getConfig()->setConfigKeyForFilename(
                 'observers.php',
                 'observers',
                 [$newobserver]
@@ -89,7 +89,7 @@ class Observers extends Atoum
             ->object(
                 $subject = \BFW\Application::getInstance()
                     ->getSubjectList()
-                    ->getSubjectForName('bfw-sql')
+                    ->getSubjectByName('bfw-sql')
             )
                 ->isInstanceOf('\BFW\Subject')
             ->mock($this->mock)

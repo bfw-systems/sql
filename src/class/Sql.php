@@ -268,7 +268,7 @@ class Sql
         $error = $this->sqlConnect->getPDO()->errorInfo();
         
         $app     = \BFW\Application::getInstance();
-        $subject = $app->getSubjectList()->getSubjectForName('bfw-sql');
+        $subject = $app->getSubjectList()->getSubjectByName('bfw-sql');
         $subject->addNotification(
             'user query',
             (object) [

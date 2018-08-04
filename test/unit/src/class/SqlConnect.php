@@ -24,9 +24,10 @@ class SqlConnect extends Atoum
             ->generate('PDO')
         ;
         $this->app
-            ->getModuleForName('bfw-sql')
+            ->getModuleList()
+            ->getModuleByName('bfw-sql')
             ->getConfig()
-            ->setConfigKeyForFile('class.php', 'PDO', '\mock\PDO')
+            ->setConfigKeyForFilename('class.php', 'PDO', '\mock\PDO')
         ;
         
         $this->mockGenerator

@@ -22,7 +22,7 @@ class Monolog extends Atoum
         $this->initModule();
         $this->createSqlConnect('myBase');
         
-        $this->module = $this->app->getModuleForName('bfw-sql');
+        $this->module = $this->app->getModuleList()->getModuleByName('bfw-sql');
         
         if ($testMethod === 'testConstruct') {
             return;
@@ -44,7 +44,7 @@ class Monolog extends Atoum
     public function testRun()
     {
         $this->assert('test Runners\Monolog::run')
-            ->if($this->module->getConfig()->setConfigKeyForFile(
+            ->if($this->module->getConfig()->setConfigKeyForFilename(
                 'monolog.php',
                 'handlers',
                 [

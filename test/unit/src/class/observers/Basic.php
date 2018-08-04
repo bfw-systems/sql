@@ -32,7 +32,7 @@ class Basic extends Atoum
             ->generate('BfwSql\Observers\Basic')
         ;
         
-        $this->monolog = $this->app->getModuleForName('bfw-sql')->monolog;
+        $this->monolog = $this->app->getModuleList()->getModuleByName('bfw-sql')->monolog;
         
         if ($testMethod !== 'testHaveMonologHandler') {
             $this->addMonologTestHandler();

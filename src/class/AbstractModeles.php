@@ -110,7 +110,8 @@ abstract class AbstractModeles extends \BfwSql\Sql
     protected function obtainSqlConnect()
     {
         $listBases = $this->obtainApp()
-            ->getModuleForName('bfw-sql')
+            ->getModuleList()
+            ->getModuleByName('bfw-sql')
             ->listBases;
         
         if (count($listBases) === 0) {

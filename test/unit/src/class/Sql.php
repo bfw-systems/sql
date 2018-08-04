@@ -204,9 +204,10 @@ class Sql extends Atoum
     public function testSelect()
     {
         $this->app
-            ->getModuleForName('bfw-sql')
+            ->getModuleList()
+            ->getModuleByName('bfw-sql')
             ->getConfig()
-            ->setConfigKeyForFile(
+            ->setConfigKeyForFilename(
                 'class.php',
                 'ActionsSelect',
                 '\mock\BfwSql\Actions\Select'
@@ -244,9 +245,10 @@ class Sql extends Atoum
     public function testInsert()
     {
         $this->app
-            ->getModuleForName('bfw-sql')
+            ->getModuleList()
+            ->getModuleByName('bfw-sql')
             ->getConfig()
-            ->setConfigKeyForFile(
+            ->setConfigKeyForFilename(
                 'class.php',
                 'ActionsInsert',
                 '\mock\BfwSql\Actions\Insert'
@@ -289,9 +291,10 @@ class Sql extends Atoum
     public function testUpdate()
     {
         $this->app
-            ->getModuleForName('bfw-sql')
+            ->getModuleList()
+            ->getModuleByName('bfw-sql')
             ->getConfig()
-            ->setConfigKeyForFile(
+            ->setConfigKeyForFilename(
                 'class.php',
                 'ActionsUpdate',
                 '\mock\BfwSql\Actions\Update'
@@ -334,9 +337,10 @@ class Sql extends Atoum
     public function testDelete()
     {
         $this->app
-            ->getModuleForName('bfw-sql')
+            ->getModuleList()
+            ->getModuleByName('bfw-sql')
             ->getConfig()
-            ->setConfigKeyForFile(
+            ->setConfigKeyForFilename(
                 'class.php',
                 'ActionsDelete',
                 '\mock\BfwSql\Actions\Delete'
@@ -421,7 +425,7 @@ class Sql extends Atoum
         $this->assert('test Sql::query - prepare - adding observer')
             ->given($observer = new \BFW\Test\Helpers\ObserverArray)
             ->given($subjectList = $this->app->getSubjectList())
-            ->given($sqlSubject = $subjectList->getSubjectForName('bfw-sql'))
+            ->given($sqlSubject = $subjectList->getSubjectByName('bfw-sql'))
             ->given($sqlSubject->attach($observer))
         ;
         
