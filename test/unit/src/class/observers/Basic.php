@@ -210,13 +210,20 @@ class Basic extends Atoum
             ->and($this->calling($this->mock)->addQueryToMonoLog = null)
             ->then
             
-            ->given($context = new \BfwSql\Actions\Test\Mocks\AbstractActions($this->sqlConnect))
-            ->if($context->setAssembledRequest('SELECT * FROM users'))
-            ->and($context->setLastErrorInfos([
-                0 => '00000',
-                1 => null,
-                2 => null
-            ]))
+            ->given($context = new \BfwSql\Queries\Select($this->sqlConnect, 'object'))
+            ->if($context->from('users', '*'))
+            ->and($context->assemble())
+            ->given($setLastErrorInfos = function($lastErrorInfos) {
+                $this->lastErrorInfos = $lastErrorInfos;
+            })
+            ->and($setLastErrorInfos->call(
+                $context->getExecuter(),
+                [
+                    0 => '00000',
+                    1 => null,
+                    2 => null
+                ]
+            ))
             
             ->given($subject = new \BFW\Test\Mock\Subject)
             ->and($subject->setAction('system query'))
@@ -224,12 +231,12 @@ class Basic extends Atoum
             ->then
         ;
         
-        $this->assert('test Observers\Basic::systemQuery with AbstractAction in context')
+        $this->assert('test Observers\Basic::systemQuery with AbstractQueries in context')
             ->variable($this->mock->update($subject))
             ->mock($this->mock)
                 ->call('addQueryToMonoLog')
                     ->withArguments(
-                        'SELECT * FROM users',
+                        'SELECT `test_users`.*'."\n".'FROM `test_users`'."\n",
                         [
                             0 => '00000',
                             1 => null,

@@ -21,9 +21,9 @@ return [
     'RunnerConnectDB' => '\BfwSql\Runners\ConnectDB',
     'CreatePdoDsn'    => '\BfwSql\CreatePdoDsn',
     'SqlConnect'      => '\BfwSql\SqlConnect',
-    'ActionsDelete'   => '\BfwSql\Actions\Delete',
-    'ActionsInsert'   => '\BfwSql\Actions\Insert',
-    'ActionsSelect'   => '\BfwSql\Actions\Select',
-    'ActionsUpdate'   => '\BfwSql\Actions\Update',
+    'QueriesDelete'   => '\BfwSql\Queries\Delete',
+    'QueriesInsert'   => '\BfwSql\Queries\Insert',
+    'QueriesSelect'   => '\BfwSql\Queries\Select',
+    'QueriesUpdate'   => '\BfwSql\Queries\Update',
     'PDO'             => '\PDO'
 ];

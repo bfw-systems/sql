@@ -89,7 +89,7 @@ class Sql
     public function obtainLastInsertedIdWithoutAI(
         $table,
         $colId,
-        $order,
+        array $order,
         $where = ''
     ) {
         $req = $this->select()
@@ -105,15 +105,13 @@ class Sql
         }
         
         if (is_array($order)) {
-            foreach ($order as $val) {
-                $req->order($val);
+            foreach ($order as $expr => $sort) {
+                $req->order($expr, $sort);
             }
-        } else {
-            $req->order($order);
         }
         
-        $res = $req->fetchRow();
-        $req->closeCursor();
+        $res = $req->getExecuter()->fetchRow();
+        $req->getExecuter()->closeCursor();
         
         if ($res) {
             return (int) $res[$colId];
@@ -128,12 +126,12 @@ class Sql
      * @param string $type (default: "array") Return PHP type
      *  Possible value : "array" or "object"
      * 
-     * @return \BfwSql\SqlSelect
+     * @return \BfwSql\Queries\Select
      */
     public function select($type = 'array')
     {
         $usedClass       = \BfwSql\UsedClass::getInstance();
-        $selectClassName = $usedClass->obtainClassNameToUse('ActionsSelect');
+        $selectClassName = $usedClass->obtainClassNameToUse('QueriesSelect');
         
         return new $selectClassName($this->sqlConnect, $type);
     }
@@ -141,70 +139,46 @@ class Sql
     /**
      * Return a new instance of SqlInsert
      * 
-     * @param string $table   The table concerned by the request
-     * @param array  $columns (default: null) All datas to add
-     *  Format is array('columnName' => 'value', ...);
      * @param string $quoteStatus (default: QUOTE_ALL) Status to automatic
      *  quoted string value system.
      * 
-     * @return \BfwSql\SqlInsert
+     * @return \BfwSql\Queries\Insert
      */
-    public function insert(
-        $table,
-        $columns = null,
-        $quoteStatus = \BfwSql\Actions\AbstractActions::QUOTE_ALL
-    ) {
+    public function insert($quoteStatus = \BfwSql\Helpers\Quoting::QUOTE_ALL)
+    {
         $usedClass       = \BfwSql\UsedClass::getInstance();
-        $insertClassName = $usedClass->obtainClassNameToUse('ActionsInsert');
+        $insertClassName = $usedClass->obtainClassNameToUse('QueriesInsert');
         
-        return new $insertClassName(
-            $this->sqlConnect,
-            $table,
-            $columns,
-            $quoteStatus
-        );
+        return new $insertClassName($this->sqlConnect, $quoteStatus);
     }
     
     /**
      * Return a new instance of SqlUpdate
      * 
-     * @param string $table   The table concerned by the request
-     * @param array  $columns (default: null) All datas to update
-     *  Format is array('columnName' => 'newValue', ...);
      * @param string $quoteStatus (default: QUOTE_ALL) Status to automatic
      *  quoted string value system.
      * 
-     * @return \BfwSql\SqlUpdate
+     * @return \BfwSql\Queries\Update
      */
-    public function update(
-        $table,
-        $columns = null,
-        $quoteStatus = \BfwSql\Actions\AbstractActions::QUOTE_ALL
-    ) {
+    public function update($quoteStatus = \BfwSql\Helpers\Quoting::QUOTE_ALL)
+    {
         $usedClass       = \BfwSql\UsedClass::getInstance();
-        $updateClassName = $usedClass->obtainClassNameToUse('ActionsUpdate');
+        $updateClassName = $usedClass->obtainClassNameToUse('QueriesUpdate');
         
-        return new $updateClassName(
-            $this->sqlConnect,
-            $table,
-            $columns,
-            $quoteStatus
-        );
+        return new $updateClassName($this->sqlConnect, $quoteStatus);
     }
     
     /**
      * Return a new instance of SqlDelete
      * 
-     * @param string $table The table concerned by the request
-     * 
-     * @return \BfwSql\SqlDelete
+     * @return \BfwSql\Queries\Delete
      */
-    public function delete($table)
+    public function delete()
     {
         $usedClass       = \BfwSql\UsedClass::getInstance();
-        $deleteClassName = $usedClass->obtainClassNameToUse('ActionsDelete');
+        $deleteClassName = $usedClass->obtainClassNameToUse('QueriesDelete');
         
-        return new $deleteClassName($this->sqlConnect, $table);
+        return new $deleteClassName($this->sqlConnect);
     }
     
     /**
@@ -222,11 +196,11 @@ class Sql
         //Search the first line in the table
         $reqFirstLine = $this->select()
             ->from($table, $column)
-            ->order($column.' ASC')
+            ->order($column, 'ASC')
             ->limit(1);
         
-        $resFirstLine = $reqFirstLine->fetchRow();
-        $reqFirstLine->closeCursor();
+        $resFirstLine = $reqFirstLine->getExecuter()->fetchRow();
+        $reqFirstLine->getExecuter()->closeCursor();
         
         // If nothing in the table. First AI is 1
         if (!$resFirstLine) {
@@ -241,11 +215,11 @@ class Sql
         //First line have ID=1, we search from the end
         $reqLastLine = $this->select()
             ->from($table, $column)
-            ->order($column.' DESC')
+            ->order($column, 'DESC')
             ->limit(1);
         
-        $resLastLine = $reqLastLine->fetchRow();
-        $reqLastLine->closeCursor();
+        $resLastLine = $reqLastLine->getExecuter()->fetchRow();
+        $reqLastLine->getExecuter()->closeCursor();
 
         //Get the last ID and add 1
         return $resLastLine[$column] + 1;

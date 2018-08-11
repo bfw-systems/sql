@@ -106,7 +106,7 @@ class Sql extends Atoum
             ->given($select = null)
             ->given($mock = $this->mock)
             ->and($this->calling($this->mock)->select = function($type = 'array') use ($mock, &$select) {
-                $select = new \mock\BfwSql\Actions\Select(
+                $select = new \mock\BfwSql\Queries\Select(
                     $mock->getSqlConnect(),
                     $type
                 );
@@ -123,13 +123,13 @@ class Sql extends Atoum
             ->integer($this->mock->obtainLastInsertedIdWithoutAI(
                 'myTable',
                 'id',
-                'id DESC'
+                ['id' => 'DESC']
             ))
                 ->isEqualTo(123)
-            ->array($select->getWhere())
+            ->array($select->getQueriesParts()['where']->getList())
                 ->isEmpty()
-            ->string($select->getOrder()[0])
-                ->isEqualTo('id DESC')
+            ->string($select->getQueriesParts()['order']->getList()[0]->generate())
+                ->isEqualTo('`id` DESC')
         ;
         
         $this->assert('test Sql::obtainLastInsertedIdWithoutAI with a complex order, without where, with a result')
@@ -140,15 +140,15 @@ class Sql extends Atoum
             ->integer($this->mock->obtainLastInsertedIdWithoutAI(
                 'myTable',
                 'id',
-                ['id DESC', 'label ASC']
+                ['id' => 'DESC', 'label' => 'ASC']
             ))
                 ->isEqualTo(124)
-            ->array($select->getWhere())
+            ->array($select->getQueriesParts()['where']->getList())
                 ->isEmpty()
-            ->string($select->getOrder()[0])
-                ->isEqualTo('id DESC')
-            ->string($select->getOrder()[1])
-                ->isEqualTo('label ASC')
+            ->string($select->getQueriesParts()['order']->getList()[0]->generate())
+                ->isEqualTo('`id` DESC')
+            ->string($select->getQueriesParts()['order']->getList()[1]->generate())
+                ->isEqualTo('`label` ASC')
         ;
         
         $this->assert('test Sql::obtainLastInsertedIdWithoutAI with a simple order and where, with a result')
@@ -159,14 +159,14 @@ class Sql extends Atoum
             ->integer($this->mock->obtainLastInsertedIdWithoutAI(
                 'myTable',
                 'id',
-                'id DESC',
+                ['id' => 'DESC'],
                 'label="atoum"'
             ))
                 ->isEqualTo(125)
-            ->string($select->getWhere()[0])
+            ->string($select->getQueriesParts()['where']->getList()[0])
                 ->isEqualTo('label="atoum"')
-            ->string($select->getOrder()[0])
-                ->isEqualTo('id DESC')
+            ->string($select->getQueriesParts()['order']->getList()[0]->generate())
+                ->isEqualTo('`id` DESC')
         ;
         
         $this->assert('test Sql::obtainLastInsertedIdWithoutAI with a simple order and complex where, with a result')
@@ -177,16 +177,16 @@ class Sql extends Atoum
             ->integer($this->mock->obtainLastInsertedIdWithoutAI(
                 'myTable',
                 'id',
-                'id DESC',
+                ['id' => 'DESC'],
                 ['label="atoum"', 'type="unit-test"']
             ))
                 ->isEqualTo(125)
-            ->string($select->getWhere()[0])
+            ->string($select->getQueriesParts()['where']->getList()[0])
                 ->isEqualTo('label="atoum"')
-            ->string($select->getWhere()[1])
+            ->string($select->getQueriesParts()['where']->getList()[1])
                 ->isEqualTo('type="unit-test"')
-            ->string($select->getOrder()[0])
-                ->isEqualTo('id DESC')
+            ->string($select->getQueriesParts()['order']->getList()[0]->generate())
+                ->isEqualTo('`id` DESC')
         ;
         
         $this->assert('test Sql::obtainLastInsertedIdWithoutAI without a result')
@@ -195,7 +195,7 @@ class Sql extends Atoum
             ->integer($this->mock->obtainLastInsertedIdWithoutAI(
                 'myTable',
                 'id',
-                'id DESC'
+                ['id' => 'DESC']
             ))
                 ->isEqualTo(0)
         ;
@@ -209,14 +209,14 @@ class Sql extends Atoum
             ->getConfig()
             ->setConfigKeyForFilename(
                 'class.php',
-                'ActionsSelect',
-                '\mock\BfwSql\Actions\Select'
+                'QueriesSelect',
+                '\mock\BfwSql\Queries\Select'
             )
         ;
         
         $this->assert('test Sql::select without argument')
             ->object($select = $this->mock->select())
-                ->isInstanceOf('\BfwSql\Actions\Select')
+                ->isInstanceOf('\BfwSql\Queries\Select')
             ->mock($select)
                 ->call('__construct')
                     ->withArguments($this->mock->getSqlConnect(), 'array')
@@ -225,7 +225,7 @@ class Sql extends Atoum
         
         $this->assert('test Sql::select with "array" argument')
             ->object($select = $this->mock->select('array'))
-                ->isInstanceOf('\BfwSql\Actions\Select')
+                ->isInstanceOf('\BfwSql\Queries\Select')
             ->mock($select)
                 ->call('__construct')
                     ->withArguments($this->mock->getSqlConnect(), 'array')
@@ -234,7 +234,7 @@ class Sql extends Atoum
         
         $this->assert('test Sql::select with "object" argument')
             ->object($select = $this->mock->select('object'))
-                ->isInstanceOf('\BfwSql\Actions\Select')
+                ->isInstanceOf('\BfwSql\Queries\Select')
             ->mock($select)
                 ->call('__construct')
                     ->withArguments($this->mock->getSqlConnect(), 'object')
@@ -250,39 +250,33 @@ class Sql extends Atoum
             ->getConfig()
             ->setConfigKeyForFilename(
                 'class.php',
-                'ActionsInsert',
-                '\mock\BfwSql\Actions\Insert'
+                'QueriesInsert',
+                '\mock\BfwSql\Queries\Insert'
             )
         ;
         
         $this->assert('test Sql::insert with default arguments')
-            ->object($insert = $this->mock->insert('myTable'))
-                ->isInstanceOf('\BfwSql\Actions\Insert')
+            ->object($insert = $this->mock->insert())
+                ->isInstanceOf('\BfwSql\Queries\Insert')
             ->mock($insert)
                 ->call('__construct')
                     ->withArguments(
                         $this->mock->getSqlConnect(),
-                        'myTable',
-                        null,
-                        \BfwSql\Actions\AbstractActions::QUOTE_ALL
+                        \BfwSql\Helpers\Quoting::QUOTE_ALL
                     )
                     ->once()
         ;
         
         $this->assert('test Sql::insert with all arguments')
             ->object($insert = $this->mock->insert(
-                'myTable',
-                ['unit-test' => 'atoum'],
-                \BfwSql\Actions\AbstractActions::QUOTE_PARTIALLY
+                \BfwSql\Helpers\Quoting::QUOTE_PARTIALLY
             ))
-                ->isInstanceOf('\BfwSql\Actions\Insert')
+                ->isInstanceOf('\BfwSql\Queries\Insert')
             ->mock($insert)
                 ->call('__construct')
                     ->withArguments(
                         $this->mock->getSqlConnect(),
-                        'myTable',
-                        ['unit-test' => 'atoum'],
-                        \BfwSql\Actions\AbstractActions::QUOTE_PARTIALLY
+                        \BfwSql\Helpers\Quoting::QUOTE_PARTIALLY
                     )
                     ->once()
         ;
@@ -296,39 +290,33 @@ class Sql extends Atoum
             ->getConfig()
             ->setConfigKeyForFilename(
                 'class.php',
-                'ActionsUpdate',
-                '\mock\BfwSql\Actions\Update'
+                'QueriesUpdate',
+                '\mock\BfwSql\Queries\Update'
             )
         ;
         
         $this->assert('test Sql::update with default arguments')
-            ->object($update = $this->mock->update('myTable'))
-                ->isInstanceOf('\BfwSql\Actions\Update')
+            ->object($update = $this->mock->update())
+                ->isInstanceOf('\BfwSql\Queries\Update')
             ->mock($update)
                 ->call('__construct')
                     ->withArguments(
                         $this->mock->getSqlConnect(),
-                        'myTable',
-                        null,
-                        \BfwSql\Actions\AbstractActions::QUOTE_ALL
+                        \BfwSql\Helpers\Quoting::QUOTE_ALL
                     )
                     ->once()
         ;
         
         $this->assert('test Sql::update with all arguments')
             ->object($update = $this->mock->update(
-                'myTable',
-                ['unit-test' => 'atoum'],
-                \BfwSql\Actions\AbstractActions::QUOTE_PARTIALLY
+                \BfwSql\Helpers\Quoting::QUOTE_PARTIALLY
             ))
-                ->isInstanceOf('\BfwSql\Actions\Update')
+                ->isInstanceOf('\BfwSql\Queries\Update')
             ->mock($update)
                 ->call('__construct')
                     ->withArguments(
                         $this->mock->getSqlConnect(),
-                        'myTable',
-                        ['unit-test' => 'atoum'],
-                        \BfwSql\Actions\AbstractActions::QUOTE_PARTIALLY
+                        \BfwSql\Helpers\Quoting::QUOTE_PARTIALLY
                     )
                     ->once()
         ;
@@ -342,17 +330,17 @@ class Sql extends Atoum
             ->getConfig()
             ->setConfigKeyForFilename(
                 'class.php',
-                'ActionsDelete',
-                '\mock\BfwSql\Actions\Delete'
+                'QueriesDelete',
+                '\mock\BfwSql\Queries\Delete'
             )
         ;
         
         $this->assert('test Sql::delete')
-            ->object($delete = $this->mock->delete('myTable'))
-                ->isInstanceOf('\BfwSql\Actions\Delete')
+            ->object($delete = $this->mock->delete())
+                ->isInstanceOf('\BfwSql\Queries\Delete')
             ->mock($delete)
                 ->call('__construct')
-                    ->withArguments($this->mock->getSqlConnect(), 'myTable')
+                    ->withArguments($this->mock->getSqlConnect())
                     ->once()
         ;
     }
@@ -372,7 +360,7 @@ class Sql extends Atoum
             ->given($select = null)
             ->given($mock = $this->mock)
             ->and($this->calling($this->mock)->select = function($type = 'array') use ($mock, &$select) {
-                $select = new \mock\BfwSql\Actions\Select(
+                $select = new \mock\BfwSql\Queries\Select(
                     $mock->getSqlConnect(),
                     $type
                 );

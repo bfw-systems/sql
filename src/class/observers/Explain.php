@@ -3,8 +3,8 @@
 namespace BfwSql\Observers;
 
 use \Exception;
-use \BfwSql\Actions\AbstractActions;
-use \BfwSql\Actions\Select;
+use \BfwSql\Queries\AbstractQuery;
+use \BfwSql\Queries\Select;
 
 /**
  * Requests observer.
@@ -75,16 +75,16 @@ class Explain extends Basic
     
     /**
      * {@inheritdoc}
-     * Limited to \BfwSql\Actions\Select object
+     * Limited to \BfwSql\Queries\Select object
      * We not run EXPLAIN automatically on other request type to not destroy db
      * 
      * @return void
      */
     protected function systemQuery()
     {
-        if ($this->context instanceof AbstractActions === false) {
+        if ($this->context instanceof AbstractQuery === false) {
             throw new Exception(
-                '"system query" event should have an AbstractActions class'
+                '"system query" event should have an AbstractQuery class'
                 .' into the context.',
                 self::ERR_SYSTEM_QUERY_CONTEXT_CLASS
             );
@@ -129,10 +129,10 @@ class Explain extends Basic
         $explainQuery = 'EXPLAIN '.$this->context->assemble();
         $request      = $pdo->prepare(
             $explainQuery,
-            $this->context->getPrepareDriversOptions()
+            $this->context->getExecuter()->getPrepareDriversOptions()
         );
         $explainResult = $request->execute(
-            $this->context->getPreparedRequestArgs()
+            $this->context->getPreparedParams()
         );
         
         if ($explainResult === false) {
