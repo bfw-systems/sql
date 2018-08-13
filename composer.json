@@ -28,20 +28,13 @@
     },
     "autoload": {
         "psr-4": {
-            "BfwSql\\": "src/class/",
-            "BfwSql\\Executers\\": "src/class/executers/",
-            "BfwSql\\Queries\\": "src/class/queries/",
-            "BfwSql\\Queries\\Parts\\": "src/class/queries/parts/",
-            "BfwSql\\Observers\\": "src/class/observers/",
-            "BfwSql\\Runners\\": "src/class/runners/",
-            "BfwSql\\Helpers\\": "src/helpers/"
+            "BfwSql\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "BfwSql\\Test\\Helpers\\": "test/unit/helpers",
-            "BfwSql\\Test\\Mocks\\": "test/unit/mocks/src/class",
-            "BfwSql\\Actions\\Test\\Mocks\\": "test/unit/mocks/src/class/actions"
+            "BfwSql\\Test\\Mocks\\": "test/unit/mocks/src"
         }
     }
 }
