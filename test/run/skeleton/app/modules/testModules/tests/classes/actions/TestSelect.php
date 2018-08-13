@@ -28,7 +28,7 @@ trait TestSelect
                     ->from($this->tableName, ['id', 'title'])
                     ->where('enabled=:enable', [':enable' => 1]);
         
-        $res = $req->fetchRow();
+        $res = $req->getExecuter()->fetchRow();
         
         $expectedObj = (object) [
             'id'    => '2',
@@ -47,7 +47,7 @@ trait TestSelect
     {
         $req = $this->select('object')
                     ->from($this->tableName, ['id', 'title']);
-        $res = $req->fetchAll();
+        $res = $req->getExecuter()->fetchAll();
         
         $this->newTest('test \BfwSql\Actions\Select::fetchAll is a generator');
         if (!$res instanceof \Generator) {

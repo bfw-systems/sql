@@ -55,7 +55,7 @@ trait TestSql
         $sqlSearchInsertedId = $this->obtainLastInsertedIdWithoutAI(
             'runner',
             'id',
-            'date DESC',
+            ['date' => 'DESC'],
             'enabled=1'
         );
         

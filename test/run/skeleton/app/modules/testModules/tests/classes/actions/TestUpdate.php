@@ -19,15 +19,17 @@ trait TestUpdate
         $dateSql = $date->getSqlFormat();
         
         $this->newTest('test BfwSql\Actions\Update - update a line');
-        $this->update(
-            $this->tableName,
-            [
-                'title' => 'test Update',
-                'date'  => $dateSql
-            ]
-        )
-        ->where('id=:id', [':id' => 2])
-        ->execute();
+        $this->update()
+            ->from(
+                $this->tableName,
+                [
+                    'title' => 'test Update',
+                    'date'  => $dateSql
+                ]
+            )
+            ->where('id=:id', [':id' => 2])
+            ->execute()
+        ;
         
         $this->newTest('test BfwSql\Actions\Update - check line updated');
         $reqCheckLine = $this->sqlConnect->getPDO()->query(

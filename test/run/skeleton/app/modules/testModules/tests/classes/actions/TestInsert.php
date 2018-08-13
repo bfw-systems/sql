@@ -19,13 +19,16 @@ trait TestInsert
         $dateSql = $date->getSqlFormat();
         
         $this->newTest('test BfwSql\Actions\Insert - add a line');
-        $this->insert(
-            $this->tableName,
-            [
-                'title' => 'test Insert',
-                'date'  => $dateSql
-            ]
-        )->execute();
+        $this->insert()
+            ->into(
+                $this->tableName,
+                [
+                    'title' => 'test Insert',
+                    'date'  => $dateSql
+                ]
+            )
+            ->execute()
+        ;
         
         $this->newTest('test BfwSql\Actions\Insert - check line inserted exist');
         $reqCheckLine = $this->sqlConnect->getPDO()->query(

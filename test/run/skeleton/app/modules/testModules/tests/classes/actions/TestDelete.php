@@ -19,9 +19,11 @@ trait TestDelete
         $dateSql = $date->getSqlFormat();
         
         $this->newTest('test BfwSql\Actions\Delete - update a line');
-        $this->delete($this->tableName)
+        $this->delete()
+            ->from($this->tableName)
             ->where('id=:id', [':id' => 4])
-            ->execute();
+            ->execute()
+        ;
         
         $this->newTest('test BfwSql\Actions\Delete - check line deleted');
         $reqCheckLine = $this->sqlConnect->getPDO()->query(

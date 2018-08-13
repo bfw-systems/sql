@@ -22,15 +22,17 @@ trait TestSecure
         $dateSql = $date->getSqlFormat();
         
         $this->newTest('test BfwSql\Helpers\Secure::protectDatas - update a line');
-        $this->update(
-            $this->tableName,
-            [
-                'date'  => $dateSql,
-                'title' => $dataProtected
-            ]
-        )
-        ->where('id=:id', [':id' => 2])
-        ->execute();
+        $this->update()
+            ->from(
+                $this->tableName,
+                [
+                    'date'  => $dateSql,
+                    'title' => $dataProtected
+                ]
+            )
+            ->where('id=:id', [':id' => 2])
+            ->execute()
+        ;
         
         $this->newTest('test BfwSql\Helpers\Secure::protectDatas - check line id=1 always exist');
         $reqCheckLineExist = $this->sqlConnect->getPDO()->query(
