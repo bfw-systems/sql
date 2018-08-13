@@ -7,57 +7,57 @@
  * @version 2.0
  */
 
-return (object) [
+return [
     /**
-     * @var \stdClass[] bases All database list to connect
+     * @var array bases All database list to connect
      */
     'bases' => [
-        (object) [
+        new class {
             /**
              * @var string baseKeyName Key used to identify this connection.
              * Because there are possibility to connect at multiple databases, 
              * we need a key to identify this base.
              * You can keep this value empty ONLY if there are one connection.
              */
-            'baseKeyName' => '',
+            public $baseKeyName = '';
             
             /**
              * @var string filePath Path to the file used for db
              * Used by sqlite driver for example. Keep empty if not used.
              */
-            'filePath'    => '',
+            public $filePath = '';
             
             /**
              * @var string host Datatable host to connect
              */
-            'host'        => '',
+            public $host = '';
             
             /**
              * @var int port Datatable port to connect
              * Mysql default is 3306
              */
-            'port'        => 0,
+            public $port = 0;
             
             /**
              * @var string baseName Database name to connect
              */
-            'baseName'    => '',
+            public $baseName = '';
             
             /**
              * @var string user Database user used to connect
              */
-            'user'        => '',
+            public $user = '';
             
             /**
              * @var string password Database password used to connect
              */
-            'password'    => '',
+            public $password = '';
             
             /**
              * @var string baseType Database type used to connect
              *  It's the name of the PDO driver
              */
-            'baseType'    => '',
+            public $baseType = '';
             
             /**
              * @var array pdoOptions Options passed to 4th arguments
@@ -65,7 +65,7 @@ return (object) [
              * 
              * @link http://php.net/manual/en/pdo.construct.php
              */
-            'pdoOptions'  => [],
+            public $pdoOptions = [];
             
             /**
              * @var boolean useUtf8 Force datas to be UTF-8
@@ -73,14 +73,14 @@ return (object) [
              * 
              * @link http://dev.mysql.com/doc/refman/5.7/en/charset-connection.html
              */
-            'useUtf8'     => true,
+            public $useUtf8 = true;
             
             /**
              * @var string tablePrefix The prefix used for all table.
              *  Empty if not prefix to use
              */
-            'tablePrefix' => ''
-        ]
+            public $tablePrefix = '';
+        }
         // Add object (duplicate first) into the array
         // to add others sql connexions
     ]

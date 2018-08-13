@@ -8,10 +8,10 @@ $vendorPath = realpath(__DIR__.'/../../../../../vendor');
 require_once($vendorPath.'/autoload.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/Application.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/ObserverArray.php');
-require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/class/Module.php');
-require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/class/Subject.php');
+require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Module.php');
+require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Subject.php');
 
-class Basic extends Atoum
+class Basic extends atoum
 {
     use \BfwSql\Test\Helpers\CreateModule;
     
@@ -47,7 +47,7 @@ class Basic extends Atoum
     
     protected function addMonologTestHandler()
     {
-        $this->monolog->addNewHandler((object) [
+        $this->monolog->addNewHandler([
             'name' => '\Monolog\Handler\TestHandler',
             'args' => []
         ]);
@@ -106,10 +106,10 @@ class Basic extends Atoum
         $this->assert('test Observers\Basic::update without handlers')
             ->if($this->calling($this->mock)->haveMonologHandler = true)
             ->and($subject->setAction('user query'))
-            ->and($context = (object) [
-                'request' => 'SELECT * FROM users',
-                'error'   => null
-            ])
+            ->and($context = new class {
+                public $request = 'SELECT * FROM users';
+                public $error = null;
+            })
             ->and($subject->setContext($context))
             ->then
             ->variable($this->mock->update($subject))
@@ -176,14 +176,20 @@ class Basic extends Atoum
             ->then
             
             ->given($subject = new \BFW\Test\Mock\Subject)
-            ->given($context = (object) [
-                'request' => 'SELECT * FROM users',
-                'error'   => [
-                    0 => '00000',
-                    1 => null,
-                    2 => null
-                ]
-            ])
+            ->given($context = new class () {
+                public $request = '';
+                public $error = [];
+                
+                public function __construct()
+                {
+                    $this->request = 'SELECT * FROM users';
+                    $this->error   = [
+                        0 => '00000',
+                        1 => null,
+                        2 => null
+                    ];
+                }
+            })
             ->and($subject->setAction('user query'))
             ->and($subject->setContext($context))
             ->then
@@ -263,14 +269,20 @@ class Basic extends Atoum
             ->then
             
             ->given($subject = new \BFW\Test\Mock\Subject)
-            ->given($context = (object) [
-                'request' => 'SELECT * FROM users',
-                'error'   => [
-                    0 => '00000',
-                    1 => null,
-                    2 => null
-                ]
-            ])
+            ->given($context = new class () {
+                public $request = '';
+                public $error = [];
+                
+                public function __construct()
+                {
+                    $this->request = 'SELECT * FROM users';
+                    $this->error   = [
+                        0 => '00000',
+                        1 => null,
+                        2 => null
+                    ];
+                }
+            })
             ->and($subject->setAction('user query'))
             ->and($subject->setContext($context))
             ->then

@@ -9,7 +9,7 @@
 
 use Monolog\Logger;
 
-return (object) [
+return [
     /**
      * List of monolog handlers.
      * It's a list of object. Each object contain the handler infos.
@@ -19,13 +19,13 @@ return (object) [
      */
     'handlers' => [
         //1.x Monolog always send to stdout if no handler is define :/
-        (object) [
+        [
             'name' => '\Monolog\Handler\TestHandler',
             'args' => []
         ]
         /**
          * Value example:
-        (object) [
+        [
             'name' => '\Monolog\Handler\StreamHandler',
             'args' => [
                 APP_DIR.'logs/bfw-sql/global.log',

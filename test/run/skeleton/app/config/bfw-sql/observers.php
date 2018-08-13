@@ -9,7 +9,7 @@
 
 use Monolog\Logger;
 
-return (object) [
+return [
     /**
      * List of observers to use
      * The key is the observer class, the value an object.
@@ -21,12 +21,12 @@ return (object) [
      *  observer. Format is the same of "handlers" in "monolog.php" config file
      */
     'observers' => [
-        (object) [
+        [
             'className'       => '\BfwSql\Observers\Basic',
-            'monologHandlers' => (object) [
+            'monologHandlers' => [
                 'useGlobal' => false,
                 'others'    => [
-                    (object) [
+                    [
                         'name' => '\Monolog\Handler\StreamHandler',
                         'args' => [
                             APP_DIR.'logs/bfw-sql/basic.log',

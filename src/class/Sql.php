@@ -245,10 +245,16 @@ class Sql
         $subject = $app->getSubjectList()->getSubjectByName('bfw-sql');
         $subject->addNotification(
             'user query',
-            (object) [
-                'request' => $request,
-                'error'   => $error
-            ]
+            new class ($request, $error) {
+                public $request = '';
+                public $error = [];
+                
+                public function __construct($request, $error)
+                {
+                    $this->request = $request;
+                    $this->error   = $error;
+                }
+            }
         );
         
         if (

@@ -8,7 +8,7 @@ $vendorPath = realpath(__DIR__.'/../../../../vendor');
 require_once($vendorPath.'/autoload.php');
 //require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/Application.php');
 
-class CreatePdoDsn extends Atoum
+class CreatePdoDsn extends atoum
 {
     //use \BFW\Test\Helpers\Application;
     
@@ -26,11 +26,11 @@ class CreatePdoDsn extends Atoum
     public function testMysql()
     {
         $this->assert('test CreatePdoDsn::mysql')
-            ->given($infos = (object) [
-                'host'     => 'localhost',
-                'port'     => 3306,
-                'baseName' => 'atoum'
-            ])
+            ->given($infos = new class {
+                public $host     = 'localhost';
+                public $port     = 3306;
+                public $baseName = 'atoum';
+            })
             ->then
             ->string(\BfwSql\CreatePdoDsn::mysql($infos))
                 ->isEqualTo('mysql:host=localhost;port=3306;dbname=atoum')
@@ -40,9 +40,9 @@ class CreatePdoDsn extends Atoum
     public function testSqlite()
     {
         $this->assert('test CreatePdoDsn::sqlite')
-            ->given($infos = (object) [
-                'filePath' => '/app/db/myapp.db'
-            ])
+            ->given($infos = new class {
+                public $filePath = '/app/db/myapp.db';
+            })
             ->then
             ->string(\BfwSql\CreatePdoDsn::sqlite($infos))
                 ->isEqualTo('sqlite:/app/db/myapp.db')
@@ -52,11 +52,11 @@ class CreatePdoDsn extends Atoum
     public function testPgsql()
     {
         $this->assert('test CreatePdoDsn::pgsql')
-            ->given($infos = (object) [
-                'host'     => 'localhost',
-                'port'     => 3306,
-                'baseName' => 'atoum'
-            ])
+            ->given($infos = new class {
+                public $host     = 'localhost';
+                public $port     = 3306;
+                public $baseName = 'atoum';
+            })
             ->then
             ->string(\BfwSql\CreatePdoDsn::pgsql($infos))
                 ->isEqualTo('pgsql:host=localhost;port=3306;dbname=atoum')
@@ -66,11 +66,11 @@ class CreatePdoDsn extends Atoum
     public function testCubrid()
     {
         $this->assert('test CreatePdoDsn::cubrid')
-            ->given($infos = (object) [
-                'host'     => 'localhost',
-                'port'     => 3306,
-                'baseName' => 'atoum'
-            ])
+            ->given($infos = new class {
+                public $host     = 'localhost';
+                public $port     = 3306;
+                public $baseName = 'atoum';
+            })
             ->then
             ->string(\BfwSql\CreatePdoDsn::cubrid($infos))
                 ->isEqualTo('cubrid:dbname=atoum;host=localhost;port=3306')
@@ -80,11 +80,11 @@ class CreatePdoDsn extends Atoum
     public function testDblib()
     {
         $this->assert('test CreatePdoDsn::dblib')
-            ->given($infos = (object) [
-                'host'     => 'localhost',
-                'port'     => 3306,
-                'baseName' => 'atoum'
-            ])
+            ->given($infos = new class {
+                public $host     = 'localhost';
+                public $port     = 3306;
+                public $baseName = 'atoum';
+            })
             ->then
             ->string(\BfwSql\CreatePdoDsn::dblib($infos))
                 ->isEqualTo('dblib:host=localhost:3306;dbname=atoum')
@@ -95,7 +95,7 @@ class CreatePdoDsn extends Atoum
     {
         $this->assert('test CreatePdoDsn::firebird')
             ->exception(function() {
-                \BfwSql\CreatePdoDsn::firebird((object) []);
+                \BfwSql\CreatePdoDsn::firebird(new class{});
             })
                 ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
         ;
@@ -105,7 +105,7 @@ class CreatePdoDsn extends Atoum
     {
         $this->assert('test CreatePdoDsn::ibm')
             ->exception(function() {
-                \BfwSql\CreatePdoDsn::ibm((object) []);
+                \BfwSql\CreatePdoDsn::ibm(new class{});
             })
                 ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
         ;
@@ -115,7 +115,7 @@ class CreatePdoDsn extends Atoum
     {
         $this->assert('test CreatePdoDsn::informix')
             ->exception(function() {
-                \BfwSql\CreatePdoDsn::informix((object) []);
+                \BfwSql\CreatePdoDsn::informix(new class{});
             })
                 ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
         ;
@@ -125,7 +125,7 @@ class CreatePdoDsn extends Atoum
     {
         $this->assert('test CreatePdoDsn::sqlsrv')
             ->exception(function() {
-                \BfwSql\CreatePdoDsn::sqlsrv((object) []);
+                \BfwSql\CreatePdoDsn::sqlsrv(new class{});
             })
                 ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
         ;
@@ -135,7 +135,7 @@ class CreatePdoDsn extends Atoum
     {
         $this->assert('test CreatePdoDsn::oci')
             ->exception(function() {
-                \BfwSql\CreatePdoDsn::oci((object) []);
+                \BfwSql\CreatePdoDsn::oci(new class{});
             })
                 ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
         ;
@@ -145,7 +145,7 @@ class CreatePdoDsn extends Atoum
     {
         $this->assert('test CreatePdoDsn::odbc')
             ->exception(function() {
-                \BfwSql\CreatePdoDsn::odbc((object) []);
+                \BfwSql\CreatePdoDsn::odbc(new class{});
             })
                 ->hasCode(\BfwSql\CreatePdoDsn::ERR_UNKNOWN_FORMAT)
         ;

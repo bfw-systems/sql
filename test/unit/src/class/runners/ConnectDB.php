@@ -8,9 +8,9 @@ $vendorPath = realpath(__DIR__.'/../../../../../vendor');
 require_once($vendorPath.'/autoload.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/Application.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/ObserverArray.php');
-require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/class/Module.php');
+require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Module.php');
 
-class ConnectDB extends Atoum
+class ConnectDB extends atoum
 {
     use \BfwSql\Test\Helpers\CreateModule;
     
@@ -64,19 +64,19 @@ class ConnectDB extends Atoum
         
         $this->assert('test Runners\ConnectDB::run with base')
             ->given($config = $this->module->getConfig())
-            ->given($newBase = (object) [
-                'baseKeyName' => 'myBase',
-                'filePath'    => '',
-                'host'        => 'localhost',
-                'port'        => 3306,
-                'baseName'    => 'atoum',
-                'user'        => 'atoum',
-                'password'    => '',
-                'baseType'    => 'mysql',
-                'pdoOptions'  => [],
-                'useUtf8'     => true,
-                'tablePrefix' => 'test_'
-            ])
+            ->given($newBase = new class {
+                public $baseKeyName = 'myBase';
+                public $filePath    = '';
+                public $host        = 'localhost';
+                public $port        = 3306;
+                public $baseName    = 'atoum';
+                public $user        = 'atoum';
+                public $password    = '';
+                public $baseType    = 'mysql';
+                public $pdoOptions  = [];
+                public $useUtf8     = true;
+                public $tablePrefix = 'test_';
+            })
             ->if($config->setConfigKeyForFilename('bases.php', 'bases', [$newBase]))
             ->then
             ->variable($this->mock->run())
@@ -94,19 +94,19 @@ class ConnectDB extends Atoum
     {
         $this->assert('test Runners\ConnectDB::connectToDatabase without baseType')
             ->exception(function() {
-                $this->mock->connectToDatabase((object) [
-                    'baseKeyName' => '',
-                    'filePath'    => '',
-                    'host'        => '',
-                    'port'        => 0,
-                    'baseName'    => '',
-                    'user'        => '',
-                    'password'    => '',
-                    'baseType'    => '',
-                    'pdoOptions'  => [],
-                    'useUtf8'     => true,
-                    'tablePrefix' => ''
-                ]);
+                $this->mock->connectToDatabase(new class {
+                    public $baseKeyName = '';
+                    public $filePath    = '';
+                    public $host        = '';
+                    public $port        = 0;
+                    public $baseName    = '';
+                    public $user        = '';
+                    public $password    = '';
+                    public $baseType    = '';
+                    public $pdoOptions  = [];
+                    public $useUtf8     = true;
+                    public $tablePrefix = '';
+                });
             })
                 ->hasCode(\BfwSql\Runners\ConnectDB::ERR_NO_BASE_TYPE)
         ;
@@ -116,48 +116,48 @@ class ConnectDB extends Atoum
                 'bases.php',
                 'bases',
                 [
-                    (object) [
-                        'baseKeyName' => '',
-                        'filePath'    => '',
-                        'host'        => 'localhost',
-                        'port'        => 3306,
-                        'baseName'    => 'atoum',
-                        'user'        => 'atoum',
-                        'password'    => '',
-                        'baseType'    => 'mysql',
-                        'pdoOptions'  => [],
-                        'useUtf8'     => true,
-                        'tablePrefix' => 'test_'
-                    ],
-                    (object) [
-                        'baseKeyName' => 'myBase',
-                        'filePath'    => '',
-                        'host'        => 'localhost',
-                        'port'        => 3306,
-                        'baseName'    => 'atoum',
-                        'user'        => 'atoum',
-                        'password'    => '',
-                        'baseType'    => 'mysql',
-                        'pdoOptions'  => [],
-                        'useUtf8'     => true,
-                        'tablePrefix' => 'test_'
-                    ]
+                    new class {
+                        public $baseKeyName = '';
+                        public $filePath    = '';
+                        public $host        = 'localhost';
+                        public $port        = 3306;
+                        public $baseName    = 'atoum';
+                        public $user        = 'atoum';
+                        public $password    = '';
+                        public $baseType    = 'mysql';
+                        public $pdoOptions  = [];
+                        public $useUtf8     = true;
+                        public $tablePrefix = 'test_';
+                    },
+                    new class {
+                        public $baseKeyName = 'myBase';
+                        public $filePath    = '';
+                        public $host        = 'localhost';
+                        public $port        = 3306;
+                        public $baseName    = 'atoum';
+                        public $user        = 'atoum';
+                        public $password    = '';
+                        public $baseType    = 'mysql';
+                        public $pdoOptions  = [];
+                        public $useUtf8     = true;
+                        public $tablePrefix = 'test_';
+                    }
                 ]
             ))
             ->exception(function() {
-                $this->mock->connectToDatabase((object) [
-                    'baseKeyName' => '',
-                    'filePath'    => '',
-                    'host'        => 'localhost',
-                    'port'        => 3306,
-                    'baseName'    => 'atoum',
-                    'user'        => 'atoum',
-                    'password'    => '',
-                    'baseType'    => 'mysql',
-                    'pdoOptions'  => [],
-                    'useUtf8'     => true,
-                    'tablePrefix' => 'test_'
-                ]);
+                $this->mock->connectToDatabase(new class {
+                    public $baseKeyName = '';
+                    public $filePath    = '';
+                    public $host        = 'localhost';
+                    public $port        = 3306;
+                    public $baseName    = 'atoum';
+                    public $user        = 'atoum';
+                    public $password    = '';
+                    public $baseType    = 'mysql';
+                    public $pdoOptions  = [];
+                    public $useUtf8     = true;
+                    public $tablePrefix = 'test_';
+                });
             })
                 ->hasCode(\BfwSql\Runners\ConnectDB::ERR_NO_CONNECTION_KEYNAME)
         ;
@@ -172,19 +172,19 @@ class ConnectDB extends Atoum
                 'bases.php',
                 'bases',
                 [
-                    (object) [
-                        'baseKeyName' => 'myBase',
-                        'filePath'    => '',
-                        'host'        => 'localhost',
-                        'port'        => 3306,
-                        'baseName'    => 'atoum',
-                        'user'        => 'atoum',
-                        'password'    => '',
-                        'baseType'    => 'mysql',
-                        'pdoOptions'  => [],
-                        'useUtf8'     => true,
-                        'tablePrefix' => 'test_'
-                    ]
+                    new class {
+                        public $baseKeyName = 'myBase';
+                        public $filePath    = '';
+                        public $host        = 'localhost';
+                        public $port        = 3306;
+                        public $baseName    = 'atoum';
+                        public $user        = 'atoum';
+                        public $password    = '';
+                        public $baseType    = 'mysql';
+                        public $pdoOptions  = [];
+                        public $useUtf8     = true;
+                        public $tablePrefix = 'test_';
+                    }
                 ]
             ))
             ->and(

@@ -9,7 +9,7 @@
 
 use Monolog\Logger;
 
-return (object) [
+return [
     /**
      * List of observers to use
      * The key is the observer class, the value an object.
@@ -23,9 +23,9 @@ return (object) [
     'observers' => [
         /**
          * Value example:
-        (object) [
+        [
             'className'       => '\BfwSql\Observers\Basic',
-            'monologHandlers' => (object) [
+            'monologHandlers' => [
                 'useGlobal' => true,
                 'others'    => []
             ]

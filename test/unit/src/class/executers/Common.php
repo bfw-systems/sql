@@ -8,7 +8,7 @@ $vendorPath = realpath(__DIR__.'/../../../../../vendor');
 require_once($vendorPath.'/autoload.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/ObserverArray.php');
 
-class Common extends Atoum
+class Common extends atoum
 {
     use \BfwSql\Test\Helpers\CreateModule;
     

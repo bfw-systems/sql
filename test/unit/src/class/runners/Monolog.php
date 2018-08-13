@@ -8,9 +8,9 @@ $vendorPath = realpath(__DIR__.'/../../../../../vendor');
 require_once($vendorPath.'/autoload.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/Application.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/ObserverArray.php');
-require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/class/Module.php');
+require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Module.php');
 
-class Monolog extends Atoum
+class Monolog extends atoum
 {
     use \BfwSql\Test\Helpers\CreateModule;
     
@@ -48,7 +48,7 @@ class Monolog extends Atoum
                 'monolog.php',
                 'handlers',
                 [
-                    (object) [
+                    [
                         'name' => '\Monolog\Handler\TestHandler',
                         'args' => []
                     ]

@@ -4,7 +4,7 @@ namespace BfwSql\Test\Helpers;
 
 $vendorPath = realpath(__DIR__.'/../../../vendor');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/Application.php');
-require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/class/Module.php');
+require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Module.php');
 
 trait CreateModule
 {
@@ -44,7 +44,7 @@ trait CreateModule
     {
         $config = new \BFW\Config('bfw-sql');
         
-        $bases = (object) [
+        $bases = [
             'bases' => []
         ];
         $config->setConfigForFilename('bases.php', $bases);
@@ -77,19 +77,24 @@ trait CreateModule
     
     protected function createSqlConnect($baseName)
     {
-        $baseInfos = (object) [
-            'baseKeyName' => $baseName,
-            'filePath'    => '',
-            'host'        => 'localhost',
-            'port'        => 3306,
-            'baseName'    => 'atoum',
-            'user'        => 'atoum',
-            'password'    => '',
-            'baseType'    => 'mysql',
-            'pdoOptions'  => [],
-            'useUtf8'     => true,
-            'tablePrefix' => 'test_'
-        ];
+        $baseInfos = new class ($baseName) {
+            public $baseKeyName = '';
+            public $filePath    = '';
+            public $host        = 'localhost';
+            public $port        = 3306;
+            public $baseName    = 'atoum';
+            public $user        = 'atoum';
+            public $password    = '';
+            public $baseType    = 'mysql';
+            public $pdoOptions  = [];
+            public $useUtf8     = true;
+            public $tablePrefix = 'test_';
+            
+            public function __construct($baseKeyName)
+            {
+                $this->baseKeyName = $baseKeyName;
+            }
+        };
         
         $this->sqlConnect = new \BfwSql\Test\Mocks\SqlConnect($baseInfos);
         

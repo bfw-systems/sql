@@ -1,0 +1,18 @@
+{
+    "bases.php": {
+        "version": "2.0.0",
+        "scriptsPlayed": []
+    },
+    "class.php": {
+        "version": "2.0.0",
+        "scriptsPlayed": []
+    },
+    "monolog.php": {
+        "version": "2.0.0",
+        "scriptsPlayed": []
+    },
+    "observers.php": {
+        "version": "2.0.0",
+        "scriptsPlayed": []
+    }
+}

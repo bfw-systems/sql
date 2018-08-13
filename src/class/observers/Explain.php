@@ -94,10 +94,10 @@ class Explain extends Basic
             return;
         }
         
-        $this->explain = (object) [
-            'status' => self::EXPLAIN_OK,
-            'datas'  => []
-        ];
+        $this->explain = new class {
+            public $status = \BfwSql\Observers\Explain::EXPLAIN_OK;
+            public $datas  = [];
+        };
         
         $this->sql = $this->obtainSql();
         

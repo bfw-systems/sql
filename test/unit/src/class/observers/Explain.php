@@ -8,10 +8,10 @@ $vendorPath = realpath(__DIR__.'/../../../../../vendor');
 require_once($vendorPath.'/autoload.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/Application.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/ObserverArray.php');
-require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/class/Module.php');
-require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/class/Subject.php');
+require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Module.php');
+require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Subject.php');
 
-class Explain extends Atoum
+class Explain extends atoum
 {
     use \BfwSql\Test\Helpers\CreateModule;
     
@@ -42,7 +42,7 @@ class Explain extends Atoum
     
     protected function addMonologTestHandler()
     {
-        $this->monolog->addNewHandler((object) [
+        $this->monolog->addNewHandler([
             'name' => '\Monolog\Handler\TestHandler',
             'args' => []
         ]);
@@ -127,11 +127,11 @@ class Explain extends Atoum
                 ->isInstanceOf('\BfwSql\Sql')
             ->object($this->mock->getSql()->getSqlConnect())
                 ->isIdenticalTo($context->getSqlConnect())
-            ->object($this->mock->getExplain())
-                ->isEqualTo((object) [
-                    'status' => \BfwSql\Observers\Explain::EXPLAIN_OK,
-                    'datas'  => []
-                ])
+            ->object($explain = $this->mock->getExplain())
+                ->variable($explain->status)
+                    ->isEqualTo(\BfwSql\Observers\Explain::EXPLAIN_OK)
+                ->array($explain->datas)
+                    ->isEmpty()
             ->mock($this->mock)
                 ->call('runExplain')
                     ->once()
@@ -211,11 +211,11 @@ class Explain extends Atoum
             ->mock($pdoStatement)
                 ->call('fetch')
                     ->never()
-            ->object($this->mock->getExplain())
-                ->isEqualTo((object) [
-                    'status' => \BfwSql\Observers\Explain::EXPLAIN_FAILED,
-                    'datas'  => []
-                ])
+            ->object($explain = $this->mock->getExplain())
+                ->variable($explain->status)
+                    ->isEqualTo(\BfwSql\Observers\Explain::EXPLAIN_FAILED)
+                ->array($explain->datas)
+                    ->isEmpty()
         ;
         
         $this->assert('test Observers\Basic::runExplain when explain empty')
@@ -226,11 +226,11 @@ class Explain extends Atoum
             ->mock($pdoStatement)
                 ->call('fetch')
                     ->once()
-            ->object($this->mock->getExplain())
-                ->isEqualTo((object) [
-                    'status' => \BfwSql\Observers\Explain::EXPLAIN_EMPTY,
-                    'datas'  => []
-                ])
+            ->object($explain = $this->mock->getExplain())
+                ->variable($explain->status)
+                    ->isEqualTo(\BfwSql\Observers\Explain::EXPLAIN_EMPTY)
+                ->array($explain->datas)
+                    ->isEmpty()
         ;
         
         $this->assert('test Observers\Basic::runExplain when explain result')
@@ -256,10 +256,11 @@ class Explain extends Atoum
             ->mock($pdoStatement)
                 ->call('fetch')
                     ->once()
-            ->object($this->mock->getExplain())
-                ->isEqualTo((object) [
-                    'status' => \BfwSql\Observers\Explain::EXPLAIN_OK,
-                    'datas'  => [
+            ->object($explain = $this->mock->getExplain())
+                ->variable($explain->status)
+                    ->isEqualTo(\BfwSql\Observers\Explain::EXPLAIN_OK)
+                ->array($explain->datas)
+                    ->isEqualTo([
                         'id'            => 1,
                         'select_type'   => 'SIMPLE',
                         'table'         => 'users',
@@ -272,8 +273,7 @@ class Explain extends Atoum
                         'rows'          => 943,
                         'filtered'      => 100,
                         'Extra'         => null
-                    ]
-                ])
+                    ])
         ;
     }
     

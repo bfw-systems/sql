@@ -7,7 +7,7 @@ use \Atoum;
 $vendorPath = realpath(__DIR__.'/../../../../../../vendor');
 require_once($vendorPath.'/autoload.php');
 
-class CommonList extends Atoum
+class CommonList extends atoum
 {
     use \BfwSql\Test\Helpers\CreateModule;
     

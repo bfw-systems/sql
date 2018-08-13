@@ -8,9 +8,9 @@ $vendorPath = realpath(__DIR__.'/../../../../../vendor');
 require_once($vendorPath.'/autoload.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/Application.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/ObserverArray.php');
-require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/class/Module.php');
+require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Module.php');
 
-class Observers extends Atoum
+class Observers extends atoum
 {
     use \BfwSql\Test\Helpers\CreateModule;
     
@@ -70,9 +70,9 @@ class Observers extends Atoum
         ;
         
         $this->assert('test Runners\Observers::run with an observer')
-            ->given($newobserver = (object) [
+            ->given($newobserver = [
                 'className'       => '\BfwSql\Observers\Basic',
-                'monologHandlers' => (object) [
+                'monologHandlers' => [
                     'useGlobal' => true,
                     'others'    => []
                 ]
@@ -104,9 +104,9 @@ class Observers extends Atoum
         $this->assert('test Runners\Observers::addObserver')
             ->given($module = $this->module)
             ->given($subject = new \BFW\Subject)
-            ->given($observerInfos = (object) [
+            ->given($observerInfos = [
                 'className'       => '\BfwSql\Observers\Basic',
-                'monologHandlers' => (object) [
+                'monologHandlers' => [
                     'useGlobal' => true,
                     'others'    => []
                 ]
@@ -145,7 +145,7 @@ class Observers extends Atoum
         
         $this->assert('test Runners\Observers::checkObserverClass with unknown class')
             ->exception(function() {
-                $this->mock->checkObserverClass((object) [
+                $this->mock->checkObserverClass([
                     'className' => '\Test'
                 ]);
             })
@@ -153,7 +153,7 @@ class Observers extends Atoum
         ;
         
         $this->assert('test Runners\Observers::checkObserverClass with unknown class')
-            ->variable($this->mock->checkObserverClass((object) [
+            ->variable($this->mock->checkObserverClass([
                     'className' => '\BfwSql\Observers\Basic'
             ]))
                 ->isNull()
@@ -163,31 +163,31 @@ class Observers extends Atoum
     public function testCheckObserverMonologHandlers()
     {
         $this->assert('test Runners\Observers::checkObserverMonologHandlers with nothing')
-            ->given($observerInfos = new \stdClass)
+            ->given($observerInfos = [])
             ->variable($this->mock->checkObserverMonologHandlers($observerInfos))
                 ->isNull()
-            ->object($observerInfos->monologHandlers)
-                ->isInstanceOf('\stdClass')
-            ->boolean($observerInfos->monologHandlers->useGlobal)
+            ->array($observerInfos['monologHandlers'])
+                ->isNotEmpty()
+            ->boolean($observerInfos['monologHandlers']['useGlobal'])
                 ->isFalse()
-            ->array($observerInfos->monologHandlers->others)
+            ->array($observerInfos['monologHandlers']['others'])
                 ->isEmpty()
         ;
         
         $this->assert('test Runners\Observers::checkObserverMonologHandlers with bad values')
-            ->given($observerInfos = (object) [
-                'monologHandlers' => (object) [
+            ->given($observerInfos = [
+                'monologHandlers' => [
                     'useGlobal' => 'false',
                     'others'    => 'none'
                 ]
             ])
             ->variable($this->mock->checkObserverMonologHandlers($observerInfos))
                 ->isNull()
-            ->object($observerInfos->monologHandlers)
-                ->isInstanceOf('\stdClass')
-            ->boolean($observerInfos->monologHandlers->useGlobal)
+            ->array($observerInfos['monologHandlers'])
+                ->isNotEmpty()
+            ->boolean($observerInfos['monologHandlers']['useGlobal'])
                 ->isTrue() //It's not an error. Only var type conversion.
-            ->array($observerInfos->monologHandlers->others)
+            ->array($observerInfos['monologHandlers']['others'])
                 ->isEmpty()
         ;
     }
@@ -195,12 +195,12 @@ class Observers extends Atoum
     public function testAddMonologForObserver()
     {
         $this->assert('test Runners\Observers::addMonologForObserver - prepare')
-            ->given($observerInfos = (object) [
+            ->given($observerInfos = [
                 'className'       => '\BfwSql\Observers\Basic',
-                'monologHandlers' => (object) [
+                'monologHandlers' => [
                     'useGlobal' => false,
                     'others'    => [
-                        (object) [
+                        [
                             'name' => '\Monolog\Handler\TestHandler',
                             'args' => []
                         ]
@@ -218,7 +218,7 @@ class Observers extends Atoum
         ;
         
         $this->assert('test Runners\Observers::addMonologForObserver with clone monolog instance')
-            ->if($observerInfos->monologHandlers->useGlobal = true)
+            ->if($observerInfos['monologHandlers']['useGlobal'] = true)
             ->object($monolog = $this->mock->addMonologForObserver($observerInfos))
                 ->isNotIdenticalTo($this->module->monolog)
             ->array($monolog->getHandlers())

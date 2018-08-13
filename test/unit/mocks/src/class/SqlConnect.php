@@ -9,7 +9,7 @@ class SqlConnect extends \BfwSql\SqlConnect
         $this->PDO = $PDO;
     }
 
-    public function setConnectionInfos(\stdClass $connectionInfos)
+    public function setConnectionInfos($connectionInfos)
     {
         $this->connectionInfos = $connectionInfos;
     }

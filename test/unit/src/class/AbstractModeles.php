@@ -7,9 +7,9 @@ use \atoum;
 $vendorPath = realpath(__DIR__.'/../../../../vendor');
 require_once($vendorPath.'/autoload.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/Application.php');
-require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/class/Module.php');
+require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Module.php');
 
-class AbstractModeles extends Atoum
+class AbstractModeles extends atoum
 {
     use \BFW\Test\Helpers\Application;
     
@@ -51,19 +51,24 @@ class AbstractModeles extends Atoum
     protected function addBase($baseName)
     {
         $module    = $this->app->getModuleList()->getModuleByName('bfw-sql');
-        $baseInfos = (object) [
-            'baseKeyName' => $baseName,
-            'filePath'    => '',
-            'host'        => 'localhost',
-            'port'        => 3306,
-            'baseName'    => 'atoum',
-            'user'        => 'atoum',
-            'password'    => '',
-            'baseType'    => 'mysql',
-            'pdoOptions'  => [],
-            'useUtf8'     => true,
-            'tablePrefix' => 'test_'
-        ];
+        $baseInfos = $baseInfos = new class ($baseName) {
+            public $baseKeyName = '';
+            public $filePath    = '';
+            public $host        = 'localhost';
+            public $port        = 3306;
+            public $baseName    = 'atoum';
+            public $user        = 'atoum';
+            public $password    = '';
+            public $baseType    = 'mysql';
+            public $pdoOptions  = [];
+            public $useUtf8     = true;
+            public $tablePrefix = 'test_';
+            
+            public function __construct($baseKeyName)
+            {
+                $this->baseKeyName = $baseKeyName;
+            }
+        };
         
         $module->listBases[$baseName] = new \BfwSql\SqlConnect($baseInfos);
     }

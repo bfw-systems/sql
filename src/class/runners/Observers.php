@@ -47,7 +47,7 @@ class Observers extends AbstractRunner
     /**
      * Create the new observer and attach it to the bfw-sql subject
      * 
-     * @param \stdClass $observerInfos Infos from config for the new observer
+     * @param array $observerInfos Infos from config for the new observer
      * @param \BFW\Subject $subject The subject to attach the new observer
      * 
      * @return void
@@ -59,7 +59,7 @@ class Observers extends AbstractRunner
         
         $monolog = $this->addMonologForObserver($observerInfos);
         
-        $observerClassName = $observerInfos->className;
+        $observerClassName = $observerInfos['className'];
         $observer          = new $observerClassName($monolog);
         $subject->attach($observer);
     }
@@ -67,7 +67,7 @@ class Observers extends AbstractRunner
     /**
      * Check the observer class infos declared in config
      * 
-     * @param \stdClass $observerInfos Infos from config for the new observer
+     * @param array $observerInfos Infos from config for the new observer
      * 
      * @throws Exception If there are somes problems with the class to use
      * 
@@ -75,16 +75,16 @@ class Observers extends AbstractRunner
      */
     protected function checkObserverClass($observerInfos)
     {
-        if (!property_exists($observerInfos, 'className')) {
+        if (!array_key_exists('className', $observerInfos)) {
             throw new Exception(
-                'The property "className" should be declared for each observer.',
+                'The key "className" should be declared for each observer.',
                 self::ERR_ADD_OBSERVER_MISSING_CLASSNAME
             );
         }
         
-        if (!class_exists($observerInfos->className)) {
+        if (!class_exists($observerInfos['className'])) {
             throw new Exception(
-                'The class '.$observerInfos->className.' not exist.',
+                'The class '.$observerInfos['className'].' not exist.',
                 self::ERR_ADD_OBSERVER_UNKNOWN_CLASS
             );
         }
@@ -93,54 +93,54 @@ class Observers extends AbstractRunner
     /**
      * Check monolog handler declared in the config and add missing datas.
      * 
-     * @param \stdClass $observerInfos Infos from config for the new observer
+     * @param array &$observerInfos Infos from config for the new observer
      * 
      * @return void
      */
-    protected function checkObserverMonologHandlers($observerInfos)
+    protected function checkObserverMonologHandlers(&$observerInfos)
     {
-        if (!property_exists($observerInfos, 'monologHandlers')) {
-            $observerInfos->monologHandlers = (object) [];
+        if (!array_key_exists('monologHandlers', $observerInfos)) {
+            $observerInfos['monologHandlers'] = [];
         }
-        $handlersInfos = $observerInfos->monologHandlers;
+        $handlersInfos = &$observerInfos['monologHandlers'];
         
-        if (!property_exists($handlersInfos, 'useGlobal')) {
-            $handlersInfos->useGlobal = false;
-        }
-        
-        if (!is_bool($handlersInfos->useGlobal)) {
-            $handlersInfos->useGlobal = (bool) $handlersInfos->useGlobal;
+        if (!array_key_exists('useGlobal', $handlersInfos)) {
+            $handlersInfos['useGlobal'] = false;
         }
         
-        if (!property_exists($handlersInfos, 'others')) {
-            $handlersInfos->others = [];
+        if (!is_bool($handlersInfos['useGlobal'])) {
+            $handlersInfos['useGlobal'] = (bool) $handlersInfos['useGlobal'];
         }
         
-        if (!is_array($handlersInfos->others)) {
-            $handlersInfos->others = [];
+        if (!array_key_exists('others', $handlersInfos)) {
+            $handlersInfos['others'] = [];
+        }
+        
+        if (!is_array($handlersInfos['others'])) {
+            $handlersInfos['others'] = [];
         }
     }
     
     /**
      * Add monolog handlers for the new observer
      * 
-     * @param \stdClass $observerInfos Infos from config for the new observer
+     * @param array $observerInfos Infos from config for the new observer
      * 
      * @return \BFW\Monolog
      */
     protected function addMonologForObserver($observerInfos)
     {
-        $handlersInfos = $observerInfos->monologHandlers;
+        $handlersInfos = $observerInfos['monologHandlers'];
         
-        if ($handlersInfos->useGlobal === false) {
+        if ($handlersInfos['useGlobal'] === false) {
             $monolog = Monolog::createMonolog($this->module->getConfig());
         } else {
             //Clone because we want add new handlers only for this observer.
             $monolog = clone $this->module->monolog;
         }
         
-        if ($handlersInfos->others !== []) {
-            foreach ($handlersInfos->others as $handlerInfos) {
+        if ($handlersInfos['others'] !== []) {
+            foreach ($handlersInfos['others'] as $handlerInfos) {
                 $monolog->addNewHandler($handlerInfos);
             }
         }

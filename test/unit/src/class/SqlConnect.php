@@ -8,7 +8,7 @@ $vendorPath = realpath(__DIR__.'/../../../../vendor');
 require_once($vendorPath.'/autoload.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/ObserverArray.php');
 
-class SqlConnect extends Atoum
+class SqlConnect extends atoum
 {
     use \BfwSql\Test\Helpers\CreateModule;
     
@@ -35,19 +35,19 @@ class SqlConnect extends Atoum
             ->generate('BfwSql\SqlConnect')
         ;
         
-        $this->baseInfos = (object) [
-            'baseKeyName' => 'myBase',
-            'filePath'    => '',
-            'host'        => 'localhost',
-            'port'        => 3306,
-            'baseName'    => 'atoum',
-            'user'        => 'atoum',
-            'password'    => '',
-            'baseType'    => 'mysql',
-            'pdoOptions'  => [],
-            'useUtf8'     => false,
-            'tablePrefix' => 'test_'
-        ];
+        $this->baseInfos = $baseInfos = new class {
+            public $baseKeyName = 'myBase';
+            public $filePath    = '';
+            public $host        = 'localhost';
+            public $port        = 3306;
+            public $baseName    = 'atoum';
+            public $user        = 'atoum';
+            public $password    = '';
+            public $baseType    = 'mysql';
+            public $pdoOptions  = [];
+            public $useUtf8     = false;
+            public $tablePrefix = 'test_';
+        };
         
         if ($testMethod === 'testConstructAndGetters') {
             return;
