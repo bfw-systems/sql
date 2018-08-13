@@ -43,8 +43,9 @@ class Limit extends AbstractPart
      * Magic method __invoke, used when the user call object like a function
      * @link http://php.net/manual/en/language.oop5.magic.php#object.invoke
      * 
-     * @param integer|array $limitInfos If it's a integer, the number of row to
-     *  return. If an array, the format is [offset, rowCount]
+     * @param array $limitInfos If one args, the number of row to return.
+     *  If two args, the first is the offset, the second is the number
+     *  of row to return.
      */
     public function __invoke(...$limitInfos)
     {

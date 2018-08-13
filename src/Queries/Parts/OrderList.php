@@ -19,7 +19,7 @@ class OrderList extends AbstractList
      * @link http://php.net/manual/en/language.oop5.magic.php#object.invoke
      * 
      * @param string $expr The expression to use into the order
-     * @param string $sort The sort order : ASC or DESC
+     * @param string|null $sort The sort order : ASC or DESC
      * 
      * @return void
      */

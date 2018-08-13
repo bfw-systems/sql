@@ -12,7 +12,7 @@ namespace BfwSql;
 class UsedClass
 {
     /**
-     * @var \BFW\UsedClass|null $instance UsedClass instance (Singleton)
+     * @var \BfwSql\UsedClass|null $instance UsedClass instance (Singleton)
      */
     protected static $instance;
     
