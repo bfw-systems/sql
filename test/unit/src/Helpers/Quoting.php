@@ -2,7 +2,7 @@
 
 namespace BfwSql\Helpers\test\unit;
 
-use \Atoum;
+use \atoum;
 
 $vendorPath = realpath(__DIR__.'/../../../../vendor');
 require_once($vendorPath.'/autoload.php');
