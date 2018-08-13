@@ -8,6 +8,11 @@ namespace BfwSql\Queries;
  * @package bfw-sql
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
+ * 
+ * @method \BfwSql\Queries\Insert into(string|array $nameInfos, string|array|null $columns=null)
+ * @method \BfwSql\Queries\Insert values(array $columns)
+ * @method \BfwSql\Queries\Select select()
+ * @method \BfwSql\Queries\Insert onDuplicate(array $columns)
  */
 class Insert extends AbstractQuery
 {

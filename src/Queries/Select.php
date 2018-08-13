@@ -10,6 +10,12 @@ use \BfwSql\SqlConnect;
  * @package bfw-sql
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
+ * 
+ * @method \BfwSql\Queries\Select subQuery(string $shortcut, string|\BfwSql\Queries\AbstractQuery $subQuery)
+ * @method \BfwSql\Queries\Select from(string|array $nameInfos, string|array|null $columns=null)
+ * @method \BfwSql\Queries\Select order(string $expr, string|null $sort = 'ASC')
+ * @method \BfwSql\Queries\Select limit([int $offset,] int $rowCount)
+ * @method \BfwSql\Queries\Select group(string $expr)
  */
 class Select extends AbstractQuery
 {

@@ -10,6 +10,8 @@ use \Exception;
  * @package bfw-sql
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
+ * 
+ * @method \BfwSql\Queries\Select from(string|array $nameInfos, string|array|null $columns=null)
  */
 class Update extends AbstractQuery
 {

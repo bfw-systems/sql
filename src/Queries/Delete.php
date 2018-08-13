@@ -8,6 +8,8 @@ namespace BfwSql\Queries;
  * @package bfw-sql
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
+ * 
+ * @method \BfwSql\Queries\Delete from(string|array $nameInfos, string|array|null $columns=null)
  */
 class Delete extends AbstractQuery
 {

@@ -10,6 +10,9 @@ use \Exception;
  * @package bfw-sql
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
+ * 
+ * @method \BfwSql\Queries\AbstractQuery table(string|array $nameInfos, string|array|null $columns=null)
+ * @method \BfwSql\Queries\AbstractQuery where(string $expr, array|null $preparedParams = null)
  */
 abstract class AbstractQuery
 {
