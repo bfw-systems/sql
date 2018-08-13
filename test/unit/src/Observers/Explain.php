@@ -100,14 +100,14 @@ class Explain extends atoum
             ->and($this->calling($this->mock)->runExplain = null)
             ->then
             
-            ->given($context = new \BfwSql\Queries\Select($this->sqlConnect, 'object'))
+            ->given($query = new \BfwSql\Queries\Select($this->sqlConnect, 'object'))
             ->given($setLastErrorInfos = function($lastErrorInfos) {
                 $this->lastErrorInfos = $lastErrorInfos;
             })
-            ->if($context->from('users', '*'))
-            ->and($context->assemble())
+            ->if($query->from('users', '*'))
+            ->and($query->assemble())
             ->and($setLastErrorInfos->call(
-                $context->getExecuter(),
+                $query->getExecuter(),
                 [
                     0 => '00000',
                     1 => null,
@@ -117,7 +117,7 @@ class Explain extends atoum
             
             ->given($subject = new \BFW\Test\Mock\Subject)
             ->and($subject->setAction('system query'))
-            ->and($subject->setContext($context))
+            ->and($subject->setContext($query->getExecuter()))
             ->then
         ;
         
@@ -126,7 +126,7 @@ class Explain extends atoum
             ->object($this->mock->getSql())
                 ->isInstanceOf('\BfwSql\Sql')
             ->object($this->mock->getSql()->getSqlConnect())
-                ->isIdenticalTo($context->getSqlConnect())
+                ->isIdenticalTo($query->getSqlConnect())
             ->object($explain = $this->mock->getExplain())
                 ->variable($explain->status)
                     ->isEqualTo(\BfwSql\Observers\Explain::EXPLAIN_OK)
@@ -157,7 +157,8 @@ class Explain extends atoum
         ;
         
         $this->assert('test Observers\Basic::systemQuery with an another incorrect context instance')
-            ->if($subject->setContext(new \BfwSql\Queries\Insert($this->sqlConnect)))
+            ->given($insert = new \BfwSql\Queries\Insert($this->sqlConnect))
+            ->if($subject->setContext($insert->getExecuter()))
             ->then
             ->variable($this->mock->update($subject))
                 ->isNull()
@@ -174,14 +175,14 @@ class Explain extends atoum
             ->and($this->calling($this->mock)->addQueryToMonoLog = null)
             ->then
             
-            ->given($context = new \BfwSql\Queries\Select($this->sqlConnect, 'object'))
+            ->given($query = new \BfwSql\Queries\Select($this->sqlConnect, 'object'))
             ->given($setLastErrorInfos = function($lastErrorInfos) {
                 $this->lastErrorInfos = $lastErrorInfos;
             })
-            ->if($context->from('users', '*'))
-            ->and($context->assemble())
+            ->if($query->from('users', '*'))
+            ->and($query->assemble())
             ->and($setLastErrorInfos->call(
-                $context->getExecuter(),
+                $query->getExecuter(),
                 [
                     0 => '00000',
                     1 => null,
@@ -191,7 +192,7 @@ class Explain extends atoum
             
             ->given($subject = new \BFW\Test\Mock\Subject)
             ->and($subject->setAction('system query'))
-            ->and($subject->setContext($context))
+            ->and($subject->setContext($query->getExecuter()))
             ->then
             
             ->given($pdoStatement = new \mock\PDOStatement)
@@ -283,14 +284,14 @@ class Explain extends atoum
             ->given($monologHandler = $this->monolog->getHandlers()[0])
             ->then
             
-            ->given($context = new \BfwSql\Queries\Select($this->sqlConnect, 'object'))
+            ->given($query = new \BfwSql\Queries\Select($this->sqlConnect, 'object'))
             ->given($setLastErrorInfos = function($lastErrorInfos) {
                 $this->lastErrorInfos = $lastErrorInfos;
             })
-            ->if($context->from('users', '*'))
-            ->and($context->assemble())
+            ->if($query->from('users', '*'))
+            ->and($query->assemble())
             ->and($setLastErrorInfos->call(
-                $context->getExecuter(),
+                $query->getExecuter(),
                 [
                     0 => '00000',
                     1 => null,
@@ -300,7 +301,7 @@ class Explain extends atoum
             
             ->given($subject = new \BFW\Test\Mock\Subject)
             ->and($subject->setAction('system query'))
-            ->and($subject->setContext($context))
+            ->and($subject->setContext($query->getExecuter()))
             ->then
             
             ->given($sql = new \mock\BfwSql\Sql($this->sqlConnect))

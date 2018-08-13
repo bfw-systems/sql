@@ -3,7 +3,6 @@
 namespace BfwSql\Observers;
 
 use \Exception;
-use \BfwSql\Queries\AbstractQuery;
 
 /**
  * Requests observer.
@@ -140,16 +139,16 @@ class Basic implements \SplObserver
      */
     protected function systemQuery()
     {
-        if ($this->context instanceof AbstractQuery === false) {
+        if ($this->context instanceof \BfwSql\Executers\Common === false) {
             throw new Exception(
-                '"system query" event should have an AbstractQuery class'
+                '"system query" event should have an Executers\Common class'
                 .' into the context.',
                 self::ERR_SYSTEM_QUERY_CONTEXT_CLASS
             );
         }
         
-        $query = $this->context->getAssembledRequest();
-        $error = $this->context->getExecuter()->getLastErrorInfos();
+        $query = $this->context->getQuery()->getAssembledRequest();
+        $error = $this->context->getLastErrorInfos();
         
         $this->addQueryToMonoLog($query, $error);
     }

@@ -216,14 +216,14 @@ class Basic extends atoum
             ->and($this->calling($this->mock)->addQueryToMonoLog = null)
             ->then
             
-            ->given($context = new \BfwSql\Queries\Select($this->sqlConnect, 'object'))
-            ->if($context->from('users', '*'))
-            ->and($context->assemble())
+            ->given($query = new \BfwSql\Queries\Select($this->sqlConnect, 'object'))
+            ->if($query->from('users', '*'))
+            ->and($query->assemble())
             ->given($setLastErrorInfos = function($lastErrorInfos) {
                 $this->lastErrorInfos = $lastErrorInfos;
             })
             ->and($setLastErrorInfos->call(
-                $context->getExecuter(),
+                $query->getExecuter(),
                 [
                     0 => '00000',
                     1 => null,
@@ -233,7 +233,7 @@ class Basic extends atoum
             
             ->given($subject = new \BFW\Test\Mock\Subject)
             ->and($subject->setAction('system query'))
-            ->and($subject->setContext($context))
+            ->and($subject->setContext($query->getExecuter()))
             ->then
         ;
         

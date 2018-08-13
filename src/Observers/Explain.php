@@ -3,7 +3,6 @@
 namespace BfwSql\Observers;
 
 use \Exception;
-use \BfwSql\Queries\AbstractQuery;
 use \BfwSql\Queries\Select;
 
 /**
@@ -82,15 +81,15 @@ class Explain extends Basic
      */
     protected function systemQuery()
     {
-        if ($this->context instanceof AbstractQuery === false) {
+        if ($this->context instanceof \BfwSql\Executers\Common === false) {
             throw new Exception(
-                '"system query" event should have an AbstractQuery class'
+                '"system query" event should have an Executers\Common class'
                 .' into the context.',
                 self::ERR_SYSTEM_QUERY_CONTEXT_CLASS
             );
         }
         
-        if ($this->context instanceof Select === false) {
+        if ($this->context->getQuery() instanceof Select === false) {
             return;
         }
         
@@ -126,13 +125,13 @@ class Explain extends Basic
         $this->sql->query('FLUSH STATUS;');
         $pdo = $this->sql->getSqlConnect()->getPDO();
         
-        $explainQuery = 'EXPLAIN '.$this->context->assemble();
+        $explainQuery = 'EXPLAIN '.$this->context->getQuery()->assemble();
         $request      = $pdo->prepare(
             $explainQuery,
-            $this->context->getExecuter()->getPrepareDriversOptions()
+            $this->context->getPrepareDriversOptions()
         );
         $explainResult = $request->execute(
-            $this->context->getPreparedParams()
+            $this->context->getQuery()->getPreparedParams()
         );
         
         if ($explainResult === false) {
