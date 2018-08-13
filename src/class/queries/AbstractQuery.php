@@ -17,19 +17,19 @@ abstract class AbstractQuery
      * @const ERR_ASSEMBLE_MISSING_TABLE_NAME Exception code if the user
      * try to generate a request without table name.
      */
-    const ERR_ASSEMBLE_MISSING_TABLE_NAME = 2304003;
+    const ERR_ASSEMBLE_MISSING_TABLE_NAME = 2401001;
     
     /**
      * @const ERR_CALL_UNKNOWN_METHOD Exception code if the __call method
      * receive a method which is really unknown
      */
-    const ERR_CALL_UNKNOWN_METHOD = 2401004;
+    const ERR_CALL_UNKNOWN_METHOD = 2401002;
     
     /**
      * @const ERR_ASSEMBLE_EMPTY_PART Exception code if during the query
      * assemble, a part is empty but should not be empty.
      */
-    const ERR_ASSEMBLE_EMPTY_PART = 2401005;
+    const ERR_ASSEMBLE_EMPTY_PART = 2401003;
     
     /**
      * @var \BfwSql\SqlConnect $sqlConnect SqlConnect object

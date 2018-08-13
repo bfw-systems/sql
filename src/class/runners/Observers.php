@@ -19,13 +19,13 @@ class Observers extends AbstractRunner
      * @const ERR_ADD_OBSERVER_MISSING_CLASSNAME Exception code if an observer
      * declared in config has no class name
      */
-    const ERR_ADD_OBSERVER_MISSING_CLASSNAME = 2504001;
+    const ERR_ADD_OBSERVER_MISSING_CLASSNAME = 2604001;
     
     /**
      * @const ERR_ADD_OBSERVER_UNKNOWN_CLASS Exception code if an observer
      * declared in config has an unknown class.
      */
-    const ERR_ADD_OBSERVER_UNKNOWN_CLASS = 2504002;
+    const ERR_ADD_OBSERVER_UNKNOWN_CLASS = 2604002;
     
     /**
      * {@inheritdoc}

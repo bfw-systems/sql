@@ -16,12 +16,12 @@ class ConnectDB extends AbstractRunner
      * @const ERR_NO_CONNECTION_KEYNAME Exception code if the connection has no
      * keyName and there are many connection declared.
      */
-    const ERR_NO_CONNECTION_KEYNAME = 2502001;
+    const ERR_NO_CONNECTION_KEYNAME = 2602001;
     
     /**
      * @const ERR_NO_BASE_TYPE Exception code if the base type is not declared.
      */
-    const ERR_NO_BASE_TYPE = 2502002;
+    const ERR_NO_BASE_TYPE = 2602002;
     
     /**
      * {@inheritdoc}

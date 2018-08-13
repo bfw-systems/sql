@@ -18,7 +18,7 @@ class Update extends AbstractQuery
     /**
      * @const ERR_GENERATE_VALUES_NO_DATAS Exception code if no data to update.
      */
-    const ERR_GENERATE_VALUES_NO_DATAS = 2305001;
+    const ERR_GENERATE_VALUES_NO_DATAS = 2406001;
     
     /**
      * @var \BfwSql\Helpers\Quoting $quoting The quoting system

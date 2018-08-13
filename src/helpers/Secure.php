@@ -9,7 +9,7 @@ use \Exception;
  */
 class Secure
 {
-    const ERR_NO_DATABASE_CONNECTED = 2201001;
+    const ERR_NO_DATABASE_CONNECTED = 2702001;
     
     /**
      * Protect datas with sql protect method
