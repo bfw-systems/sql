@@ -40,8 +40,9 @@ class Common
     protected $lastErrorInfos = [];
     
     /**
-     * @var \PDOStatement $lastRequestStatement The PDOStatement pour the
-     *  last request executed.
+     * @var \PDOStatement|integer|bool $lastRequestStatement The PDOStatement
+     *  for the last request executed. Or integer if the request return the number
+     *  of row impacted. Or a boolean (false) if request failed.
      */
     protected $lastRequestStatement;
     
@@ -107,7 +108,7 @@ class Common
     /**
      * Getter to access to lastRequestStatement property
      * 
-     * @return \PDOStatement|null
+     * @return \PDOStatement|integer|bool|null
      */
     public function getLastRequestStatement()
     {
@@ -198,9 +199,9 @@ class Common
     /**
      * Execute a prepared request
      * 
-     * @return \PDOStatement
+     * @return \PDOStatement|bool
      */
-    protected function executePreparedQuery(): \PDOStatement
+    protected function executePreparedQuery()
     {
         $pdo = $this->sqlConnect->getPDO();
         $req = $pdo->prepare(
@@ -216,7 +217,7 @@ class Common
     /**
      * Execute a not prepared request
      * 
-     * @return \PDOStatement|integer
+     * @return \PDOStatement|integer|bool
      */
     protected function executeNotPreparedQuery()
     {
@@ -269,9 +270,9 @@ class Common
      * 
      * @link http://php.net/manual/fr/pdostatement.closecursor.php
      * 
-     * @return void
+     * @return bool
      */
-    public function closeCursor()
+    public function closeCursor(): bool
     {
         return $this->lastRequestStatement->closeCursor();
     }

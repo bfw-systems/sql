@@ -104,10 +104,8 @@ class Sql
             $req->where($where);
         }
         
-        if (is_array($order)) {
-            foreach ($order as $expr => $sort) {
-                $req->order($expr, $sort);
-            }
+        foreach ($order as $expr => $sort) {
+            $req->order($expr, $sort);
         }
         
         $res = $req->getExecuter()->fetchRow();

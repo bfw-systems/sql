@@ -31,7 +31,6 @@ class ConnectDB extends AbstractRunner
     {
         $moduleConfig    = $this->module->getConfig();
         $configListBases = $moduleConfig->getValue('bases', 'bases.php');
-        $configNbBases   = count($configListBases);
         
         $this->module->listBases = [];
 

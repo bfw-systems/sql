@@ -12,7 +12,7 @@ namespace BfwSql;
 class UsedClass
 {
     /**
-     * @var \BFW\Application|null $instance Application instance (Singleton)
+     * @var \BFW\UsedClass|null $instance UsedClass instance (Singleton)
      */
     protected static $instance;
     
@@ -32,7 +32,7 @@ class UsedClass
     }
     
     /**
-     * Get the Application instance (Singleton pattern)
+     * Get the UsedClass instance (Singleton pattern)
      * 
      * @param \BFW\Config|null $config The config instance for the module
      * 

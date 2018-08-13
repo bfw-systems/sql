@@ -414,12 +414,12 @@ class Common extends atoum
             
         $this->assert('test Executers\Common::closeCursor')
             ->given($statement = new \mock\PDOStatement)
-            ->if($this->calling($statement)->closeCursor = null)
+            ->if($this->calling($statement)->closeCursor = true)
             ->and($setLastRequestStatement->call($this->mock, $statement))
             ->then
             
-            ->variable($this->mock->closeCursor())
-                ->isNull() //Because mock
+            ->boolean($this->mock->closeCursor())
+                ->isTrue()
             ->mock($statement)
                 ->call('closeCursor')
                     ->once()

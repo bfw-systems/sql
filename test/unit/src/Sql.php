@@ -96,7 +96,7 @@ class Sql extends atoum
             ->given($mockStatements = $this->disablePdoRequest())
             ->if($this->calling($mockStatements->prepareReturn)->execute = null)
             ->and($this->calling($mockStatements->prepareReturn)->fetch = false)
-            ->and($this->calling($mockStatements->prepareReturn)->closeCursor = null)
+            ->and($this->calling($mockStatements->prepareReturn)->closeCursor = true)
             ->and($this->calling($this->pdo)->errorInfo = [
                 0 => '00000',
                 1 => null,

@@ -23,7 +23,7 @@ class Table extends AbstractPart
     protected $shortcut;
     
     /**
-     * @var \BfwSql\Queries\Parts\ColumnsList|null $columns Object containing
+     * @var \BfwSql\Queries\Parts\ColumnList|null $columns Object containing
      * all columns of this table to use into the request
      */
     protected $columns;
@@ -57,7 +57,7 @@ class Table extends AbstractPart
     /**
      * Getter accessor to property columns
      * 
-     * @return \BfwSql\Queries\Parts\ColumnsList|null
+     * @return \BfwSql\Queries\Parts\ColumnList|null
      */
     public function getColumns()
     {

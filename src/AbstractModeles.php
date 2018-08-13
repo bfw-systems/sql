@@ -32,17 +32,17 @@ abstract class AbstractModeles extends \BfwSql\Sql
     const ERR_UNKNOWN_CONNECTION_FOR_BASEKEYNAME = 2101003;
     
     /**
-     * @var $tableName The table name
+     * @var string $tableName The table name
      */
     protected $tableName = '';
     
     /**
-     * @var $tableNameWithPrefix the table name with prefix
+     * @var string $tableNameWithPrefix the table name with prefix
      */
     protected $tableNameWithPrefix = '';
     
     /**
-     * @var $baseKeyName The baseKeyName to use to connection.
+     * @var string $baseKeyName The baseKeyName to use to connection.
      *  Use it if they are multiple database to connect in the application.
      */
     protected $baseKeyName = '';
