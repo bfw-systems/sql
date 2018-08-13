@@ -94,9 +94,7 @@ class JoinList extends atoum
                     ->isFalse()
                 ->iterator($item0->getColumns())
                     ->isInstanceOf('\BfwSql\Queries\Parts\ColumnList')
-                    ->hasSize(1)
-                ->string($item0->getColumns()->getList()[0]->getName())
-                    ->isEqualTo('*')
+                    ->hasSize(0)
         ;
         
         $this->assert('test Queries\Parts\JoinList::__invoke with all')

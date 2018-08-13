@@ -66,7 +66,7 @@ trait JoinTrait
         string $joinType,
         $table,
         string $on,
-        $columns = '*'
+        $columns = null
     ): self {
         $this->queriesParts[$joinType]($table, $on, $columns);
         

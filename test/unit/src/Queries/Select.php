@@ -261,7 +261,7 @@ class Select extends atoum
                 ->isNull()
             ->string($this->mock->getAssembledRequest())
                 ->isEqualTo(
-                    'SELECT `a`.`read`,`a`.`write`,`test_c`.`id`,`s`.*,`test_b`.*'."\n"
+                    'SELECT `a`.`read`,`a`.`write`,`test_c`.`id`'."\n"
                     .'FROM `test_users` AS `u`'."\n"
                     .'INNER JOIN `test_access` AS `a` ON a.id_access=u.id_access'."\n"
                     .'INNER JOIN `test_c` ON c.id_user=u.id_user'."\n"

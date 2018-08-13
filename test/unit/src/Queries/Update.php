@@ -178,7 +178,7 @@ class Update extends atoum
                 ->isEqualTo('`test_table` AS `t` SET `t`.`name`="atoum",`t`.`type`="unit"')
         ;
         
-        $this->assert('test Queries\Update::generateValue with join')
+        $this->assert('test Queries\Update::generateValue with intermediate join')
             ->if($this->mock->from(
                 ['t' => 'table'],
                 [
@@ -187,8 +187,18 @@ class Update extends atoum
                 ]
             ))
             ->if($this->mock->join(
+                'b',
+                'test_b.iduser=u.iduser'
+            ))
+            ->then
+            ->string($this->mock->generateValues())
+                ->isEqualTo('`test_table` AS `t` SET `t`.`name`="atoum",`t`.`type`="unit"')
+        ;
+        
+        $this->assert('test Queries\Update::generateValue with join')
+            ->if($this->mock->join(
                 ['a' => 'access'],
-                'a.idaccess=u.idaccess',
+                'a.idaccess=test_b.idaccess',
                 ['perm' => 'test']
             ))
             ->then

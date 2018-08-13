@@ -53,7 +53,7 @@ class JoinList extends AbstractList
      * 
      * @return void
      */
-    public function __invoke($nameInfos, string $on, $columns = '*')
+    public function __invoke($nameInfos, string $on, $columns = null)
     {
         $join = new Join($this->querySystem);
         $join->setColumnsWithValue($this->columnsWithValue);

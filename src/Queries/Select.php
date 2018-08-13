@@ -89,11 +89,17 @@ class Select extends AbstractQuery
         $joinKeyList = ['join', 'joinLeft', 'joinRight'];
         foreach ($joinKeyList as $joinKeyName) {
             foreach ($this->queriesParts[$joinKeyName] as $join) {
+                $joinSql = $join->getColumns()->generate();
+                
+                if (empty($joinSql)) {
+                    continue;
+                }
+                
                 if ($sqlParts !== '') {
                     $sqlParts .= ',';
                 }
                 
-                $sqlParts .= $join->getColumns()->generate();
+                $sqlParts .= $joinSql;
             }
         }
         
