@@ -36,7 +36,7 @@ class Monolog extends AbstractRunner
      * 
      * @return \BFW\Monolog
      */
-    public static function createMonolog(\BFW\Config $config)
+    public static function createMonolog(\BFW\Config $config): \BFW\Monolog
     {
         return new \BFW\Monolog(
             'bfw-sql',

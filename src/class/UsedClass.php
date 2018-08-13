@@ -38,7 +38,7 @@ class UsedClass
      * 
      * @return \BfwSql\UsedClass
      */
-    public static function getInstance($config = null)
+    public static function getInstance($config = null): \BfwSql\UsedClass
     {
         if (self::$instance === null) {
             $class = get_called_class();
@@ -53,7 +53,7 @@ class UsedClass
      * 
      * @return \BFW\Config
      */
-    public function getConfig()
+    public function getConfig(): \BFW\Config
     {
         return $this->config;
     }
@@ -65,7 +65,7 @@ class UsedClass
      * 
      * @return string
      */
-    public function obtainClassNameToUse($classNameKey)
+    public function obtainClassNameToUse(string $classNameKey): string
     {
         return $this->config->getValue($classNameKey, 'class.php');
     }

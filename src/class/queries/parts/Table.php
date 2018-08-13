@@ -82,7 +82,7 @@ class Table extends AbstractPart
      * 
      * @return $this
      */
-    public function setColumnsWithValue(bool $columnsWithValue): Table
+    public function setColumnsWithValue(bool $columnsWithValue): self
     {
         $this->columnsWithValue = $columnsWithValue;
         return $this;
@@ -169,7 +169,7 @@ class Table extends AbstractPart
      * 
      * @return string
      */
-    protected function obtainColumnsClassName()
+    protected function obtainColumnsClassName(): string
     {
         if ($this->columnsWithValue === true) {
             return __NAMESPACE__.'\ColumnValueList';

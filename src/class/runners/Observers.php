@@ -52,7 +52,7 @@ class Observers extends AbstractRunner
      * 
      * @return void
      */
-    protected function addObserver($observerInfos, \BFW\Subject $subject)
+    protected function addObserver(array $observerInfos, \BFW\Subject $subject)
     {
         $this->checkObserverClass($observerInfos);
         $this->checkObserverMonologHandlers($observerInfos);
@@ -73,7 +73,7 @@ class Observers extends AbstractRunner
      * 
      * @return void
      */
-    protected function checkObserverClass($observerInfos)
+    protected function checkObserverClass(array $observerInfos)
     {
         if (!array_key_exists('className', $observerInfos)) {
             throw new Exception(
@@ -97,7 +97,7 @@ class Observers extends AbstractRunner
      * 
      * @return void
      */
-    protected function checkObserverMonologHandlers(&$observerInfos)
+    protected function checkObserverMonologHandlers(array &$observerInfos)
     {
         if (!array_key_exists('monologHandlers', $observerInfos)) {
             $observerInfos['monologHandlers'] = [];
@@ -128,7 +128,7 @@ class Observers extends AbstractRunner
      * 
      * @return \BFW\Monolog
      */
-    protected function addMonologForObserver($observerInfos)
+    protected function addMonologForObserver(array $observerInfos): \BFW\Monolog
     {
         $handlersInfos = $observerInfos['monologHandlers'];
         

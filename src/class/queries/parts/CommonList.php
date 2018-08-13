@@ -12,7 +12,7 @@ class CommonList extends AbstractList
      * 
      * @return $this
      */
-    public function setSeparator(string $separator): CommonList
+    public function setSeparator(string $separator): self
     {
         $this->separator = $separator;
         return $this;

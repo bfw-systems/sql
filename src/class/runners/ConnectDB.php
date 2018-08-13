@@ -43,7 +43,7 @@ class ConnectDB extends AbstractRunner
     /**
      * Create the connection to a database
      * 
-     * @param \stdClass $baseInfos Information about the database to connect
+     * @param object $baseInfos Information about the database to connect
      * 
      * @throws \Exception
      * 

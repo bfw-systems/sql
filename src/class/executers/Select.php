@@ -21,7 +21,14 @@ class Select extends Common
         return $this->returnType;
     }
     
-    public function setReturnType(string $returnType): Select
+    /**
+     * Setter accessor to property returnType
+     * 
+     * @param string $returnType The new return type value
+     * 
+     * @return $this
+     */
+    public function setReturnType(string $returnType): self
     {
         $this->returnType = $returnType;
         return $this;
@@ -55,7 +62,7 @@ class Select extends Common
     /**
      * Fetch all rows returned by the request
      * 
-     * @return generator
+     * @return \Generator
      */
     public function fetchAll(): \Generator
     {

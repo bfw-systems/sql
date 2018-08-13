@@ -32,11 +32,11 @@ class CreatePdoDsn
     /**
      * Create the PDO instance for mysql driver
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @return string
      */
-    public static function mysql($connectionInfos)
+    public static function mysql($connectionInfos): string
     {
         $host     = $connectionInfos->host;
         $port     = $connectionInfos->port;
@@ -48,11 +48,11 @@ class CreatePdoDsn
     /**
      * Create the PDO instance for sqlite driver
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @return string
      */
-    public static function sqlite($connectionInfos)
+    public static function sqlite($connectionInfos): string
     {
         return 'sqlite:'.$connectionInfos->filePath;
     }
@@ -60,11 +60,11 @@ class CreatePdoDsn
     /**
      * Create the PDO instance for pgsql driver
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @return string
      */
-    public static function pgsql($connectionInfos)
+    public static function pgsql($connectionInfos): string
     {
         $host     = $connectionInfos->host;
         $port     = $connectionInfos->port;
@@ -79,11 +79,11 @@ class CreatePdoDsn
      * DSN find on http://php.net/manual/en/ref.pdo-cubrid.php
      * If is not correct, please, create a github issue.
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @return string
      */
-    public static function cubrid($connectionInfos)
+    public static function cubrid($connectionInfos): string
     {
         $host     = $connectionInfos->host;
         $port     = $connectionInfos->port;
@@ -98,11 +98,11 @@ class CreatePdoDsn
      * DSN find on http://php.net/manual/fr/ref.pdo-dblib.php#118093
      * If is not correct, please, create a github issue.
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @return string
      */
-    public static function dblib($connectionInfos)
+    public static function dblib($connectionInfos): string
     {
         $host     = $connectionInfos->host;
         $port     = $connectionInfos->port;
@@ -114,7 +114,7 @@ class CreatePdoDsn
     /**
      * Create the PDO instance for firebird driver
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @throws \Exception Unknown DSN format
      */
@@ -126,7 +126,7 @@ class CreatePdoDsn
     /**
      * Create the PDO instance for ibm driver
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @throws \Exception Unknown DSN format
      */
@@ -138,7 +138,7 @@ class CreatePdoDsn
     /**
      * Create the PDO instance for informix driver
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @throws \Exception Unknown DSN format
      */
@@ -150,7 +150,7 @@ class CreatePdoDsn
     /**
      * Create the PDO instance for sqlsrv driver
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @throws \Exception Unknown DSN format
      */
@@ -162,7 +162,7 @@ class CreatePdoDsn
     /**
      * Create the PDO instance for oci driver
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @throws \Exception Unknown DSN format
      */
@@ -174,7 +174,7 @@ class CreatePdoDsn
     /**
      * Create the PDO instance for odbc driver
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @throws \Exception Unknown DSN format
      */
@@ -186,7 +186,7 @@ class CreatePdoDsn
     /**
      * Create the PDO instance for 4d driver
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @throws \Exception Unknown DSN format
      *

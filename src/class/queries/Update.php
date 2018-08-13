@@ -34,7 +34,7 @@ class Update extends AbstractQuery
      */
     public function __construct(
         \BfwSql\SqlConnect $sqlConnect,
-        $quoteStatus = \BfwSql\Helpers\Quoting::QUOTE_ALL
+        string $quoteStatus = \BfwSql\Helpers\Quoting::QUOTE_ALL
     ) {
         parent::__construct($sqlConnect);
         

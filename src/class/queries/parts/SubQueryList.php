@@ -14,7 +14,7 @@ class SubQueryList extends AbstractList
      * @link http://php.net/manual/en/language.oop5.magic.php#object.invoke
      * 
      * @param string $shortcut The shortcut to use into the request
-     * @param string|\BfwSql\Queries\AbstractQuery $query The sub-query
+     * @param string|\BfwSql\Queries\AbstractQuery $subQuery The sub-query
      * 
      * @return void
      */

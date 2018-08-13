@@ -95,7 +95,7 @@ abstract class AbstractQuery
      * 
      * @throws Exception If the part not exist
      */
-    public function __call(string $name, $args)
+    public function __call(string $name, array $args)
     {
         if (!isset($this->queriesParts[$name])) {
             throw new Exception(
@@ -356,9 +356,9 @@ abstract class AbstractQuery
      * 
      * @param string $request The user request
      * 
-     * @return \BfwSql\Queries\AbstractQuery
+     * @return $this
      */
-    public function query(string $request): AbstractQuery
+    public function query(string $request): self
     {
         $this->assembledRequest = $request;
         
@@ -370,9 +370,9 @@ abstract class AbstractQuery
      * 
      * @param array $preparedParams Filters to add in prepared request
      * 
-     * @return \BfwSql\Queries\AbstractQuery
+     * @return $this
      */
-    public function addPreparedParams(array $preparedParams): AbstractQuery
+    public function addPreparedParams(array $preparedParams): self
     {
         foreach ($preparedParams as $prepareKey => $prepareValue) {
             $this->preparedParams[$prepareKey] = $prepareValue;

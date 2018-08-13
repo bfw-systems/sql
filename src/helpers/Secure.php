@@ -20,7 +20,7 @@ class Secure
      * 
      * @throw \Exception If no database connected
      */
-    public static function protectDatas($datas)
+    public static function protectDatas(string $datas): string
     {
         $dbModule = \BFW\Application::getInstance()
             ->getModuleList()

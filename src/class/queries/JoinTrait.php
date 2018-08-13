@@ -21,7 +21,7 @@ trait JoinTrait
      * 
      * @return $this
      */
-    public function join(...$args)
+    public function join(...$args): self
     {
         array_unshift($args, 'join');
         return $this->createJoin(...$args);
@@ -32,7 +32,7 @@ trait JoinTrait
      * 
      * @return $this
      */
-    public function joinLeft(...$args)
+    public function joinLeft(...$args): self
     {
         array_unshift($args, 'joinLeft');
         return $this->createJoin(...$args);
@@ -43,7 +43,7 @@ trait JoinTrait
      * 
      * @return $this
      */
-    public function joinRight(...$args)
+    public function joinRight(...$args): self
     {
         array_unshift($args, 'joinRight');
         return $this->createJoin(...$args);
@@ -67,7 +67,7 @@ trait JoinTrait
         $table,
         string $on,
         $columns = '*'
-    ) {
+    ): self {
         $this->queriesParts[$joinType]($table, $on, $columns);
         
         return $this;

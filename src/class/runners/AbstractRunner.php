@@ -31,7 +31,7 @@ abstract class AbstractRunner
      * 
      * @return \BFW\Module
      */
-    public function getModule()
+    public function getModule(): \BFW\Module
     {
         return $this->module;
     }

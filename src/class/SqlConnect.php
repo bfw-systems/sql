@@ -43,7 +43,7 @@ class SqlConnect
      * Constructor
      * Initialize the connection
      * 
-     * @param \stdClass $connectionInfos All informations about the connection
+     * @param object $connectionInfos All informations about the connection
      * 
      * @throw \PDOException If Connexion fail
      */
@@ -98,13 +98,13 @@ class SqlConnect
     /**
      * Protect a data with the system implemented by the pdo drivers used.
      * 
-     * @param string $string Data to protect
+     * @param string $datas Data to protect
      * 
      * @return string
      */
-    public function protect($string)
+    public function protect(string $datas): string
     {
-        $protectedString = $this->PDO->quote($string);
+        $protectedString = $this->PDO->quote($datas);
         
         /**
          * The quote method add the caracter ' on the start and the end of the
@@ -127,7 +127,7 @@ class SqlConnect
     /**
      * Getter to access at the property connectionInfos
      * 
-     * @return \stdClass
+     * @return object
      */
     public function getConnectionInfos()
     {
@@ -139,7 +139,7 @@ class SqlConnect
      * 
      * @return string
      */
-    public function getType() 
+    public function getType() : string
     {
         return $this->type;
     }
@@ -149,7 +149,7 @@ class SqlConnect
      * 
      * @return integer
      */
-    public function getNbQuery()
+    public function getNbQuery(): int
     {
         return $this->nbQuery;
     }

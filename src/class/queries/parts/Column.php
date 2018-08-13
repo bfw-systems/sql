@@ -30,7 +30,7 @@ class Column
      * @param \BfwSql\Queries\Parts\Table $table The table where is the column
      * @param string $name The column name
      * @param string $shortcut The column shortcut
-     * @param type $value The column shortcut
+     * @param mixed $value The column value
      */
     public function __construct(
         Table $table,

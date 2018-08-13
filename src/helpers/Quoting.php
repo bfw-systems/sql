@@ -113,7 +113,7 @@ class Quoting
      * 
      * @return string
      */
-    public function getQuoteStatus()
+    public function getQuoteStatus(): string
     {
         return $this->quoteStatus;
     }
@@ -123,7 +123,7 @@ class Quoting
      * 
      * @return string
      */
-    public function getPartiallyPreferedMode()
+    public function getPartiallyPreferedMode(): string
     {
         return $this->partiallyPreferedMode;
     }
@@ -137,7 +137,7 @@ class Quoting
      * 
      * @return $this
      */
-    public function setPartiallyPreferedMode($partiallyPreferedMode)
+    public function setPartiallyPreferedMode(string$partiallyPreferedMode): self
     {
         $this->partiallyPreferedMode = $partiallyPreferedMode;
         
@@ -149,7 +149,7 @@ class Quoting
      * 
      * @return array
      */
-    public function getQuotedColumns()
+    public function getQuotedColumns(): array
     {
         return $this->quotedColumns;
     }
@@ -159,7 +159,7 @@ class Quoting
      * 
      * @return array
      */
-    public function getNotQuotedColumns()
+    public function getNotQuotedColumns(): array
     {
         return $this->notQuotedColumns;
     }
@@ -174,7 +174,7 @@ class Quoting
      * 
      * @return $this
      */
-    public function addQuotedColumns(array $columns)
+    public function addQuotedColumns(array $columns): self
     {
         foreach ($columns as $columnName) {
             if (isset($this->notQuotedColumns[$columnName])) {
@@ -200,7 +200,7 @@ class Quoting
      * 
      * @return $this
      */
-    public function addNotQuotedColumns(array $columns)
+    public function addNotQuotedColumns(array $columns): self
     {
         foreach ($columns as $columnName) {
             if (isset($this->quotedColumns[$columnName])) {
@@ -221,11 +221,11 @@ class Quoting
      * Quote a value if need, else return the value passed in parameter
      * 
      * @param string $columnName The column corresponding to the value
-     * @param string $value      The value to quote
+     * @param mixed  $value      The value to quote
      * 
-     * @return string
+     * @return mixed
      */
-    public function quoteValue($columnName, $value)
+    public function quoteValue(string $columnName, $value)
     {
         if ($this->quoteStatus === self::QUOTE_NONE) {
             return $value;

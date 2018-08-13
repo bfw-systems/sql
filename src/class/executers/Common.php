@@ -85,9 +85,9 @@ class Common
      * 
      * @param boolean $preparedRequestStatus The new status for prepared request
      * 
-     * @return \BfwSql\Queries\AbstractQuery
+     * @return $this
      */
-    public function setIsPreparedRequest(bool $preparedRequestStatus): Common
+    public function setIsPreparedRequest(bool $preparedRequestStatus): self
     {
         $this->isPreparedRequest = (bool) $preparedRequestStatus;
         
@@ -141,9 +141,9 @@ class Common
      * 
      * @param array $driverOptions Drivers options
      * 
-     * @return \BfwSql\Queries\AbstractQuery
+     * @return $this
      */
-    public function setPrepareDriversOptions(array $driverOptions): Common
+    public function setPrepareDriversOptions(array $driverOptions): self
     {
         $this->prepareDriversOptions = $driverOptions;
         

@@ -36,7 +36,7 @@ class JoinList extends AbstractList
      * 
      * @return $this
      */
-    public function setColumnsWithValue(bool $columnsWithValue): JoinList
+    public function setColumnsWithValue(bool $columnsWithValue): self
     {
         $this->columnsWithValue = $columnsWithValue;
         return $this;
@@ -53,7 +53,7 @@ class JoinList extends AbstractList
      * 
      * @return void
      */
-    public function __invoke($nameInfos, $on, $columns = '*')
+    public function __invoke($nameInfos, string $on, $columns = '*')
     {
         $join = new Join($this->querySystem);
         $join->setColumnsWithValue($this->columnsWithValue);

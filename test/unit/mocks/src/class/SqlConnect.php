@@ -14,12 +14,12 @@ class SqlConnect extends \BfwSql\SqlConnect
         $this->connectionInfos = $connectionInfos;
     }
 
-    public function setType($type)
+    public function setType(string $type)
     {
         $this->type = $type;
     }
 
-    public function setNbQuery($nbQuery)
+    public function setNbQuery(int $nbQuery)
     {
         $this->nbQuery = $nbQuery;
     }

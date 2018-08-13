@@ -47,7 +47,7 @@ class Sql
      * 
      * @return \BfwSql\SqlConnect
      */
-    public function getSqlConnect()
+    public function getSqlConnect(): \BfwSql\SqlConnect
     {
         return $this->sqlConnect;
     }
@@ -57,7 +57,7 @@ class Sql
      * 
      * @return string
      */
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return $this->prefix;
     }
@@ -70,7 +70,7 @@ class Sql
      * 
      * @return integer
      */
-    public function obtainLastInsertedId($name = null)
+    public function obtainLastInsertedId($name = null): int
     {
         return (int) $this->sqlConnect->getPDO()->lastInsertId($name);
     }
@@ -81,17 +81,17 @@ class Sql
      * 
      * @param string       $table The table name
      * @param string       $colId The column name for the ID
-     * @param string|array $order Columns to sort table content
+     * @param array        $order Columns to sort table content
      * @param string|array $where All where instruction used for filter content
      * 
      * @return integer
      */
     public function obtainLastInsertedIdWithoutAI(
-        $table,
-        $colId,
+        string $table,
+        string $colId,
         array $order,
         $where = ''
-    ) {
+    ): int {
         $req = $this->select()
                     ->from($table, $colId)
                     ->limit(1);
@@ -128,7 +128,7 @@ class Sql
      * 
      * @return \BfwSql\Queries\Select
      */
-    public function select($type = 'array')
+    public function select(string $type = 'array'): \BfwSql\Queries\Select
     {
         $usedClass       = \BfwSql\UsedClass::getInstance();
         $selectClassName = $usedClass->obtainClassNameToUse('QueriesSelect');
@@ -144,8 +144,9 @@ class Sql
      * 
      * @return \BfwSql\Queries\Insert
      */
-    public function insert($quoteStatus = \BfwSql\Helpers\Quoting::QUOTE_ALL)
-    {
+    public function insert(
+        string $quoteStatus = \BfwSql\Helpers\Quoting::QUOTE_ALL
+    ): \BfwSql\Queries\Insert {
         $usedClass       = \BfwSql\UsedClass::getInstance();
         $insertClassName = $usedClass->obtainClassNameToUse('QueriesInsert');
         
@@ -160,8 +161,9 @@ class Sql
      * 
      * @return \BfwSql\Queries\Update
      */
-    public function update($quoteStatus = \BfwSql\Helpers\Quoting::QUOTE_ALL)
-    {
+    public function update(
+        string $quoteStatus = \BfwSql\Helpers\Quoting::QUOTE_ALL
+    ): \BfwSql\Queries\Update {
         $usedClass       = \BfwSql\UsedClass::getInstance();
         $updateClassName = $usedClass->obtainClassNameToUse('QueriesUpdate');
         
@@ -173,7 +175,7 @@ class Sql
      * 
      * @return \BfwSql\Queries\Delete
      */
-    public function delete()
+    public function delete(): \BfwSql\Queries\Delete
     {
         $usedClass       = \BfwSql\UsedClass::getInstance();
         $deleteClassName = $usedClass->obtainClassNameToUse('QueriesDelete');
@@ -191,7 +193,7 @@ class Sql
      * 
      * @return integer
      */
-    public function createId($table, $column)
+    public function createId(string $table, string $column): int
     {
         //Search the first line in the table
         $reqFirstLine = $this->select()
@@ -234,7 +236,7 @@ class Sql
      * 
      * @return \PDOStatement
      */
-    public function query($request)
+    public function query(string $request): \PDOStatement
     {
         $this->sqlConnect->upNbQuery();
         

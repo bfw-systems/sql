@@ -38,7 +38,7 @@ class Explain extends Basic
     protected $sql;
     
     /**
-     * @var \stdClass An object with explain status and informations returned
+     * @var object An object with explain status and informations returned
      */
     protected $explain;
     
@@ -47,7 +47,7 @@ class Explain extends Basic
      * 
      * @return \BfwSql\Sql
      */
-    public function getSql()
+    public function getSql(): \BfwSql\Sql
     {
         return $this->sql;
     }
@@ -55,7 +55,7 @@ class Explain extends Basic
     /**
      * Getter accessor to property explain
      * 
-     * @return \stdClass
+     * @return object
      */
     public function getExplain()
     {
@@ -110,7 +110,7 @@ class Explain extends Basic
      * 
      * @return \BfwSql\Sql
      */
-    protected function obtainSql()
+    protected function obtainSql(): \BfwSql\Sql
     {
         $sqlConnect = $this->context->getSqlConnect();
         return new \BfwSql\Sql($sqlConnect);
@@ -155,7 +155,7 @@ class Explain extends Basic
      * {@inheritdoc}
      * Add explain informations to monolog too.
      */
-    protected function addQueryToMonoLog($query, $error)
+    protected function addQueryToMonoLog(string $query, array $error)
     {
         $this->monolog->getLogger()->debug(
             'Type: '.$this->action.' ; '

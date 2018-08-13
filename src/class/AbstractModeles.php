@@ -63,7 +63,7 @@ abstract class AbstractModeles extends \BfwSql\Sql
      * 
      * @return string
      */
-    public function getTableName()
+    public function getTableName(): string
     {
         return $this->tableName;
     }
@@ -73,7 +73,7 @@ abstract class AbstractModeles extends \BfwSql\Sql
      * 
      * @return string
      */
-    public function getTableNameWithPrefix()
+    public function getTableNameWithPrefix(): string
     {
         return $this->tableNameWithPrefix;
     }
@@ -83,7 +83,7 @@ abstract class AbstractModeles extends \BfwSql\Sql
      * 
      * @return string
      */
-    public function getBaseKeyName()
+    public function getBaseKeyName(): string
     {
         return $this->baseKeyName;
     }
@@ -94,7 +94,7 @@ abstract class AbstractModeles extends \BfwSql\Sql
      * 
      * @return \BFW\Application
      */
-    protected function obtainApp()
+    protected function obtainApp(): \BFW\Application
     {
         return \BFW\Application::getInstance();
     }
@@ -107,7 +107,7 @@ abstract class AbstractModeles extends \BfwSql\Sql
      * @throws \Exception If there are many connection declared and if the
      *  property baseKeyName is empty
      */
-    protected function obtainSqlConnect()
+    protected function obtainSqlConnect(): \BfwSql\SqlConnect
     {
         $listBases = $this->obtainApp()
             ->getModuleList()

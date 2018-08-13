@@ -59,7 +59,7 @@ abstract class AbstractList extends AbstractPart implements Iterator
      * 
      * @return $this
      */
-    public function setPartPrefix(string $prefix): AbstractList
+    public function setPartPrefix(string $prefix): self
     {
         $this->partPrefix = $prefix;
         return $this;

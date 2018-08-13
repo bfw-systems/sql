@@ -201,7 +201,7 @@ class Explain extends atoum
             
             ->given($sql = new \mock\BfwSql\Sql($this->sqlConnect))
             ->if($this->calling($this->mock)->obtainSql = $sql)
-            ->and($this->calling($sql)->query = null)
+            ->and($this->calling($sql)->query = new \mock\PDOStatement)
         ;
         
         $this->assert('test Observers\Basic::runExplain when explain fail')
@@ -305,7 +305,7 @@ class Explain extends atoum
             
             ->given($sql = new \mock\BfwSql\Sql($this->sqlConnect))
             ->if($this->calling($this->mock)->obtainSql = $sql)
-            ->and($this->calling($sql)->query = null)
+            ->and($this->calling($sql)->query = new \mock\PDOStatement)
             ->then
             
             ->given($pdoStatement = new \mock\PDOStatement)

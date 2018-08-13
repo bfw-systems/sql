@@ -138,7 +138,7 @@ class Observers extends atoum
     {
         $this->assert('test Runners\Observers::checkObserverClass without className property')
             ->exception(function() {
-                $this->mock->checkObserverClass(new \stdClass);
+                $this->mock->checkObserverClass([]);
             })
                 ->hasCode(\BfwSql\Runners\Observers::ERR_ADD_OBSERVER_MISSING_CLASSNAME)
         ;

@@ -51,7 +51,7 @@ class Basic implements \SplObserver
      * 
      * @return \BFW\Monolog
      */
-    public function getMonolog()
+    public function getMonolog(): \BFW\Monolog
     {
         return $this->monolog;
     }
@@ -61,7 +61,7 @@ class Basic implements \SplObserver
      * 
      * @return string
      */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
     }
@@ -97,7 +97,7 @@ class Basic implements \SplObserver
      * 
      * @return boolean
      */
-    protected function haveMonologHandler()
+    protected function haveMonologHandler(): bool
     {
         $handlers = $this->monolog->getHandlers();
         
@@ -162,7 +162,7 @@ class Basic implements \SplObserver
      * 
      * @return void
      */
-    protected function addQueryToMonoLog($query, $error)
+    protected function addQueryToMonoLog(string $query, array $error)
     {
         $this->monolog->getLogger()->debug(
             'Type: '.$this->action.' ; '
