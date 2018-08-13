@@ -64,7 +64,7 @@ class Insert extends AbstractQuery
         $partTable->createColumnInstance();
         
         $parts['into']        = $partTable;
-        $parts['values']      = $partTable->getColumns();
+        $parts['values']      = &$partTable->getColumns();
         $parts['select']      = new Select($this->sqlConnect, 'object');
         $parts['onDuplicate'] = new Parts\ColumnValueList($this, $partTable);
     }

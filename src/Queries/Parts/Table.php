@@ -59,7 +59,7 @@ class Table extends AbstractPart
      * 
      * @return \BfwSql\Queries\Parts\ColumnList|null
      */
-    public function getColumns()
+    public function &getColumns()
     {
         return $this->columns;
     }
