@@ -6,12 +6,12 @@ use \Exception;
 
 trait CheckTests
 {
-    use \Modules\testModules\tests\classes\TestSql;
-    use \Modules\testModules\tests\classes\actions\TestSelect;
-    use \Modules\testModules\tests\classes\actions\TestInsert;
-    use \Modules\testModules\tests\classes\actions\TestUpdate;
-    use \Modules\testModules\tests\classes\actions\TestDelete;
-    use \Modules\testModules\tests\helpers\TestSecure;
+    use \Modules\testModules\tests\TestSql;
+    use \Modules\testModules\tests\Queries\TestSelect;
+    use \Modules\testModules\tests\Queries\TestInsert;
+    use \Modules\testModules\tests\Queries\TestUpdate;
+    use \Modules\testModules\tests\Queries\TestDelete;
+    use \Modules\testModules\tests\Helpers\TestSecure;
     
     protected $testName = '';
     protected $testStatus = true;

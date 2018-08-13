@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\testModules\tests\classes;
+namespace Modules\testModules\tests;
 
 trait TestSql
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\testModules\tests\helpers;
+namespace Modules\testModules\tests\Helpers;
 
 trait TestSecure
 {

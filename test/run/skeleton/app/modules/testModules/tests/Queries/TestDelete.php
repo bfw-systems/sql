@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\testModules\tests\classes\actions;
+namespace Modules\testModules\tests\Queries;
 
 trait TestDelete
 {
