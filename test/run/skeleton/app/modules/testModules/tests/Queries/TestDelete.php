@@ -15,7 +15,7 @@ trait TestDelete
     
     protected function testDeleteExecute()
     {
-        $date    = new \BFW\Dates;
+        $date    = new \BFW\Helpers\Dates;
         $dateSql = $date->getSqlFormat();
         
         $this->newTest('test BfwSql\Actions\Delete - update a line');

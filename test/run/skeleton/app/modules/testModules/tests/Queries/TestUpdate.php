@@ -15,7 +15,7 @@ trait TestUpdate
     
     protected function testUpdateExecute()
     {
-        $date    = new \BFW\Dates;
+        $date    = new \BFW\Helpers\Dates;
         $dateSql = $date->getSqlFormat();
         
         $this->newTest('test BfwSql\Actions\Update - update a line');

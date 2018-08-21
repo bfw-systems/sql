@@ -18,7 +18,7 @@ trait TestSecure
         $dataToUpdate  = 'test SecureProtect";DELETE FROM test_runner WHERE id=1;';
         $dataProtected = \BfwSql\Helpers\Secure::protectDatas($dataToUpdate);
         
-        $date    = new \BFW\Dates;
+        $date    = new \BFW\Helpers\Dates;
         $dateSql = $date->getSqlFormat();
         
         $this->newTest('test BfwSql\Helpers\Secure::protectDatas - update a line');

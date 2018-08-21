@@ -15,7 +15,7 @@ trait TestInsert
     
     protected function testInsertExecute()
     {
-        $date    = new \BFW\Dates;
+        $date    = new \BFW\Helpers\Dates;
         $dateSql = $date->getSqlFormat();
         
         $this->newTest('test BfwSql\Actions\Insert - add a line');
