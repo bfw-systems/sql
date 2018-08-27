@@ -53,9 +53,19 @@ class Observers extends atoum
     {
         $this->assert('test Runners\Observers::run - prepare')
             ->if($this->calling($this->mock)->addObserver = null)
+            ->and($removeSubject = function() {
+                try {
+                    $subjectList = \BFW\Application::getInstance()->getSubjectList();
+                    $subject     = $subjectList->getSubjectByName('bfw-sql');
+
+                    $subjectList->removeSubject($subject);
+                } catch (Exception $ex) {}
+            })
         ;
         
         $this->assert('test Runners\Observers::run without observer')
+            ->if($removeSubject())
+            ->then
             ->variable($this->mock->run())
                 ->isNull()
             ->mock($this->mock)
@@ -70,6 +80,8 @@ class Observers extends atoum
         ;
         
         $this->assert('test Runners\Observers::run with an observer')
+            ->if($removeSubject())
+            ->then
             ->given($newobserver = [
                 'className'       => '\BfwSql\Observers\Basic',
                 'monologHandlers' => [
