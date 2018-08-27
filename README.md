@@ -1,39 +1,19 @@
 bfw-sql
-=
-Module SQL pour BFW
+===========
 
-[![Build Status](https://travis-ci.org/bulton-fr/bfw-sql.svg?branch=1.0)](https://travis-ci.org/bulton-fr/bfw-sql) [![Coverage Status](https://coveralls.io/repos/bulton-fr/bfw-sql/badge.png?branch=1.0)](https://coveralls.io/r/bulton-fr/bfw-sql?branch=1.0) [![Dependency Status](https://www.versioneye.com/user/projects/5413ea429e162200400000bb/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5413ea429e162200400000bb)
+[![Build Status](https://travis-ci.org/bulton-fr/bfw-sql.svg?branch=2.0)](https://travis-ci.org/bulton-fr/bfw-sql) [![Coverage Status](https://coveralls.io/repos/github/bulton-fr/bfw-sql/badge.svg?branch=2.0)](https://coveralls.io/github/bulton-fr/bfw-sql?branch=2.0) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bulton-fr/bfw-sql/badges/quality-score.png?b=2.0)](https://scrutinizer-ci.com/g/bulton-fr/bfw-sql/?branch=2.0)
+[![Latest Stable Version](https://poser.pugx.org/bulton-fr/bfw-sql/v/stable)](https://packagist.org/packages/bulton-fr/bfw-sql) [![License](https://poser.pugx.org/bulton-fr/bfw-sql/license)](https://packagist.org/packages/bulton-fr/bfw-sql)
 
-[![Latest Stable Version](https://poser.pugx.org/bulton-fr/bfw-sql/v/stable.svg)](https://packagist.org/packages/bulton-fr/bfw-sql) [![Latest Unstable Version](https://poser.pugx.org/bulton-fr/bfw-sql/v/unstable.svg)](https://packagist.org/packages/bulton-fr/bfw-sql) [![License](https://poser.pugx.org/bulton-fr/bfw-sql/license.svg)](https://packagist.org/packages/bulton-fr/bfw-sql)
-
+SQL module for the BFW framework
 
 ---
 
-__Installation :__
+__Install :__
 
-Il est recommandé d'utiliser composer pour installer le framework :
+You can use composer to get the module : `composer require bulton-fr/bfw-sql @stable`
 
-Pour récupérer composer:
-```
-curl -sS https://getcomposer.org/installer | php
-```
+And to install the module : `./vendor/bin/bfwInstallModules`
 
-Pour installer le framework, créez un fichier "composer.json" à la racine de votre projet, et ajoutez-y ceci:
-```
-{
-    "require": {
-        "bulton-fr/bfw-sql": "@stable"
-    }
-}
-```
+__Config and use it:__
 
-Enfin, pour lancer l'installation, 2 étapes sont nécessaires :
-
-Récupérer le module via composer :
-```
-php composer.phar install
-```
-Via un utilitaire du framework BFW, créer un lien vers le module dans le dossier module du projet :
-```
-./vendor/bin/bfw_loadModules
-```
+Please refer you to the `docs` directory.
