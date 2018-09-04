@@ -16,16 +16,19 @@
  * Modele is extended by user.
  */
 return [
-    'RunnerMonolog'   => '\BfwSql\Runners\Monolog',
-    'RunnerObservers' => '\BfwSql\Runners\Observers',
-    'RunnerConnectDB' => '\BfwSql\Runners\ConnectDB',
+    'PDO'             => '\PDO',
     'CreatePdoDsn'    => '\BfwSql\CreatePdoDsn',
     'SqlConnect'      => '\BfwSql\SqlConnect',
+    
+    'ExecutersCommon' => '\BfwSql\Executers\Common',
+    'ExecutersSelect' => '\BfwSql\Executers\Select',
+    
     'QueriesDelete'   => '\BfwSql\Queries\Delete',
     'QueriesInsert'   => '\BfwSql\Queries\Insert',
     'QueriesSelect'   => '\BfwSql\Queries\Select',
     'QueriesUpdate'   => '\BfwSql\Queries\Update',
-    'PDO'             => '\PDO',
-    'ExecutersCommon' => '\BfwSql\Executers\Common',
-    'ExecutersSelect' => '\BfwSql\Executers\Select'
+    
+    'RunnerMonolog'   => '\BfwSql\Runners\Monolog',
+    'RunnerObservers' => '\BfwSql\Runners\Observers',
+    'RunnerConnectDB' => '\BfwSql\Runners\ConnectDB',
 ];
