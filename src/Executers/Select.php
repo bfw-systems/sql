@@ -51,12 +51,18 @@ class Select extends Common
     /**
      * Fetch one row of the result
      * 
+     * @param bool $reexecute (default false) To reexecute the request, or just
+     * have the next line.
+     * 
      * @return mixed
      */
-    public function fetchRow()
+    public function fetchRow(bool $reexecute = false)
     {
-        $req = $this->execute();
-        return $req->fetch($this->obtainPdoFetchType());
+        if ($this->lastRequestStatement === null || $reexecute === true) {
+            $this->execute();
+        }
+        
+        return $this->lastRequestStatement->fetch($this->obtainPdoFetchType());
     }
     
     /**

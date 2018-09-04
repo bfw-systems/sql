@@ -75,20 +75,46 @@ class Select extends atoum
     
     public function testFetchRow()
     {
-        $this->assert('test Executers\Select::fetchRow')
+        $this->assert('test Executers\Select::fetchRow - prepare')
+            ->given($mock = $this->mock)
             ->given($pdoStatement = new \mock\PDOStatement)
             ->given($fetchReturn = (object) [
                 'type'    => 'unit_test',
                 'libName' => 'atoum'
             ])
+            ->given($setLastRequestStatement = function ($lastRequestStatement) {
+                $this->lastRequestStatement = $lastRequestStatement;
+            })
             ->then
             
             ->if($this->calling($pdoStatement)->fetch = $fetchReturn)
-            ->and($this->calling($this->mock)->execute = $pdoStatement)
+            ->and($this->calling($this->mock)->execute = function() use ($mock, $pdoStatement, $setLastRequestStatement) {
+                $setLastRequestStatement->call($mock, $pdoStatement);
+                return $pdoStatement;
+            })
             ->then
-            
+        ;
+        
+        $this->assert('test Executers\Select::fetchRow for first call')
             ->object($this->mock->fetchRow())
                 ->isIdenticalTo($fetchReturn)
+            ->mock($this->mock)
+                ->call('execute')
+                    ->once()
+        ;
+        
+        $this->assert('test Executers\Select::fetchRow for next call')
+            ->object($this->mock->fetchRow())
+            ->mock($this->mock)
+                ->call('execute')
+                    ->never()
+        ;
+        
+        $this->assert('test Executers\Select::fetchRow with reexecute')
+            ->object($this->mock->fetchRow(true))
+            ->mock($this->mock)
+                ->call('execute')
+                    ->once()
         ;
     }
     
