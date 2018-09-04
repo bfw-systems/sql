@@ -412,7 +412,7 @@ class Common extends atoum
             })
         ;
             
-        $this->assert('test Executers\Common::closeCursor')
+        $this->assert('test Executers\Common::closeCursor with PDOStatement object')
             ->given($statement = new \mock\PDOStatement)
             ->if($this->calling($statement)->closeCursor = true)
             ->and($setLastRequestStatement->call($this->mock, $statement))
@@ -423,6 +423,15 @@ class Common extends atoum
             ->mock($statement)
                 ->call('closeCursor')
                     ->once()
+        ;
+            
+        $this->assert('test Executers\Common::closeCursor without PDOStatement object')
+            ->if($setLastRequestStatement->call($this->mock, 42))
+            ->then
+            ->exception(function() {
+                $this->mock->closeCursor();
+            })
+                ->hasCode(\BfwSql\Executers\Common::ERR_CLOSE_CURSOR_NOT_PDOSTATEMENT)
         ;
     }
     

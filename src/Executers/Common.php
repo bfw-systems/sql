@@ -19,6 +19,13 @@ class Common
     const ERR_EXECUTED_UNKNOWN_ERROR = 2201002;
     
     /**
+     * @const ERR_CLOSE_CURSOR_NOT_PDOSTATEMENT Exception code if the method
+     * closeCursor is called for a request who have not returned a
+     * PDOStatement object.
+     */
+    const ERR_CLOSE_CURSOR_NOT_PDOSTATEMENT = 2201003;
+    
+    /**
      * @var \BfwSql\Queries\AbstractQuery $query Query system object
      */
     protected $query;
@@ -270,10 +277,21 @@ class Common
      * 
      * @link http://php.net/manual/fr/pdostatement.closecursor.php
      * 
+     * @throws \Exception If the property $lastRequestStatement is not a
+     * PDOStatement object.
+     * 
      * @return bool
      */
     public function closeCursor(): bool
     {
+        if ($this->lastRequestStatement instanceof \PDOStatement === false) {
+            throw new Exception(
+                'The cursor can\'t be close because the request '
+                .'not have return a PDOStatement object.',
+                self::ERR_CLOSE_CURSOR_NOT_PDOSTATEMENT
+            );
+        }
+        
         return $this->lastRequestStatement->closeCursor();
     }
     
