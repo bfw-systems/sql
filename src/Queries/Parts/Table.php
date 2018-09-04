@@ -181,6 +181,8 @@ class Table extends AbstractPart
     /**
      * Instanciate the columnsList object.
      * To generate it before the call to __invoke() when is necessary
+     * 
+     * @return void
      */
     public function createColumnInstance()
     {
