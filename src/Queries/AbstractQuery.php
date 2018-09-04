@@ -67,7 +67,10 @@ abstract class AbstractQuery
     public function __construct(\BfwSql\SqlConnect $sqlConnect)
     {
         $this->sqlConnect = $sqlConnect;
-        $this->executer   = new \BfwSql\Executers\Common($this);
+        
+        $usedClass      = \BfwSql\UsedClass::getInstance();
+        $executerClass  = $usedClass->obtainClassNameToUse('ExecutersCommon');
+        $this->executer = new $executerClass($this);
         
         $this->defineQueriesParts();
     }

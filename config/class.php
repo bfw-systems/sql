@@ -25,5 +25,7 @@ return [
     'QueriesInsert'   => '\BfwSql\Queries\Insert',
     'QueriesSelect'   => '\BfwSql\Queries\Select',
     'QueriesUpdate'   => '\BfwSql\Queries\Update',
-    'PDO'             => '\PDO'
+    'PDO'             => '\PDO',
+    'ExecutersCommon' => '\BfwSql\Executers\Common',
+    'ExecutersSelect' => '\BfwSql\Executers\Select'
 ];

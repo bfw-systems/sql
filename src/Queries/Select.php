@@ -31,7 +31,9 @@ class Select extends AbstractQuery
     {
         parent::__construct($sqlConnect);
         
-        $this->executer = new \BfwSql\Executers\Select($this);
+        $usedClass      = \BfwSql\UsedClass::getInstance();
+        $executerClass  = $usedClass->obtainClassNameToUse('ExecutersSelect');
+        $this->executer = new $executerClass($this);
         $this->executer->setReturnType($returnType);
     }
     
