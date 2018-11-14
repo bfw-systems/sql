@@ -38,6 +38,8 @@ class Delete extends atoum
             ->object($this->mock = new \mock\BfwSql\Queries\Delete($this->sqlConnect))
                 ->isInstanceOf('\BfwSql\Queries\Delete')
                 ->isInstanceOf('\BfwSql\Queries\AbstractQuery')
+            ->string($this->mock->getRequestType())
+                ->isEqualTo('delete')
         ;
     }
     

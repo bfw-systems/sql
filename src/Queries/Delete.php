@@ -16,6 +16,11 @@ class Delete extends AbstractQuery
     /**
      * {@inheritdoc}
      */
+    protected $requestType = 'delete';
+    
+    /**
+     * {@inheritdoc}
+     */
     protected function defineQueriesParts()
     {
         parent::defineQueriesParts();

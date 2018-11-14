@@ -53,6 +53,8 @@ class AbstractQuery extends atoum
             ->mock($this->mock)
                 ->call('defineQueriesParts')
                     ->once()
+            ->string($this->mock->getRequestType())
+                ->isEmpty()
         ;
     }
     

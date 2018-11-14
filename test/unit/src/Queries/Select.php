@@ -41,6 +41,8 @@ class Select extends atoum
                 ->isInstanceOf('\BfwSql\Queries\AbstractQuery')
             ->string($this->mock->getExecuter()->getReturnType())
                 ->isEqualTo('object')
+            ->string($this->mock->getRequestType())
+                ->isEqualTo('select')
         ;
     }
     

@@ -22,6 +22,11 @@ class Insert extends AbstractQuery
     protected $quoting;
     
     /**
+     * {@inheritdoc}
+     */
+    protected $requestType = 'insert';
+    
+    /**
      * Constructor
      * 
      * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion

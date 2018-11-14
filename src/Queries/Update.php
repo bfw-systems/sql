@@ -28,6 +28,11 @@ class Update extends AbstractQuery
     protected $quoting;
     
     /**
+     * {@inheritdoc}
+     */
+    protected $requestType = 'update';
+    
+    /**
      * Constructor
      * 
      * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion

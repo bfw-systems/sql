@@ -60,6 +60,11 @@ abstract class AbstractQuery
     protected $queriesParts = [];
     
     /**
+     * @var string $requestType The type of the request (ex: "select")
+     */
+    protected $requestType = '';
+    
+    /**
      * Constructor
      * 
      * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
@@ -166,6 +171,16 @@ abstract class AbstractQuery
     public function getPreparedParams(): array
     {
         return $this->preparedParams;
+    }
+    
+    /**
+     * Getter to access at requestType property
+     * 
+     * @return array
+     */
+    public function getRequestType()
+    {
+        return $this->requestType;
     }
     
     /**

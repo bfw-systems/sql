@@ -22,6 +22,11 @@ class Select extends AbstractQuery
     use JoinTrait;
     
     /**
+     * {@inheritdoc}
+     */
+    protected $requestType = 'select';
+    
+    /**
      * Constructor
      * 
      * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
