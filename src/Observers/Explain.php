@@ -154,14 +154,18 @@ class Explain extends Basic
      * {@inheritdoc}
      * Add explain informations to monolog too.
      */
-    protected function addQueryToMonoLog(string $query, array $error)
-    {
-        $this->monolog->getLogger()->debug(
-            'Type: '.$this->action.' ; '
+    protected function addQueryToMonoLog(
+        string $query,
+        array $error,
+        array $preparedArgs
+    ) {
+        $logTxt = 'Type: '.$this->action.' ; '
             .'Query: '.$query. ' ; '
             .'Errors: '.print_r($error, true).' ; '
             .'Explain status: '.$this->explain->status.' ; '
-            .'Explain datas: '.print_r($this->explain->datas, true)
-        );
+            .'Explain datas: '.print_r($this->explain->datas, true). ';'
+        ;
+        
+        $this->monolog->getLogger()->debug($logTxt, $preparedArgs);
     }
 }

@@ -359,7 +359,7 @@ class Explain extends atoum
                     .'     [filtered] => 100'
                     .'     [Extra] =>  '
                     .')'
-                    .'  [] []'
+                    .' ; [] []'
                     ."\n"
                 )
         ;

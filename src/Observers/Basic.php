@@ -127,7 +127,7 @@ class Basic implements \SplObserver
         $query = $this->context->request;
         $error = $this->context->error;
         
-        $this->addQueryToMonoLog($query, $error);
+        $this->addQueryToMonoLog($query, $error, []);
     }
     
     /**
@@ -147,10 +147,12 @@ class Basic implements \SplObserver
             );
         }
         
-        $query = $this->context->getQuery()->getAssembledRequest();
-        $error = $this->context->getLastErrorInfos();
+        $query        = $this->context->getQuery();
+        $queryTxt     = $query->getAssembledRequest();
+        $preparedArgs = $query->getPreparedParams();
+        $error        = $this->context->getLastErrorInfos();
         
-        $this->addQueryToMonoLog($query, $error);
+        $this->addQueryToMonoLog($queryTxt, $error, $preparedArgs);
     }
     
     /**
@@ -161,12 +163,15 @@ class Basic implements \SplObserver
      * 
      * @return void
      */
-    protected function addQueryToMonoLog(string $query, array $error)
-    {
-        $this->monolog->getLogger()->debug(
-            'Type: '.$this->action.' ; '
+    protected function addQueryToMonoLog(
+        string $query,
+        array $error,
+        array $preparedArgs
+    ) {
+        $logTxt = 'Type: '.$this->action.' ; '
             .'Query: '.$query. ' ; '
-            .'Errors: '.print_r($error, true)
-        );
+            .'Errors: '.print_r($error, true). ';';
+        
+        $this->monolog->getLogger()->debug($logTxt, $preparedArgs);
     }
 }

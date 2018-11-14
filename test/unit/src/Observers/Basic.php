@@ -203,7 +203,8 @@ class Basic extends atoum
                             0 => '00000',
                             1 => null,
                             2 => null
-                        ]
+                        ],
+                        []
                     )
                         ->once()
         ;
@@ -247,7 +248,27 @@ class Basic extends atoum
                             0 => '00000',
                             1 => null,
                             2 => null
-                        ]
+                        ],
+                        []
+                    )
+                        ->once()
+        ;
+        
+        $this->assert('test Observers\Basic::systemQuery with AbstractQueries in context and with prepared args')
+            ->if($query->where('id=:idUser', [':idUser' => 42]))
+            ->and($query->assemble(true))
+            ->then
+            ->variable($this->mock->update($subject))
+            ->mock($this->mock)
+                ->call('addQueryToMonoLog')
+                    ->withArguments(
+                        'SELECT `test_users`.*'."\n".'FROM `test_users`'."\n".'WHERE id=:idUser'."\n",
+                        [
+                            0 => '00000',
+                            1 => null,
+                            2 => null
+                        ],
+                        [':idUser' => 42]
                     )
                         ->once()
         ;
@@ -301,7 +322,7 @@ class Basic extends atoum
                     '['.$datetime->format('Y-m-d H:i:s').'] bfw-sql.DEBUG: '
                     .'Type: user query ; Query: SELECT * FROM users ; '
                     .'Errors: Array (     [0] => 00000     [1] =>      [2] =>  )'
-                    .'  [] []'
+                    .' ; [] []'
                     ."\n"
                 )
         ;
