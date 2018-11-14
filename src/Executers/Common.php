@@ -188,19 +188,32 @@ class Common
         $this->sqlConnect->upNbQuery();
         $this->query->assemble();
         
-        if ($this->isPreparedRequest) {
-            $req = $this->executePreparedQuery();
-        } else {
-            $req = $this->executeNotPreparedQuery();
+        try {
+            if ($this->isPreparedRequest) {
+                $req = $this->executePreparedQuery();
+            } else {
+                $req = $this->executeNotPreparedQuery();
+            }
+            
+            $this->lastRequestStatement = $req;
+        } catch (\Throwable $e) {
+            \BFW\Application::getInstance()
+                ->getModuleList()
+                ->getModuleByName('bfw-sql')
+                ->monolog
+                ->getLogger()
+                ->warning(
+                    'Exception while query execution : '.$e->getMessage()
+                )
+            ;
+            
+            throw new \Exception($e->getMessage(), (int) $e->getCode(), $e);
+        } finally {
+            $this->lastErrorInfos = $this->sqlConnect->getPDO()->errorInfo();
+            $this->callObserver();
         }
         
-        $error = $this->sqlConnect->getPDO()->errorInfo();
-        
-        $this->lastRequestStatement = $req;
-        $this->lastErrorInfos       = $error;
-        $this->callObserver();
-        
-        return $error;
+        return $this->lastErrorInfos;
     }
     
     /**
