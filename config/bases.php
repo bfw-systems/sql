@@ -7,6 +7,8 @@
  * @version 2.0
  */
 
+use \PDO;
+
 return [
     /**
      * @var array bases All database list to connect
@@ -72,6 +74,16 @@ return [
              * @link http://php.net/manual/en/pdo.construct.php
              */
             public $pdoOptions = [];
+            
+            /**
+             * @var array pdoAttributes Some attributes define with setAttribute
+             * method.
+             * 
+             * @link http://php.net/manual/en/pdo.setattribute.php
+             */
+            public $pdoAttributes = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ];
             
             /**
              * @var boolean mysqlUtf8 Force datas to be UTF-8

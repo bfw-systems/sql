@@ -80,8 +80,27 @@ class SqlConnect
             $this->connectionInfos->pdoOptions
         );
             
+        $this->pdoSetAttributes();
+            
         if ($this->connectionInfos->mysqlUtf8 === true) {
             $this->mysqlUtf8();
+        }
+    }
+    
+    /**
+     * Define attributes for PDO.
+     * List of attributes is define in base config on key pdoAttributes
+     * 
+     * @link http://php.net/manual/en/pdo.setattribute.php
+     * 
+     * @return void
+     */
+    protected function pdoSetAttributes()
+    {
+        $pdoAttributes = $this->connectionInfos->pdoAttributes;
+        
+        foreach ($pdoAttributes as $attributeName => $attributeValue) {
+            $this->PDO->setAttribute($attributeName, $attributeValue);
         }
     }
     

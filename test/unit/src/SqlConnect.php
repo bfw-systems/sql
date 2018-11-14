@@ -21,6 +21,7 @@ class SqlConnect extends atoum
         
         $this->mockGenerator
             ->orphanize('__construct')
+            ->shunt('setAttribute')
             ->generate('PDO')
         ;
         $this->app
@@ -31,6 +32,7 @@ class SqlConnect extends atoum
         ;
         
         $this->mockGenerator
+            ->makeVisible('pdoSetAttributes')
             ->makeVisible('mysqlUtf8')
             ->generate('BfwSql\SqlConnect')
         ;
@@ -77,6 +79,7 @@ class SqlConnect extends atoum
     public function testCreateConnection()
     {
         $this->assert('test SqlConnect::createConnection - prepare')
+            ->if($this->calling($this->mock)->pdoSetAttributes = null)
             ->if($this->calling($this->mock)->mysqlUtf8 = null)
         ;
         
@@ -97,6 +100,8 @@ class SqlConnect extends atoum
             ->object($this->mock->getPDO())
                 ->isInstanceOf('\PDO')
             ->mock($this->mock)
+                ->call('pdoSetAttributes')
+                    ->once()
                 ->call('mysqlUtf8')
                     ->never()
         ;
@@ -109,8 +114,25 @@ class SqlConnect extends atoum
             ->object($this->mock->getPDO())
                 ->isInstanceOf('\PDO')
             ->mock($this->mock)
+                ->call('pdoSetAttributes')
+                    ->once()
                 ->call('mysqlUtf8')
                     ->once()
+        ;
+    }
+    
+    public function testPdoSetAttributes()
+    {
+        $this->assert('test SqlConnect::pdoSetAttributes')
+            ->if($this->mock->createConnection()) //To have a pdo instance
+            ->and($this->calling($this->mock->getPDO())->setAttribute = null)
+            ->then
+            ->variable($this->mock->pdoSetAttributes())
+                ->isNull()
+            ->mock($this->mock->getPDO())
+                ->call('setAttribute')
+                    ->withArguments(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION)
+                    ->twice() //Already called when pdo instance is created.
         ;
     }
     
