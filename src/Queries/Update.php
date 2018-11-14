@@ -80,6 +80,8 @@ class Update extends AbstractQuery
         $this->queriesParts['joinRight']->setColumnsWithValue(true);
         
         $this->queriesParts['table']->createColumnInstance();
+        
+        $this->querySgbd->disableQueriesParts($this->queriesParts);
     }
     
     /**

@@ -104,6 +104,8 @@ abstract class AbstractQuery
             'table' => new Parts\Table($this),
             'where' => new Parts\WhereList($this)
         ];
+        
+        $this->querySgbd->disableQueriesParts($this->queriesParts);
     }
     
     /**

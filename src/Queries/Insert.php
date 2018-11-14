@@ -72,6 +72,8 @@ class Insert extends AbstractQuery
         $parts['values']      = &$partTable->getColumns();
         $parts['select']      = new Select($this->sqlConnect, 'object');
         $parts['onDuplicate'] = new Parts\ColumnValueList($this, $partTable);
+        
+        $this->querySgbd->disableQueriesParts($this->queriesParts);
     }
     
     /**

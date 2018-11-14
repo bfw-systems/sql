@@ -26,6 +26,8 @@ class Delete extends AbstractQuery
         parent::defineQueriesParts();
         
         $this->queriesParts['from'] = $this->queriesParts['table'];
+        
+        $this->querySgbd->disableQueriesParts($this->queriesParts);
     }
     
     /**

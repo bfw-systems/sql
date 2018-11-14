@@ -61,6 +61,8 @@ class Select extends AbstractQuery
         $this->joinDefinePrefix();
         $this->queriesParts['group']->setSeparator(',');
         $this->queriesParts['group']->setPartPrefix('GROUP BY');
+        
+        $this->querySgbd->disableQueriesParts($this->queriesParts);
     }
     
     /**
