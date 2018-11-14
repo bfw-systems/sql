@@ -80,8 +80,8 @@ class SqlConnect
             $this->connectionInfos->pdoOptions
         );
             
-        if ($this->connectionInfos->useUtf8 === true) {
-            $this->useUtf8();
+        if ($this->connectionInfos->mysqlUtf8 === true) {
+            $this->mysqlUtf8();
         }
     }
     
@@ -90,7 +90,7 @@ class SqlConnect
      * 
      * @return void
      */
-    protected function useUtf8()
+    protected function mysqlUtf8()
     {
         $this->PDO->exec('SET NAMES utf8');
     }

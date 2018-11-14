@@ -31,7 +31,7 @@ class SqlConnect extends atoum
         ;
         
         $this->mockGenerator
-            ->makeVisible('useUtf8')
+            ->makeVisible('mysqlUtf8')
             ->generate('BfwSql\SqlConnect')
         ;
         
@@ -77,7 +77,7 @@ class SqlConnect extends atoum
     public function testCreateConnection()
     {
         $this->assert('test SqlConnect::createConnection - prepare')
-            ->if($this->calling($this->mock)->useUtf8 = null)
+            ->if($this->calling($this->mock)->mysqlUtf8 = null)
         ;
         
         $this->assert('test SqlConnect::createConnection with non-existent dsn')
@@ -97,30 +97,30 @@ class SqlConnect extends atoum
             ->object($this->mock->getPDO())
                 ->isInstanceOf('\PDO')
             ->mock($this->mock)
-                ->call('useUtf8')
+                ->call('mysqlUtf8')
                     ->never()
         ;
         
         $this->assert('test SqlConnect::createConnection with existing dsn and with utf8')
-            ->if($this->baseInfos->useUtf8 = true)
+            ->if($this->baseInfos->mysqlUtf8 = true)
             ->then
             ->variable($this->mock->createConnection())
                 ->isNull()
             ->object($this->mock->getPDO())
                 ->isInstanceOf('\PDO')
             ->mock($this->mock)
-                ->call('useUtf8')
+                ->call('mysqlUtf8')
                     ->once()
         ;
     }
     
-    public function testUseUtf8()
+    public function testMysqlUtf8()
     {
-        $this->assert('test SqlConnect::useUtf8')
+        $this->assert('test SqlConnect::mysqlUtf8')
             ->if($this->mock->createConnection()) //To have a pdo instance
             ->and($this->calling($this->mock->getPDO())->exec = null)
             ->then
-            ->variable($this->mock->useUtf8())
+            ->variable($this->mock->mysqlUtf8())
                 ->isNull()
             ->mock($this->mock->getPDO())
                 ->call('exec')

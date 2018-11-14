@@ -74,12 +74,12 @@ return [
             public $pdoOptions = [];
             
             /**
-             * @var boolean useUtf8 Force datas to be UTF-8
+             * @var boolean mysqlUtf8 Force datas to be UTF-8
              *  Used for Mysql
              * 
              * @link http://dev.mysql.com/doc/refman/5.7/en/charset-connection.html
              */
-            public $useUtf8 = true;
+            public $mysqlUtf8 = false;
         }
         // Add object (duplicate first) into the array
         // to add others sql connexions
