@@ -122,6 +122,19 @@ class JoinList extends atoum
                 ->string($item1->getColumns()->getList()[0]->getName())
                     ->isEqualTo('name')
         ;
+        
+        $this->assert('test Queries\Parts\JoinList::__invoke when it\'s disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->exception(function() {
+                $this->mock->__invoke(
+                    ['a' => 'access'],
+                    'a.id_access=u.id_access',
+                    ['name' => 'atoum']
+                );
+            })
+                ->hasCode(\BfwSql\Queries\Parts\AbstractPart::ERR_INVOKE_PART_DISABLED)
+        ;
     }
     
     public function testGenerate()
@@ -150,6 +163,13 @@ class JoinList extends atoum
                     'LEFT JOIN `test_access` AS `a` ON a.id_access=u.id_access'."\n"
                     .'LEFT JOIN `test_sessions` AS `s` ON s.id_user=u.id_user'
                 )
+        ;
+        
+        $this->assert('test Queries\Parts\JoinList::generate if disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->string($this->mock->generate())
+                ->isEmpty()
         ;
     }
 }

@@ -20,6 +20,8 @@ class SubQueryList extends AbstractList
      */
     public function __invoke(string $shortcut, $subQuery)
     {
+        $this->invokeCheckIsDisabled();
+        
         $this->list[] = new SubQuery($shortcut, $subQuery);
     }
     
@@ -28,6 +30,10 @@ class SubQueryList extends AbstractList
      */
     public function generate(): string
     {
+        if ($this->isDisabled === true) {
+            return '';
+        }
+        
         $sqlPart = '';
         
         foreach ($this->list as $index => $subQuery) {

@@ -63,6 +63,15 @@ class Limit extends atoum
             ->integer($this->mock->getOffset())
                 ->isEqualTo(5)
         ;
+        
+        $this->assert('test Queries\Parts\Limit::__invoke when it\'s disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->exception(function() {
+                $this->mock->__invoke(5, 10);
+            })
+                ->hasCode(\BfwSql\Queries\Parts\AbstractPart::ERR_INVOKE_PART_DISABLED)
+        ;
     }
     
     public function testGenerate()
@@ -84,6 +93,13 @@ class Limit extends atoum
             ->then
             ->string($this->mock->generate())
                 ->isEqualTo('5, 10')
+        ;
+        
+        $this->assert('test Queries\Parts\Limit::generate if disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->string($this->mock->generate())
+                ->isEmpty()
         ;
     }
 }

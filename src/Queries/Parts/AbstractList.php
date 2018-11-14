@@ -110,6 +110,10 @@ abstract class AbstractList extends AbstractPart implements Iterator
      */
     public function generate(): string
     {
+        if ($this->isDisabled === true) {
+            return '';
+        }
+        
         $sqlPart = '';
         
         foreach ($this->list as $index => $expr) {

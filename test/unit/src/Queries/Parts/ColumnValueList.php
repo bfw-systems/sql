@@ -98,6 +98,19 @@ class ColumnValueList extends atoum
                 ->object($item3->getTable())
                     ->isIdenticalTo($this->mock->getTable())
         ;
+        
+        $this->assert('test Queries\Parts\ColumnValueList::__invoke when it\'s disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->exception(function() {
+                $this->mock->__invoke([
+                    'category'   => 'test',
+                    'type'       => 'unit',
+                    'dateUpdate' => null
+                ]);
+            })
+                ->hasCode(\BfwSql\Queries\Parts\AbstractPart::ERR_INVOKE_PART_DISABLED)
+        ;
     }
     
     public function testGenerate()
@@ -135,6 +148,13 @@ class ColumnValueList extends atoum
                     .'`test_table`.`type`="unit",'
                     .'`test_table`.`dateUpdate`=null'
                 )
+        ;
+        
+        $this->assert('test Queries\Parts\ColumnValueList::generate if disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->string($this->mock->generate())
+                ->isEmpty()
         ;
     }
 }

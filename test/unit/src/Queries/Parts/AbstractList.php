@@ -172,5 +172,12 @@ class AbstractList extends atoum
             ->string($this->mock->generate())
                 ->isEqualTo('atoum, unit, test')
         ;
+        
+        $this->assert('test Queries\Parts\AbstractList::generate if disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->string($this->mock->generate())
+                ->isEmpty()
+        ;
     }
 }

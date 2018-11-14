@@ -68,5 +68,14 @@ class WhereList extends atoum
             ->string($this->query->getPreparedParams()[':name'])
                 ->isEqualTo('atoum')
         ;
+        
+        $this->assert('test Queries\Parts\WhereList::__invoke when it\'s disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->exception(function() {
+                $this->mock->__invoke('name=:name', [':name' => 'atoum']);
+            })
+                ->hasCode(\BfwSql\Queries\Parts\AbstractPart::ERR_INVOKE_PART_DISABLED)
+        ;
     }
 }

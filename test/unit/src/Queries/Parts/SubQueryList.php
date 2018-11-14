@@ -57,6 +57,18 @@ class SubQueryList extends atoum
                 ->string($item->getQuery())
                     ->isEqualTo('SELECT COUNT(id) FROM sessions s WHERE s.ip=u.lastIp')
         ;
+        
+        $this->assert('test Queries\Parts\SubQueryList::__invoke when it\'s disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->exception(function() {
+                $this->mock->__invoke(
+                    'nbSessionIp',
+                    'SELECT COUNT(id) FROM sessions s WHERE s.ip=u.lastIp'
+                );
+            })
+                ->hasCode(\BfwSql\Queries\Parts\AbstractPart::ERR_INVOKE_PART_DISABLED)
+        ;
     }
     
     public function testGenerate()
@@ -85,6 +97,13 @@ class SubQueryList extends atoum
                     '(SELECT COUNT(id) FROM sessions s WHERE s.ip=u.lastIp) AS `nbSessionIp`,'
                     .'(SELECT COUNT(id) FROM items i WHERE i.iduser=u.iduser) AS `nbItems`'
                 )
+        ;
+        
+        $this->assert('test Queries\Parts\SubQueryList::generate if disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->string($this->mock->generate())
+                ->isEmpty()
         ;
     }
 }

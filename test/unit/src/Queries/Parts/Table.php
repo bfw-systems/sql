@@ -205,6 +205,15 @@ class Table extends atoum
                 ->call('defineColumns')
                     ->withArguments(null)->once()
         ;
+        
+        $this->assert('test Queries\Parts\Table::__invoke when it\'s disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->exception(function() {
+                $this->mock->__invoke(['u' => 'user']);
+            })
+                ->hasCode(\BfwSql\Queries\Parts\AbstractPart::ERR_INVOKE_PART_DISABLED)
+        ;
     }
     
     public function testCreateColumnInstance()
@@ -225,18 +234,25 @@ class Table extends atoum
     
     public function testGenerate()
     {
-        $this->assert('test Queries\Parts\Join::generate without shortcut')
+        $this->assert('test Queries\Parts\Table::generate without shortcut')
             ->if($this->mock->__invoke('user'))
             ->then
             ->string($this->mock->generate())
                 ->isEqualTo('`test_user`')
         ;
         
-        $this->assert('test Queries\Parts\Join::generate with shortcut')
+        $this->assert('test Queries\Parts\Table::generate with shortcut')
             ->if($this->mock->__invoke(['u' => 'user']))
             ->then
             ->string($this->mock->generate())
                 ->isEqualTo('`test_user` AS `u`')
+        ;
+        
+        $this->assert('test Queries\Parts\Table::generate if disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->string($this->mock->generate())
+                ->isEmpty()
         ;
     }
 }

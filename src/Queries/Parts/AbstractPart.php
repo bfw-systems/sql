@@ -7,6 +7,12 @@ use \BfwSql\Queries\AbstractQuery;
 abstract class AbstractPart implements PartInterface
 {
     /**
+     * @const ERR_INVOKE_PART_DISABLED Exception code when invoke is used
+     * with a part which is disabled.
+     */
+    const ERR_INVOKE_PART_DISABLED = 2502001;
+    
+    /**
      * @var \BfwSql\Queries\AbstractQuery $querySystem The object who generate
      * the full query
      */
@@ -32,6 +38,13 @@ abstract class AbstractPart implements PartInterface
      * Example : The FROM part can not be empty for a SELECT query
      */
     protected $canBeEmpty = true;
+    
+    /**
+     *
+     * @var bool $isDisabled Define if the current part is disabled (or not)
+     * for the specific SGBD.
+     */
+    protected $isDisabled = false;
     
     /**
      * Define querySystem property and find the tablePrefix
@@ -96,5 +109,46 @@ abstract class AbstractPart implements PartInterface
     public function getCanBeEmpty(): bool
     {
         return $this->canBeEmpty;
+    }
+    
+    /**
+     * Getter accessor to property canBeEmpty
+     * 
+     * @return bool
+     */
+    public function getIsDisabled(): bool
+    {
+        return $this->isDisabled;
+    }
+
+    /**
+     * Setter accessor to property canBeEmpty
+     * 
+     * @param bool $isDisabled new value for isDisabled
+     * 
+     * @return $this
+     */
+    public function setIsDisabled(bool $isDisabled): self
+    {
+        $this->isDisabled = $isDisabled;
+        return $this;
+    }
+    
+    /**
+     * Check if the part is disabled, and throw an Exception if it is.
+     * Should be use in __invoke method.
+     * 
+     * @throws \Exception
+     * 
+     * @return void
+     */
+    protected function invokeCheckIsDisabled()
+    {
+        if ($this->isDisabled === true) {
+            throw new \Exception(
+                'This query part is disabled for the used SGBD.',
+                self::ERR_INVOKE_PART_DISABLED
+            );
+        }
     }
 }

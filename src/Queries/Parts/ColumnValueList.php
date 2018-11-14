@@ -13,6 +13,8 @@ class ColumnValueList extends ColumnList
      */
     public function __invoke(array $columns)
     {
+        $this->invokeCheckIsDisabled();
+        
         foreach ($columns as $name => $value) {
             $this->list[] = new Column($this->table, $name, null, $value);
         }
@@ -23,6 +25,10 @@ class ColumnValueList extends ColumnList
      */
     public function generate(): string
     {
+        if ($this->isDisabled === true) {
+            return '';
+        }
+        
         $sqlPart = '';
         
         foreach ($this->list as $index => $column) {

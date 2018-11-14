@@ -49,6 +49,8 @@ class Limit extends AbstractPart
      */
     public function __invoke(...$limitInfos)
     {
+        $this->invokeCheckIsDisabled();
+        
         if (isset($limitInfos[1])) {
             $this->offset   = (int) $limitInfos[0];
             $this->rowCount = (int) $limitInfos[1];
@@ -62,6 +64,10 @@ class Limit extends AbstractPart
      */
     public function generate(): string
     {
+        if ($this->isDisabled === true) {
+            return '';
+        }
+        
         if ($this->rowCount === null) {
             return '';
         } else if ($this->offset === null) {

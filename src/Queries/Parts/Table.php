@@ -102,6 +102,8 @@ class Table extends AbstractPart
      */
     public function __invoke($nameInfos, $columns = null)
     {
+        $this->invokeCheckIsDisabled();
+        
         $this->defineNameAndShortcut($nameInfos);
         $this->defineColumns($columns);
     }
@@ -194,6 +196,10 @@ class Table extends AbstractPart
      */
     public function generate(): string
     {
+        if ($this->isDisabled === true) {
+            return '';
+        }
+        
         $partQuery = '`'.$this->name.'`';
         
         if ($this->shortcut !== null) {

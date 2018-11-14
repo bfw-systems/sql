@@ -69,5 +69,14 @@ class CommonList extends atoum
             ->string($this->mock->getList()[1])
                 ->isEqualTo('category')
         ;
+        
+        $this->assert('test Queries\Parts\CommonList::__invoke when it\'s disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->exception(function() {
+                $this->mock->__invoke('category');
+            })
+                ->hasCode(\BfwSql\Queries\Parts\AbstractPart::ERR_INVOKE_PART_DISABLED)
+        ;
     }
 }

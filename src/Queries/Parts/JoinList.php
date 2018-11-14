@@ -55,6 +55,8 @@ class JoinList extends AbstractList
      */
     public function __invoke($nameInfos, string $on, $columns = null)
     {
+        $this->invokeCheckIsDisabled();
+        
         $join = new Join($this->querySystem);
         $join->setColumnsWithValue($this->columnsWithValue);
         $join->__invoke($nameInfos, $columns, $on);
@@ -67,6 +69,10 @@ class JoinList extends AbstractList
      */
     public function generate(): string
     {
+        if ($this->isDisabled === true) {
+            return '';
+        }
+        
         $sqlPart = '';
         
         foreach ($this->list as $index => $join) {

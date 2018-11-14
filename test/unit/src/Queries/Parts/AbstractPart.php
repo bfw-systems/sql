@@ -21,6 +21,11 @@ class AbstractPart extends atoum
         
         $this->query = new \mock\BfwSql\Queries\AbstractQuery($this->sqlConnect);
         
+        $this->mockGenerator
+            ->makeVisible('invokeCheckIsDisabled')
+            ->generate('BfwSql\Queries\Parts\AbstractPart')
+        ;
+        
         if ($testMethod === 'testConstruct') {
             return;
         }
@@ -74,6 +79,42 @@ class AbstractPart extends atoum
         $this->assert('test Queries\Parts\AbstractQuery::getCanBeEmpty')
             ->boolean($this->mock->getCanBeEmpty())
                 ->isTrue()
+        ;
+    }
+    
+    public function testGetAndSetIsDisabled()
+    {
+        $this->assert('test Queries\Parts\AbstractQuery::getIsDisabled with default value')
+            ->boolean($this->mock->getIsDisabled())
+                ->isFalse()
+        ;
+        
+        $this->assert('test Queries\Parts\AbstractQuery::setIsDisabled')
+            ->object($this->mock->setIsDisabled(true))
+                ->isIdenticalTo($this->mock)
+            ->boolean($this->mock->getIsDisabled())
+                ->isTrue()
+            ->object($this->mock->setIsDisabled(false))
+                ->isIdenticalTo($this->mock)
+            ->boolean($this->mock->getIsDisabled())
+                ->isFalse()
+        ;
+    }
+    
+    public function testInvokeCheckIsDisabled()
+    {
+        $this->assert('test Queries\Parts\AbstractQuery::invokeCheckIsDisabled when it\'s not disabled')
+            ->variable($this->mock->invokeCheckIsDisabled())
+                ->isNull()
+        ;
+        
+        $this->assert('test Queries\Parts\AbstractQuery::invokeCheckIsDisabled when it\'s disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->exception(function() {
+                $this->mock->invokeCheckIsDisabled();
+            })
+                ->hasCode(\BfwSql\Queries\Parts\AbstractPart::ERR_INVOKE_PART_DISABLED)
         ;
     }
 }

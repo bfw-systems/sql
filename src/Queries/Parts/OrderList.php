@@ -25,6 +25,8 @@ class OrderList extends AbstractList
      */
     public function __invoke(string $expr, $sort = 'ASC')
     {
+        $this->invokeCheckIsDisabled();
+        
         $this->list[] = new Order($expr, $sort);
     }
     
@@ -33,6 +35,10 @@ class OrderList extends AbstractList
      */
     public function generate(): string
     {
+        if ($this->isDisabled === true) {
+            return '';
+        }
+        
         $sqlPart = '';
         
         foreach ($this->list as $index => $order) {

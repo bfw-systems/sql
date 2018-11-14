@@ -26,6 +26,8 @@ class WhereList extends CommonList
      */
     public function __invoke(string $expr, $preparedParams = null)
     {
+        $this->invokeCheckIsDisabled();
+        
         parent::__invoke($expr);
         
         if ($preparedParams !== null) {

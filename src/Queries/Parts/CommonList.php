@@ -28,6 +28,8 @@ class CommonList extends AbstractList
      */
     public function __invoke(string $expr)
     {
+        $this->invokeCheckIsDisabled();
+        
         $this->list[] = $expr;
     }
 }

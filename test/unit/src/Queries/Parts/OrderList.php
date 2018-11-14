@@ -78,6 +78,15 @@ class OrderList extends atoum
                 ->variable($item2->getSort())
                     ->isNull()
         ;
+        
+        $this->assert('test Queries\Parts\OrderList::__invoke when it\'s disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->exception(function() {
+                $this->mock->__invoke('RAND()', null);
+            })
+                ->hasCode(\BfwSql\Queries\Parts\AbstractPart::ERR_INVOKE_PART_DISABLED)
+        ;
     }
     
     public function testGenerate()
@@ -101,6 +110,13 @@ class OrderList extends atoum
             ->if($this->mock->__invoke('RAND()', null))
             ->string($this->mock->generate())
                 ->isEqualTo('`name` ASC,`login` DESC,RAND()')
+        ;
+        
+        $this->assert('test Queries\Parts\OrderList::generate if disabled')
+            ->if($this->mock->setIsDisabled(true))
+            ->then
+            ->string($this->mock->generate())
+                ->isEmpty()
         ;
     }
 }

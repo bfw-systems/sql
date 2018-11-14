@@ -51,6 +51,8 @@ class ColumnList extends AbstractList
      */
     public function __invoke(array $columns)
     {
+        $this->invokeCheckIsDisabled();
+        
         foreach ($columns as $shortcut => $name) {
             if (is_int($shortcut)) {
                 $column = new Column($this->table, $name);
@@ -67,6 +69,10 @@ class ColumnList extends AbstractList
      */
     public function generate(): string
     {
+        if ($this->isDisabled === true) {
+            return '';
+        }
+        
         $sqlPart = '';
         
         foreach ($this->list as $index => $column) {
