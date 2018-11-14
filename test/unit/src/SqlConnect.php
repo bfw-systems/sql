@@ -38,17 +38,20 @@ class SqlConnect extends atoum
         ;
         
         $this->baseInfos = $baseInfos = new class {
-            public $baseKeyName = 'myBase';
-            public $filePath    = '';
-            public $host        = 'localhost';
-            public $port        = 3306;
-            public $baseName    = 'atoum';
-            public $user        = 'atoum';
-            public $password    = '';
-            public $baseType    = 'mysql';
-            public $pdoOptions  = [];
-            public $useUtf8     = false;
-            public $tablePrefix = 'test_';
+            public $baseKeyName   = 'myBase';
+            public $filePath      = '';
+            public $host          = 'localhost';
+            public $port          = 3306;
+            public $baseName      = 'atoum';
+            public $user          = 'atoum';
+            public $password      = '';
+            public $baseType      = 'mysql';
+            public $tablePrefix   = 'test_';
+            public $pdoOptions    = [];
+            public $pdoAttributes = [
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+            ];
+            public $mysqlUtf8     = false;
         };
         
         if ($testMethod === 'testConstructAndGetters') {

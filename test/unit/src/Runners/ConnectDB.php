@@ -65,17 +65,20 @@ class ConnectDB extends atoum
         $this->assert('test Runners\ConnectDB::run with base')
             ->given($config = $this->module->getConfig())
             ->given($newBase = new class {
-                public $baseKeyName = 'myBase';
-                public $filePath    = '';
-                public $host        = 'localhost';
-                public $port        = 3306;
-                public $baseName    = 'atoum';
-                public $user        = 'atoum';
-                public $password    = '';
-                public $baseType    = 'mysql';
-                public $pdoOptions  = [];
-                public $useUtf8     = true;
-                public $tablePrefix = 'test_';
+                public $baseKeyName   = 'myBase';
+                public $filePath      = '';
+                public $host          = 'localhost';
+                public $port          = 3306;
+                public $baseName      = 'atoum';
+                public $user          = 'atoum';
+                public $password      = '';
+                public $baseType      = 'mysql';
+                public $tablePrefix   = 'test_';
+                public $pdoOptions    = [];
+                public $pdoAttributes = [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                ];
+                public $mysqlUtf8     = false;
             })
             ->if($config->setConfigKeyForFilename('bases.php', 'bases', [$newBase]))
             ->then
@@ -95,17 +98,20 @@ class ConnectDB extends atoum
         $this->assert('test Runners\ConnectDB::connectToDatabase without baseType')
             ->exception(function() {
                 $this->mock->connectToDatabase(new class {
-                    public $baseKeyName = '';
-                    public $filePath    = '';
-                    public $host        = '';
-                    public $port        = 0;
-                    public $baseName    = '';
-                    public $user        = '';
-                    public $password    = '';
-                    public $baseType    = '';
-                    public $pdoOptions  = [];
-                    public $useUtf8     = true;
-                    public $tablePrefix = '';
+                    public $baseKeyName   = '';
+                    public $filePath      = '';
+                    public $host          = '';
+                    public $port          = 0;
+                    public $baseName      = '';
+                    public $user          = '';
+                    public $password      = '';
+                    public $baseType      = '';
+                    public $tablePrefix   = '';
+                    public $pdoOptions    = [];
+                    public $pdoAttributes = [
+                        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                    ];
+                    public $mysqlUtf8     = true;
                 });
             })
                 ->hasCode(\BfwSql\Runners\ConnectDB::ERR_NO_BASE_TYPE)
@@ -117,46 +123,55 @@ class ConnectDB extends atoum
                 'bases',
                 [
                     new class {
-                        public $baseKeyName = '';
-                        public $filePath    = '';
-                        public $host        = 'localhost';
-                        public $port        = 3306;
-                        public $baseName    = 'atoum';
-                        public $user        = 'atoum';
-                        public $password    = '';
-                        public $baseType    = 'mysql';
-                        public $pdoOptions  = [];
-                        public $useUtf8     = true;
-                        public $tablePrefix = 'test_';
+                        public $baseKeyName   = '';
+                        public $filePath      = '';
+                        public $host          = 'localhost';
+                        public $port          = 3306;
+                        public $baseName      = 'atoum';
+                        public $user          = 'atoum';
+                        public $password      = '';
+                        public $baseType      = 'mysql';
+                        public $tablePrefix   = 'test_';
+                        public $pdoOptions    = [];
+                        public $pdoAttributes = [
+                            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                        ];
+                        public $mysqlUtf8     = true;
                     },
                     new class {
-                        public $baseKeyName = 'myBase';
-                        public $filePath    = '';
-                        public $host        = 'localhost';
-                        public $port        = 3306;
-                        public $baseName    = 'atoum';
-                        public $user        = 'atoum';
-                        public $password    = '';
-                        public $baseType    = 'mysql';
-                        public $pdoOptions  = [];
-                        public $useUtf8     = true;
-                        public $tablePrefix = 'test_';
+                        public $baseKeyName   = 'myBase';
+                        public $filePath      = '';
+                        public $host          = 'localhost';
+                        public $port          = 3306;
+                        public $baseName      = 'atoum';
+                        public $user          = 'atoum';
+                        public $password      = '';
+                        public $baseType      = 'mysql';
+                        public $tablePrefix   = 'test_';
+                        public $pdoOptions    = [];
+                        public $pdoAttributes = [
+                            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                        ];
+                        public $mysqlUtf8     = true;
                     }
                 ]
             ))
             ->exception(function() {
                 $this->mock->connectToDatabase(new class {
-                    public $baseKeyName = '';
-                    public $filePath    = '';
-                    public $host        = 'localhost';
-                    public $port        = 3306;
-                    public $baseName    = 'atoum';
-                    public $user        = 'atoum';
-                    public $password    = '';
-                    public $baseType    = 'mysql';
-                    public $pdoOptions  = [];
-                    public $useUtf8     = true;
-                    public $tablePrefix = 'test_';
+                    public $baseKeyName   = '';
+                    public $filePath      = '';
+                    public $host          = 'localhost';
+                    public $port          = 3306;
+                    public $baseName      = 'atoum';
+                    public $user          = 'atoum';
+                    public $password      = '';
+                    public $baseType      = 'mysql';
+                    public $tablePrefix   = 'test_';
+                    public $pdoOptions    = [];
+                    public $pdoAttributes = [
+                        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                    ];
+                    public $mysqlUtf8     = true;
                 });
             })
                 ->hasCode(\BfwSql\Runners\ConnectDB::ERR_NO_CONNECTION_KEYNAME)
@@ -173,17 +188,20 @@ class ConnectDB extends atoum
                 'bases',
                 [
                     new class {
-                        public $baseKeyName = 'myBase';
-                        public $filePath    = '';
-                        public $host        = 'localhost';
-                        public $port        = 3306;
-                        public $baseName    = 'atoum';
-                        public $user        = 'atoum';
-                        public $password    = '';
-                        public $baseType    = 'mysql';
-                        public $pdoOptions  = [];
-                        public $useUtf8     = true;
-                        public $tablePrefix = 'test_';
+                        public $baseKeyName   = 'myBase';
+                        public $filePath      = '';
+                        public $host          = 'localhost';
+                        public $port          = 3306;
+                        public $baseName      = 'atoum';
+                        public $user          = 'atoum';
+                        public $password      = '';
+                        public $baseType      = 'mysql';
+                        public $tablePrefix   = 'test_';
+                        public $pdoOptions    = [];
+                        public $pdoAttributes = [
+                            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                        ];
+                        public $mysqlUtf8     = true;
                     }
                 ]
             ))

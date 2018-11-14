@@ -10,17 +10,20 @@
 return [
     'bases' => [
         new class {
-            public $baseKeyName = 'travis';
-            public $filePath    = '';
-            public $host        = 'localhost';
-            public $port        = 3306;
-            public $baseName    = 'bfw_sql_tests';
-            public $user        = 'travis';
-            public $password    = '';
-            public $baseType    = 'mysql';
-            public $pdoOptions  = [];
-            public $useUtf8     = true;
-            public $tablePrefix = 'test_';
+            public $baseKeyName   = 'travis';
+            public $filePath      = '';
+            public $host          = 'localhost';
+            public $port          = 3306;
+            public $baseName      = 'bfw_sql_tests';
+            public $user          = 'travis';
+            public $password      = '';
+            public $baseType      = 'mysql';
+            public $tablePrefix   = 'test_';
+            public $pdoOptions    = [];
+            public $pdoAttributes = [
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+            ];
+            public $mysqlUtf8     = true;
         }
     ]
 ];
