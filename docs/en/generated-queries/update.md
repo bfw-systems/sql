@@ -67,7 +67,7 @@ class MyTable
     public function foo(array $datas, int $id): int
     {
         return $this->update()
-            ->into($this->tableName, $datas)
+            ->from($this->tableName, $datas)
             ->where('id=:id', [':id' => $id])
             ->execute()
         ;
@@ -82,8 +82,8 @@ class MyTable
     
     public function bar(array $datas, int $id): int
     {
-        return $this->insert()
-            ->update(['t' => $this->tableName], $datas)
+        return $this->update()
+            ->from(['t' => $this->tableName], $datas)
             ->join(
                 ['o' => 'myOtherTable'],
                 'o.id=t.idother',
