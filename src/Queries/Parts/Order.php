@@ -61,19 +61,17 @@ class Order extends AbstractPart
      */
     public function generate(): string
     {
-        $expr = $this->expr;
-        
+        $isFunction = false;
         if (
-            strpos($expr, ' ') === false &&
-            strpos($expr, '(') === false
+            strpos($this->expr, ' ') !== false ||
+            strpos($this->expr, '(') !== false
         ) {
-            $expr = '`'.$expr.'`';
+            $isFunction = true;
         }
         
-        if ($this->sort === null) {
-            return $expr;
-        }
-        
-        return $expr.' '.$this->sort;
+        return $this->querySystem
+            ->getQuerySgbd()
+            ->order($this->expr, $this->sort, $isFunction)
+        ;
     }
 }

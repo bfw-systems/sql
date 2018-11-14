@@ -76,11 +76,11 @@ class ColumnList extends AbstractList
         $sqlPart = '';
         
         foreach ($this->list as $index => $column) {
-            if ($index > 0) {
-                $sqlPart .= $this->separator;
-            }
-            
-            $sqlPart .= $column->generate();
+            $sqlPart .= $this->querySystem->getQuerySgbd()->listItem(
+                $column->generate(),
+                $index,
+                $this->separator
+            );
         }
         
         return $sqlPart;

@@ -41,13 +41,9 @@ class Join extends Table
      */
     public function generate(): string
     {
-        $partQuery = '`'.$this->name.'`';
-        if ($this->shortcut !== null) {
-            $partQuery .= ' AS `'.$this->shortcut.'`';
-        }
-        
-        $partQuery .= ' ON '.$this->on;
-        
-        return $partQuery;
+        return $this->querySystem
+            ->getQuerySgbd()
+            ->join($this->name, $this->shortcut, $this->on)
+        ;
     }
 }

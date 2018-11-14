@@ -117,11 +117,11 @@ abstract class AbstractList extends AbstractPart implements Iterator
         $sqlPart = '';
         
         foreach ($this->list as $index => $expr) {
-            if ($index > 0) {
-                $sqlPart .= $this->separator;
-            }
-            
-            $sqlPart .= $expr;
+            $sqlPart .= $this->querySystem->getQuerySgbd()->listItem(
+                $expr,
+                $index,
+                $this->separator
+            );
         }
         
         return $sqlPart;

@@ -68,12 +68,9 @@ class Limit extends AbstractPart
             return '';
         }
         
-        if ($this->rowCount === null) {
-            return '';
-        } else if ($this->offset === null) {
-            return (string) $this->rowCount;
-        } else {
-            return $this->offset.', '.$this->rowCount;
-        }
+        return $this->querySystem
+            ->getQuerySgbd()
+            ->limit($this->rowCount, $this->offset)
+        ;
     }
 }

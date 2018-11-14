@@ -116,19 +116,21 @@ class Column
             $tableName = $this->table->getShortcut();
         }
         
+        $isFunction = false;
         if (
-            strpos($columnName, ' ') === false &&
-            strpos($columnName, '(') === false
+            strpos($columnName, ' ') !== false ||
+            strpos($columnName, '(') !== false
         ) {
-            //Add quote only if a column has been declared
-            if ($columnName !== '*') {
-                $columnName = '`'.$columnName.'`';
-            }
-
-            $columnName = '`'.$tableName.'`.'.$columnName;
+            $isFunction = true;
         }
         
-        return $columnName;
+        $isJoker = ($columnName === '*') ? true : false;
+        
+        return $this->table
+            ->getQuerySystem()
+            ->getQuerySgbd()
+            ->columnName($columnName, $tableName, $isFunction, $isJoker)
+        ;
     }
     
     /**
@@ -144,8 +146,7 @@ class Column
             return 'null';
         }
         
-        return $this
-            ->table
+        return $this->table
             ->getQuerySystem()
             ->getQuoting()
             ->quoteValue($this->name, $this->value)

@@ -27,7 +27,7 @@ class OrderList extends AbstractList
     {
         $this->invokeCheckIsDisabled();
         
-        $this->list[] = new Order($expr, $sort);
+        $this->list[] = new Order($this->querySystem, $expr, $sort);
     }
     
     /**
@@ -42,11 +42,11 @@ class OrderList extends AbstractList
         $sqlPart = '';
         
         foreach ($this->list as $index => $order) {
-            if ($index > 0) {
-                $sqlPart .= $this->separator;
-            }
-            
-            $sqlPart .= $order->generate();
+            $sqlPart .= $this->querySystem->getQuerySgbd()->listItem(
+                $order->generate(),
+                $index,
+                $this->separator
+            );
         }
         
         return $sqlPart;

@@ -76,11 +76,11 @@ class JoinList extends AbstractList
         $sqlPart = '';
         
         foreach ($this->list as $index => $join) {
-            if ($index > 0) {
-                $sqlPart .= $this->separator;
-            }
-            
-            $sqlPart .= $this->partPrefix.' '.$join->generate();
+            $sqlPart .= $this->querySystem->getQuerySgbd()->listItem(
+                $this->partPrefix.' '.$join->generate(),
+                $index,
+                $this->separator
+            );
         }
         
         return $sqlPart;

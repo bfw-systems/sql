@@ -22,7 +22,7 @@ class SubQueryList extends AbstractList
     {
         $this->invokeCheckIsDisabled();
         
-        $this->list[] = new SubQuery($shortcut, $subQuery);
+        $this->list[] = new SubQuery($this->querySystem, $shortcut, $subQuery);
     }
     
     /**
@@ -37,11 +37,11 @@ class SubQueryList extends AbstractList
         $sqlPart = '';
         
         foreach ($this->list as $index => $subQuery) {
-            if ($index > 0) {
-                $sqlPart .= $this->separator;
-            }
-            
-            $sqlPart .= $subQuery->generate();
+            $sqlPart .= $this->querySystem->getQuerySgbd()->listItem(
+                $subQuery->generate(),
+                $index,
+                $this->separator
+            );
         }
         
         return $sqlPart;

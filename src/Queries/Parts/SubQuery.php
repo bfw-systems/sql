@@ -112,6 +112,9 @@ class SubQuery extends AbstractPart
      */
     public function generate(): string
     {
-        return '('.$this->query.') AS `'.$this->shortcut.'`';
+        return $this->querySystem
+            ->getQuerySgbd()
+            ->subQuery($this->query, $this->shortcut)
+        ;
     }
 }

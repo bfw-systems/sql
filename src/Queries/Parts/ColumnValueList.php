@@ -32,11 +32,12 @@ class ColumnValueList extends ColumnList
         $sqlPart = '';
         
         foreach ($this->list as $index => $column) {
-            if ($index > 0) {
-                $sqlPart .= $this->separator;
-            }
-            
-            $sqlPart .= $column->obtainName().'='.$column->obtainValue();
+            $expr     = $column->obtainName().'='.$column->obtainValue();
+            $sqlPart .= $this->querySystem->getQuerySgbd()->listItem(
+                $expr,
+                $index,
+                $this->separator
+            );
         }
         
         return $sqlPart;

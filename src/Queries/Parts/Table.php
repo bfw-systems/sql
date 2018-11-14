@@ -200,12 +200,9 @@ class Table extends AbstractPart
             return '';
         }
         
-        $partQuery = '`'.$this->name.'`';
-        
-        if ($this->shortcut !== null) {
-            $partQuery .= ' AS `'.$this->shortcut.'`';
-        }
-        
-        return $partQuery;
+        return $this->querySystem
+            ->getQuerySgbd()
+            ->table($this->name, $this->shortcut)
+        ;
     }
 }
