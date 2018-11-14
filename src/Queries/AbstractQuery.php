@@ -191,9 +191,9 @@ abstract class AbstractQuery
     /**
      * Getter to access at requestType property
      * 
-     * @return array
+     * @return string
      */
-    public function getRequestType()
+    public function getRequestType(): string
     {
         return $this->requestType;
     }
@@ -201,9 +201,9 @@ abstract class AbstractQuery
     /**
      * Getter to access at querySgbd property
      * 
-     * @return array
+     * @return \BfwSql\Queries\SGBD\AbstractSGBD
      */
-    public function getQuerySgbd()
+    public function getQuerySgbd(): \BfwSql\Queries\SGBD\AbstractSGBD
     {
         return $this->querySgbd;
     }
