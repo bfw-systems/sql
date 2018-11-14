@@ -19,12 +19,14 @@ class Order extends atoum
     {
         $this->initModule();
         $this->createSqlConnect('myBase');
+        
+        $this->query = new \mock\BfwSql\Queries\AbstractQuery($this->sqlConnect);
     }
     
     public function testConstructAndGetter()
     {
         $this->assert('test Queries\Parts\Order::__construct and getters without sort arg')
-            ->object($this->mock = new \mock\BfwSql\Queries\Parts\Order('name'))
+            ->object($this->mock = new \mock\BfwSql\Queries\Parts\Order($this->query, 'name'))
                 ->isInstanceOf('\BfwSql\Queries\Parts\Order')
             ->string($this->mock->getExpr())
                 ->isEqualTo('name')
@@ -33,7 +35,7 @@ class Order extends atoum
         ;
         
         $this->assert('test Queries\Parts\Order::__construct and getters with sort arg')
-            ->object($this->mock = new \mock\BfwSql\Queries\Parts\Order('login', 'DESC'))
+            ->object($this->mock = new \mock\BfwSql\Queries\Parts\Order($this->query, 'login', 'DESC'))
                 ->isInstanceOf('\BfwSql\Queries\Parts\Order')
             ->string($this->mock->getExpr())
                 ->isEqualTo('login')
@@ -42,7 +44,7 @@ class Order extends atoum
         ;
         
         $this->assert('test Queries\Parts\Order::__construct and getters with sort arg to null')
-            ->object($this->mock = new \mock\BfwSql\Queries\Parts\Order('login', null))
+            ->object($this->mock = new \mock\BfwSql\Queries\Parts\Order($this->query, 'login', null))
                 ->isInstanceOf('\BfwSql\Queries\Parts\Order')
             ->string($this->mock->getExpr())
                 ->isEqualTo('login')
@@ -54,14 +56,14 @@ class Order extends atoum
     public function testGenerate()
     {
         $this->assert('test Queries\Parts\Order::generate with column name and sort')
-            ->if($this->mock = new \mock\BfwSql\Queries\Parts\Order('login', 'DESC'))
+            ->if($this->mock = new \mock\BfwSql\Queries\Parts\Order($this->query, 'login', 'DESC'))
             ->then
             ->string($this->mock->generate())
                 ->isEqualTo('`login` DESC')
         ;
         
         $this->assert('test Queries\Parts\Order::generate with function and without sort')
-            ->if($this->mock = new \mock\BfwSql\Queries\Parts\Order('RAND()', null))
+            ->if($this->mock = new \mock\BfwSql\Queries\Parts\Order($this->query, 'RAND()', null))
             ->then
             ->string($this->mock->generate())
                 ->isEqualTo('RAND()')

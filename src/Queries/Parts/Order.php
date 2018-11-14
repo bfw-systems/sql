@@ -2,7 +2,9 @@
 
 namespace BfwSql\Queries\Parts;
 
-class Order
+use \BfwSql\Queries\AbstractQuery;
+
+class Order extends AbstractPart
 {
     /**
      * @var string $expr The expression to use into the order
@@ -17,11 +19,17 @@ class Order
     /**
      * Define the expression and the order to sort
      * 
+     * @param \BfwSql\Queries\AbstractQuery $querySystem
      * @param string $expr The expression to use into the order
      * @param string|null $sort The sort order : ASC or DESC
      */
-    public function __construct(string $expr, $sort = 'ASC')
-    {
+    public function __construct(
+        AbstractQuery $querySystem,
+        string $expr,
+        $sort = 'ASC'
+    ) {
+        parent::__construct($querySystem);
+        
         $this->expr = $expr;
         $this->sort = $sort;
     }

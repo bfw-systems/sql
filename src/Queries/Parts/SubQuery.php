@@ -3,8 +3,9 @@
 namespace BfwSql\Queries\Parts;
 
 use \Exception;
+use \BfwSql\Queries\AbstractQuery;
 
-class SubQuery
+class SubQuery extends AbstractPart
 {
     /**
      * @const ERR_QUERY_NOT_OBJECT_OR_STRING Exception code if the query is
@@ -32,11 +33,17 @@ class SubQuery
      * Define the shortcut and the sql query.
      * If the sub-query is an object, call method to obtain the string query
      * 
+     * @param \BfwSql\Queries\AbstractQuery $querySystem
      * @param string $shortcut The shortcut to use into the request
      * @param string|\BfwSql\Queries\AbstractQuery $query The sub-query
      */
-    public function __construct(string $shortcut, $query)
-    {
+    public function __construct(
+        AbstractQuery $querySystem,
+        string $shortcut,
+        $query
+    ) {
+        parent::__construct($querySystem);
+        
         $this->shortcut = $shortcut;
         $this->query    = $this->obtainAssembledQuery($query);
     }

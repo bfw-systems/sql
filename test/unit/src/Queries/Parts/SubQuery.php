@@ -19,6 +19,8 @@ class SubQuery extends atoum
         $this->initModule();
         $this->createSqlConnect('myBase');
         
+        $this->query = new \mock\BfwSql\Queries\AbstractQuery($this->sqlConnect);
+        
         $this->mockGenerator->makeVisible('obtainAssembledQuery');
         
         if ($testMethod === 'testObtainAssembledQuery') {
@@ -32,6 +34,7 @@ class SubQuery extends atoum
     {
         $this->assert('test Queries\Parts\SubQuery::__construct and getters with string query')
             ->object($this->mock = new \mock\BfwSql\Queries\Parts\SubQuery(
+                $this->query,
                 'nbSessionIp',
                 'SELECT COUNT(id) FROM sessions s WHERE s.ip=u.lastIp'
             ))
@@ -48,6 +51,7 @@ class SubQuery extends atoum
             ->and($query->where('s.ip=u.lastIp'))
             ->then
             ->object($this->mock = new \mock\BfwSql\Queries\Parts\SubQuery(
+                $this->query,
                 'nbSessionIp',
                 $query
             ))
@@ -66,7 +70,7 @@ class SubQuery extends atoum
     public function testObtainAssembledQuery()
     {
         $this->assert('test Queries\Parts\SubQuery::obtainAssembledQuery - prepare')
-            ->given($this->mock = new \mock\BfwSql\Queries\Parts\SubQuery('nbSessionIp', ''))
+            ->given($this->mock = new \mock\BfwSql\Queries\Parts\SubQuery($this->query, 'nbSessionIp', ''))
         ;
         
         $this->assert('test Queries\Parts\SubQuery::obtainAssembledQuery with string query')
@@ -106,6 +110,7 @@ class SubQuery extends atoum
     {
         $this->assert('test Queries\Parts\Order::generate')
             ->if($this->mock = new \mock\BfwSql\Queries\Parts\SubQuery(
+                $this->query, 
                 'nbSessionIp',
                 'SELECT COUNT(id) FROM sessions s WHERE s.ip=u.lastIp'
             ))
