@@ -65,6 +65,13 @@ abstract class AbstractQuery
     protected $requestType = '';
     
     /**
+     * @var \BfwSql\Queries\SGBD\AbstractSGBD $querySgbd The QueriesSGBD
+     * instance which define query part allowed per SGBD or change some
+     * query part generation per SGBD.
+     */
+    protected $querySgbd;
+    
+    /**
      * Constructor
      * 
      * @param \BfwSql\SqlConnect $sqlConnect Instance of SGBD connexion
@@ -76,6 +83,12 @@ abstract class AbstractQuery
         $usedClass      = \BfwSql\UsedClass::getInstance();
         $executerClass  = $usedClass->obtainClassNameToUse('ExecutersCommon');
         $this->executer = new $executerClass($this);
+        
+        $sgbdType        = $this->sqlConnect->getType();
+        $querySgbdClass  = $usedClass->obtainClassNameToUse(
+            'QueriesSgbd'.ucfirst($sgbdType)
+        );
+        $this->querySgbd = new $querySgbdClass($this);
         
         $this->defineQueriesParts();
     }
@@ -181,6 +194,16 @@ abstract class AbstractQuery
     public function getRequestType()
     {
         return $this->requestType;
+    }
+    
+    /**
+     * Getter to access at querySgbd property
+     * 
+     * @return array
+     */
+    public function getQuerySgbd()
+    {
+        return $this->querySgbd;
     }
     
     /**

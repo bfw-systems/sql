@@ -55,6 +55,8 @@ class AbstractQuery extends atoum
                     ->once()
             ->string($this->mock->getRequestType())
                 ->isEmpty()
+            ->object($this->mock->getQuerySgbd())
+                ->isInstanceOf('\BfwSql\Queries\SGBD\AbstractSGBD')
         ;
     }
     
