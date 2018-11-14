@@ -75,9 +75,9 @@ trait CreateModule
         $runnerDb->run();
     }
     
-    protected function createSqlConnect($baseName)
+    protected function createSqlConnect($baseName, $baseType = 'mysql')
     {
-        $baseInfos = new class ($baseName) {
+        $baseInfos = new class ($baseName, $baseType) {
             public $baseKeyName   = '';
             public $filePath      = '';
             public $host          = 'localhost';
@@ -85,7 +85,7 @@ trait CreateModule
             public $baseName      = 'atoum';
             public $user          = 'atoum';
             public $password      = '';
-            public $baseType      = 'mysql';
+            public $baseType      = '';
             public $tablePrefix   = 'test_';
             public $pdoOptions    = [];
             public $pdoAttributes = [
@@ -93,9 +93,10 @@ trait CreateModule
             ];
             public $mysqlUtf8     = true;
             
-            public function __construct($baseKeyName)
+            public function __construct($baseKeyName, $baseType)
             {
                 $this->baseKeyName = $baseKeyName;
+                $this->baseType    = $baseType;
             }
         };
         
