@@ -60,6 +60,12 @@ return [
             public $baseType = '';
             
             /**
+             * @var string tablePrefix The prefix used for all table.
+             *  Empty if not prefix to use
+             */
+            public $tablePrefix = '';
+            
+            /**
              * @var array pdoOptions Options passed to 4th arguments
              * of PDO::__construct
              * 
@@ -74,12 +80,6 @@ return [
              * @link http://dev.mysql.com/doc/refman/5.7/en/charset-connection.html
              */
             public $useUtf8 = true;
-            
-            /**
-             * @var string tablePrefix The prefix used for all table.
-             *  Empty if not prefix to use
-             */
-            public $tablePrefix = '';
         }
         // Add object (duplicate first) into the array
         // to add others sql connexions
