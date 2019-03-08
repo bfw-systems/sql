@@ -11,6 +11,7 @@ The list of all parts available is :
   * `where` : List of all condition to use into WHERE section
 * Into Insert
   * `from` : A reference to `table`
+  * `set` : A reference to columns list into `table`
   * `join` : A list of table to join (with INNER JOIN) who contain table infos (name, shortcut and "on" condition) and their columns to return
   * `joinLeft` : A list of table to join (with LEFT JOIN) who contain table infos (name, shortcut and "on" condition) and their columns to return
   * `joinRight` : A list of table to join (with RIGHT JOIN) who contain table infos (name, shortcut and "on" condition) and their columns to return
@@ -18,6 +19,7 @@ The list of all parts available is :
 For all of thats, you have a dynamic method who exist :
 * `\BfwSql\Queries\Update public table(string|array $nameInfos, string|array|null $columns=null)`
 * `\BfwSql\Queries\Update from(string|array $nameInfos, string|array|null $columns=null)`
+* `\BfwSql\Queries\Update set(array $columns)`
 * `\BfwSql\Queries\Update public join(string|array $table, string $on, [string|array $columns=null])`
 * `\BfwSql\Queries\Update public joinLeft(string|array $table, string $on, [string|array $columns=null])`
 * `\BfwSql\Queries\Update public joinRight(string|array $table, string $on, [string|array $columns=null])`

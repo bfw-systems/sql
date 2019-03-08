@@ -11,7 +11,8 @@ use \Exception;
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
  * 
- * @method \BfwSql\Queries\Select from(string|array $nameInfos, string|array|null $columns=null)
+ * @method \BfwSql\Queries\Update from(string|array $nameInfos, string|array|null $columns=null)
+ * @method \BfwSql\Queries\Update set(array $columns)
  */
 class Update extends AbstractQuery
 {
@@ -68,7 +69,11 @@ class Update extends AbstractQuery
     {
         parent::defineQueriesParts();
         
-        $this->queriesParts['from']      = $this->queriesParts['table'];
+        $parts     = &$this->queriesParts; //Yes, it's just to have < 80 chars
+        $partTable = $parts['table'];
+        
+        $this->queriesParts['from']      = $partTable;
+        $this->queriesParts['set']       = &$partTable->getColumns();
         $this->queriesParts['join']      = new Parts\JoinList($this);
         $this->queriesParts['joinLeft']  = new Parts\JoinList($this);
         $this->queriesParts['joinRight'] = new Parts\JoinList($this);

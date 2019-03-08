@@ -76,6 +76,7 @@ class Update extends atoum
                     'table',
                     'where',
                     'from',
+                    'set',
                     'join',
                     'joinLeft',
                     'joinRight'
@@ -89,6 +90,9 @@ class Update extends atoum
             ->object($queriesPart['from'])
                 ->isInstanceOf('\BfwSql\Queries\Parts\Table')
                 ->isidenticalTo($queriesPart['table'])
+            ->object($queriesPart['set'])
+                ->isInstanceOf('\BfwSql\Queries\Parts\ColumnValueList')
+                ->isidenticalTo($queriesPart['table']->getColumns())
             ->object($queriesPart['join'])
                 ->isInstanceOf('\BfwSql\Queries\Parts\JoinList')
             ->object($queriesPart['joinLeft'])
