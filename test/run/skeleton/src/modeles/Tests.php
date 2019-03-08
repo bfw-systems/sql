@@ -1,8 +1,8 @@
 <?php
 
-namespace Modeles;
+namespace Models;
 
-class Tests extends \BfwSql\AbstractModeles
+class Tests extends \BfwSql\AbstractModels
 {
     use \Modules\testModules\CheckTests;
     

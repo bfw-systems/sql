@@ -60,7 +60,7 @@ You can access to the quoting system instance by the getter `getQuoting()` of th
 I know, they are not great examples. If you have better, you can suggest others ;)
 
 ```php
-namespace Modeles;
+namespace Models;
 
 class MyTable
 {

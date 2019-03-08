@@ -190,14 +190,14 @@ You can access it with the getter `getQuoting()` from the `Queries` instance.
 
 ### Insert
 
-Into you modele, you have this method `\BfwSql\Queries\Insert public insert([string $quoteStatus=\BfwSql\Helpers\Quoting::QUOTE_ALL])`.
+Into you model, you have this method `\BfwSql\Queries\Insert public insert([string $quoteStatus=\BfwSql\Helpers\Quoting::QUOTE_ALL])`.
 It instantiate an object of the class `Queries\Insert`.
 
 You can choose the quoting status to use (the value passed to the Quoting constructor). By default the status use the status `QUOTE_ALL`.
 
 ### Update
 
-Into you modele, you have this method `\BfwSql\Queries\Update public update([string $quoteStatus=\BfwSql\Helpers\Quoting::QUOTE_ALL])`.
+Into you model, you have this method `\BfwSql\Queries\Update public update([string $quoteStatus=\BfwSql\Helpers\Quoting::QUOTE_ALL])`.
 It instantiate an object of the class `Queries\Update`.
 
 You can choose the quoting status to use (the value passed to the Quoting constructor). By default the status use the status `QUOTE_ALL`.
@@ -207,11 +207,11 @@ You can choose the quoting status to use (the value passed to the Quoting constr
 Yes the column list to quote is wtf, if you have a better example (with the partially case), you are free to propose ;)
 
 ```php
-namespace Modeles;
+namespace Models;
 
 use \BfwSql\Helpers\Quoting;
 
-class Users extends \BfwSql\AbstractModeles
+class Users extends \BfwSql\AbstractModels
 {
     protected $tableName = 'users';
 

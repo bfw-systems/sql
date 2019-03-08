@@ -9,7 +9,7 @@ require_once($vendorPath.'/autoload.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/helpers/Application.php');
 require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Module.php');
 
-class AbstractModeles extends atoum
+class AbstractModels extends atoum
 {
     use \BFW\Test\Helpers\Application;
     
@@ -25,14 +25,14 @@ class AbstractModeles extends atoum
             ->makeVisible('getApp')
             ->makeVisible('obtainSqlConnect')
             ->orphanize('__construct') //Not call the construct
-            ->generate('BfwSql\AbstractModeles')
+            ->generate('BfwSql\AbstractModels')
         ;
         
         if ($testMethod === 'testConstructAndGetters') {
             return;
         }
         
-        $this->mock = new \mock\BfwSql\AbstractModeles;
+        $this->mock = new \mock\BfwSql\AbstractModels;
     }
     
     protected function createModule()
@@ -78,25 +78,25 @@ class AbstractModeles extends atoum
     
     public function testConstructAndGetters()
     {
-        $this->assert('test AbstractModeles::__construct')
+        $this->assert('test AbstractModels::__construct')
             ->given($this->createModule())
             ->and($this->addBase('myBase'))
             ->then
-            ->object($obj = new \BfwSql\Test\Helpers\Modele)
-                ->isInstanceOf('\BfwSql\AbstractModeles')
+            ->object($obj = new \BfwSql\Test\Helpers\Model)
+                ->isInstanceOf('\BfwSql\AbstractModels')
         ;
         
-        $this->assert('test AbstractModeles::getTableName')
+        $this->assert('test AbstractModels::getTableName')
             ->string($obj->getTableName())
-                ->isEqualTo('modele')
+                ->isEqualTo('model')
         ;
         
-        $this->assert('test AbstractModeles::getTableNameWithPrefix')
+        $this->assert('test AbstractModels::getTableNameWithPrefix')
             ->string($obj->getTableNameWithPrefix())
-                ->isEqualTo('test_modele')
+                ->isEqualTo('test_model')
         ;
         
-        $this->assert('test AbstractModeles::getBaseKeyName')
+        $this->assert('test AbstractModels::getBaseKeyName')
             ->string($obj->getBaseKeyName())
                 ->isEqualTo('myBase')
         ;
@@ -104,7 +104,7 @@ class AbstractModeles extends atoum
     
     public function testObtainApp()
     {
-        $this->assert('test AbstractModeles::obtainApp')
+        $this->assert('test AbstractModels::obtainApp')
             ->object($this->invoke($this->mock)->obtainApp())
                 ->isInstanceOf('\BFW\Application')
         ;
@@ -112,55 +112,55 @@ class AbstractModeles extends atoum
     
     public function testObtainSqlConnect()
     {
-        $this->assert('test AbstractModeles::obtainSqlConnect - prepare')
+        $this->assert('test AbstractModels::obtainSqlConnect - prepare')
             ->given($this->createModule())
             ->then
             ->if($this->mockGenerator->makeVisible('obtainSqlConnect'))
             ->and($this->mockGenerator->orphanize('__construct'))
-            ->given($modele = new \mock\BfwSql\Test\Helpers\Modele)
+            ->given($model = new \mock\BfwSql\Test\Helpers\Model)
         ;
         
-        $this->assert('test AbstractModeles::obtainSqlConnect without bases')
+        $this->assert('test AbstractModels::obtainSqlConnect without bases')
             ->exception(function() {
                 $this->invoke($this->mock)->obtainSqlConnect();
             })
-                ->hasCode(\BfwSql\AbstractModeles::ERR_NO_CONNECTION_CONFIGURED)
+                ->hasCode(\BfwSql\AbstractModels::ERR_NO_CONNECTION_CONFIGURED)
         ;
         
-        $this->assert('test AbstractModeles::obtainSqlConnect - prepare - adding multiple bases')
+        $this->assert('test AbstractModels::obtainSqlConnect - prepare - adding multiple bases')
             ->if($this->addBase('myBase'))
             ->and($this->addBase('myBase2'))
         ;
         
-        $this->assert('test AbstractModeles::obtainSqlConnect with many bases and without baseKeyName declared')
+        $this->assert('test AbstractModels::obtainSqlConnect with many bases and without baseKeyName declared')
             ->exception(function() {
                 $this->invoke($this->mock)->obtainSqlConnect();
             })
-                ->hasCode(\BfwSql\AbstractModeles::ERR_NEED_BASEKEYNAME_DEFINED)
+                ->hasCode(\BfwSql\AbstractModels::ERR_NEED_BASEKEYNAME_DEFINED)
         ;
         
-        $this->assert('test AbstractModeles::obtainSqlConnect with many bases and unknow baseKeyName declared')
-            ->if($modele->setBaseKeyName('myBase1'))
+        $this->assert('test AbstractModels::obtainSqlConnect with many bases and unknow baseKeyName declared')
+            ->if($model->setBaseKeyName('myBase1'))
             ->then
-            ->exception(function() use ($modele) {
-                $this->invoke($modele)->obtainSqlConnect();
+            ->exception(function() use ($model) {
+                $this->invoke($model)->obtainSqlConnect();
             })
-                ->hasCode(\BfwSql\AbstractModeles::ERR_UNKNOWN_CONNECTION_FOR_BASEKEYNAME)
+                ->hasCode(\BfwSql\AbstractModels::ERR_UNKNOWN_CONNECTION_FOR_BASEKEYNAME)
         ;
         
-        $this->assert('test AbstractModeles::obtainSqlConnect with many bases and correct baseKeyName declared')
-            ->if($modele->setBaseKeyName('myBase'))
+        $this->assert('test AbstractModels::obtainSqlConnect with many bases and correct baseKeyName declared')
+            ->if($model->setBaseKeyName('myBase'))
             ->then
-            ->object($this->invoke($modele)->obtainSqlConnect())
+            ->object($this->invoke($model)->obtainSqlConnect())
                 ->isInstanceOf('\BfwSql\SqlConnect')
         ;
         
-        $this->assert('test AbstractModeles::obtainSqlConnect with one base')
-            ->if($modele->setBaseKeyName('myBase'))
+        $this->assert('test AbstractModels::obtainSqlConnect with one base')
+            ->if($model->setBaseKeyName('myBase'))
             ->and($this->app->getModuleList()->getModuleByName('bfw-sql')->listBases = [])
             ->and($this->addBase('myBase'))
             ->then
-            ->object($this->invoke($modele)->obtainSqlConnect())
+            ->object($this->invoke($model)->obtainSqlConnect())
                 ->isInstanceOf('\BfwSql\SqlConnect')
         ;
     }

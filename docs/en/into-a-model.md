@@ -1,21 +1,21 @@
-# Into a modele
+# Into a model
 
-Like I said before, if your modele extends the class `BfwSql\AbstractModeles`, you will have access to many properties and methods.
+Like I said before, if your model extends the class `BfwSql\AbstractModels`, you will have access to many properties and methods.
 
 ## Properties
 
-From `BfwSql\AbstractModeles` :
-* `protected $tableName` : The table name of this modele
+From `BfwSql\AbstractModels` :
+* `protected $tableName` : The table name of this model
 * `protected $tableNameWithPrefix` : The name with the table prefix
-* `protected $baseKeyName` : The baseKeyName who match with the dabatase to use with this modele
+* `protected $baseKeyName` : The baseKeyName who match with the dabatase to use with this model
 
-From `BfwSql\Sql` (because `AbstractModeles` extend it) :
+From `BfwSql\Sql` (because `AbstractModels` extend it) :
 * `protected $sqlConnect` : The `BfwSql\SqlConnect` instance who match with the database to use
 * `protected $prefix` : The prefix to use for all table of this connection
 
 ## Methods
 
-From `BfwSql\AbstractModeles` :
+From `BfwSql\AbstractModels` :
 * Getters
   * `string public getBaseKeyName()`
   * `string public getTableName()`
@@ -25,7 +25,7 @@ To get a direct access to `\BFW\Application` instance
 * `\BfwSql\SqlConnect protected obtainSqlConnect()`
 To find the instance of `\BfwSql\SqlConnect` who match with the database to use
 
-From `BfwSql\Sql` (because `AbstractModeles` extend it) :
+From `BfwSql\Sql` (because `AbstractModels` extend it) :
 * Getters
   * `string public getPrefix()`
   * `\BfwSql\SqlConnect public getSqlConnect()`

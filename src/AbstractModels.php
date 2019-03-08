@@ -11,7 +11,7 @@ use \Exception;
  * @author Vermeulen Maxime <bulton.fr@gmail.com>
  * @version 2.0
  */
-abstract class AbstractModeles extends \BfwSql\Sql
+abstract class AbstractModels extends \BfwSql\Sql
 {
     /**
      * @const ERR_NO_CONNECTION_CONFIGURED Exception code if no connection

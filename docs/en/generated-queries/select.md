@@ -3,7 +3,7 @@
 You can generate the majority of your SELECT queries with this class.
 Like I explain before, Queries class generate their queries with many Parts classes.
 
-When you call the `select()` method into your modele, you can choose the format for the returned datas.
+When you call the `select()` method into your model, you can choose the format for the returned datas.
 By default is "array", but you can switch to "object".
 
 ## Access to each parts :
@@ -64,7 +64,7 @@ For missing example, I think parameters name can be enough to understand.
 But if you have some examples to add, I will be happy to add them.
 
 ```php
-namespace Modeles;
+namespace Models;
 
 class MyTable
 {

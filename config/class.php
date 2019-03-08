@@ -13,7 +13,7 @@
  * Can not define because extends for :
  * * Sql
  * * SqlActions
- * Modele is extended by user.
+ * Model is extended by user.
  */
 return [
     'PDO'                 => '\PDO',

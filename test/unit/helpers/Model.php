@@ -2,9 +2,9 @@
 
 namespace BfwSql\Test\Helpers;
 
-class Modele extends \BfwSql\AbstractModeles
+class Model extends \BfwSql\AbstractModels
 {
-    protected $tableName = 'modele';
+    protected $tableName = 'model';
     
     protected $baseKeyName = 'myBase';
     

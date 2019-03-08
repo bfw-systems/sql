@@ -13,7 +13,7 @@ Each base declared should be an object (you can use anonymous class for that).
 The config file already contain a base structure to use.
 
 The object should contains properties :
-* `$baseKeyName` : The internal name for this connection. Used by modeles.
+* `$baseKeyName` : The internal name for this connection. Used by models.
 * `$filePath` : For SGBD like sqlite who use a file, the path to the database file
 * `$host` : For SGBD like mysql who use a server, the host of the server
 * `$port` : For SGBD like mysql who use a server, the port of the server
@@ -65,15 +65,15 @@ Each observers configured should be an array with two keys :
   * `others` : All others handler to use for this observer.
 The format is identical of the format used into the config file `monolog.php`
 
-# The first modele
+# The first model
 
-You can use the directory `/src/modeles` to save you modeles.
-You can also use the namespace `\Modeles` for your modeles, this namespace is declared to composer and linked to the directory `/src/modeles` by the framework.
+You can use the directory `/src/models` to save you models.
+You can also use the namespace `\Models` for your models, this namespace is declared to composer and linked to the directory `/src/models` by the framework.
 
-Your modeles can extends of the class `\BfwSql\AbstractModeles`.
+Your models can extends of the class `\BfwSql\AbstractModels`.
 This class extends of `\BfwSql\Sql` who gives you an access to generated queries system.
 
-The class AbstractModeles have the property `$baseKeyName` which must correspond to the key `$baseKeyName` declared into the config file `bases.php`.
+The class AbstractModels have the property `$baseKeyName` which must correspond to the key `$baseKeyName` declared into the config file `bases.php`.
 With that, the system will find the correct instance of `\BfwSql\SqlConnect` (who instantiate `PDO`) to execute queries on the correct database.
 
 If you have only one database declared, you can not declared `$baseKeyName`, the system will automatically find the database (because there is only one, it's easy to know which one to take).
@@ -81,9 +81,9 @@ If you have only one database declared, you can not declared `$baseKeyName`, the
 ## Example
 
 ```php
-namespace Modeles;
+namespace Models;
 
-class MyTable extends \BfwSql\AbstractModeles
+class MyTable extends \BfwSql\AbstractModels
 {
     protected $baseKeyName = 'testDb';
     

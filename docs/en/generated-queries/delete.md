@@ -40,7 +40,7 @@ For missing example, I think parameters name can be enough to understand.
 But if you have some examples to add, I will be happy to add them.
 
 ```php
-namespace Modeles;
+namespace Models;
 
 class MyTable
 {
