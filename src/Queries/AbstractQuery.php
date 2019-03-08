@@ -100,9 +100,13 @@ abstract class AbstractQuery
      */
     protected function defineQueriesParts()
     {
+        $usedClass  = \BfwSql\UsedClass::getInstance();
+        $tableClass = $usedClass->obtainClassNameToUse('QueriesPartsTable');
+        $whereClass = $usedClass->obtainClassNameToUse('QueriesPartsWhereList');
+        
         $this->queriesParts = [
-            'table' => new Parts\Table($this),
-            'where' => new Parts\WhereList($this)
+            'table' => new $tableClass($this),
+            'where' => new $whereClass($this)
         ];
         
         $this->querySgbd->disableQueriesParts($this->queriesParts);

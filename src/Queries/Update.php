@@ -72,11 +72,14 @@ class Update extends AbstractQuery
         $parts     = &$this->queriesParts; //Yes, it's just to have < 80 chars
         $partTable = $parts['table'];
         
+        $usedClass     = \BfwSql\UsedClass::getInstance();
+        $joinListClass = $usedClass->obtainClassNameToUse('QueriesPartsJoinList');
+        
         $this->queriesParts['from']      = $partTable;
         $this->queriesParts['set']       = &$partTable->getColumns();
-        $this->queriesParts['join']      = new Parts\JoinList($this);
-        $this->queriesParts['joinLeft']  = new Parts\JoinList($this);
-        $this->queriesParts['joinRight'] = new Parts\JoinList($this);
+        $this->queriesParts['join']      = new $joinListClass($this);
+        $this->queriesParts['joinLeft']  = new $joinListClass($this);
+        $this->queriesParts['joinRight'] = new $joinListClass($this);
         
         $this->joinDefinePrefix();
         $this->queriesParts['from']->setColumnsWithValue(true);

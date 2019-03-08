@@ -68,10 +68,14 @@ class Insert extends AbstractQuery
         $partTable->setColumnsWithValue(true);
         $partTable->createColumnInstance();
         
+        $usedClass       = \BfwSql\UsedClass::getInstance();
+        $selectClass     = $usedClass->obtainClassNameToUse('QueriesSelect');
+        $colValListClass = $usedClass->obtainClassNameToUse('QueriesPartsColumnValueList');
+        
         $parts['into']        = $partTable;
         $parts['values']      = &$partTable->getColumns();
-        $parts['select']      = new Select($this->sqlConnect, 'object');
-        $parts['onDuplicate'] = new Parts\ColumnValueList($this, $partTable);
+        $parts['select']      = new $selectClass($this->sqlConnect, 'object');
+        $parts['onDuplicate'] = new $colValListClass($this, $partTable);
         
         $this->querySgbd->disableQueriesParts($this->queriesParts);
     }

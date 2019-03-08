@@ -15,8 +15,11 @@ class ColumnValueList extends ColumnList
     {
         $this->invokeCheckIsDisabled();
         
+        $usedClass   = \BfwSql\UsedClass::getInstance();
+        $columnClass = $usedClass->obtainClassNameToUse('QueriesPartsColumn');
+        
         foreach ($columns as $name => $value) {
-            $this->list[] = new Column($this->table, $name, null, $value);
+            $this->list[] = new $columnClass($this->table, $name, null, $value);
         }
     }
     

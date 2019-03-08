@@ -22,7 +22,10 @@ class SubQueryList extends AbstractList
     {
         $this->invokeCheckIsDisabled();
         
-        $this->list[] = new SubQuery($this->querySystem, $shortcut, $subQuery);
+        $usedClass   = \BfwSql\UsedClass::getInstance();
+        $subQueryClass = $usedClass->obtainClassNameToUse('QueriesPartsSubQuery');
+        
+        $this->list[] = new $subQueryClass($this->querySystem, $shortcut, $subQuery);
     }
     
     /**

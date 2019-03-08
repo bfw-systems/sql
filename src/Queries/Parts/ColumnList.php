@@ -53,11 +53,14 @@ class ColumnList extends AbstractList
     {
         $this->invokeCheckIsDisabled();
         
+        $usedClass   = \BfwSql\UsedClass::getInstance();
+        $columnClass = $usedClass->obtainClassNameToUse('QueriesPartsColumn');
+        
         foreach ($columns as $shortcut => $name) {
             if (is_int($shortcut)) {
-                $column = new Column($this->table, $name);
+                $column = new $columnClass($this->table, $name);
             } else {
-                $column = new Column($this->table, $name, $shortcut);
+                $column = new $columnClass($this->table, $name, $shortcut);
             }
             
             $this->list[] = $column;

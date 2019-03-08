@@ -57,7 +57,10 @@ class JoinList extends AbstractList
     {
         $this->invokeCheckIsDisabled();
         
-        $join = new Join($this->querySystem);
+        $usedClass   = \BfwSql\UsedClass::getInstance();
+        $joinClass = $usedClass->obtainClassNameToUse('QueriesPartsJoin');
+        
+        $join = new $joinClass($this->querySystem);
         $join->setColumnsWithValue($this->columnsWithValue);
         $join->__invoke($nameInfos, $columns, $on);
         

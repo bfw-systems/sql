@@ -27,7 +27,10 @@ class OrderList extends AbstractList
     {
         $this->invokeCheckIsDisabled();
         
-        $this->list[] = new Order($this->querySystem, $expr, $sort);
+        $usedClass   = \BfwSql\UsedClass::getInstance();
+        $orderClass = $usedClass->obtainClassNameToUse('QueriesPartsOrder');
+        
+        $this->list[] = new $orderClass($this->querySystem, $expr, $sort);
     }
     
     /**

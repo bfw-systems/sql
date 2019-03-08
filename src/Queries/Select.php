@@ -49,14 +49,21 @@ class Select extends AbstractQuery
     {
         parent::defineQueriesParts();
         
-        $this->queriesParts['subQuery']  = new Parts\SubQueryList($this);
+        $usedClass         = \BfwSql\UsedClass::getInstance();
+        $subQueryListClass = $usedClass->obtainClassNameToUse('QueriesPartsSubQueryList');
+        $joinListClass     = $usedClass->obtainClassNameToUse('QueriesPartsJoinList');
+        $orderListClass    = $usedClass->obtainClassNameToUse('QueriesPartsOrderList');
+        $limitClass        = $usedClass->obtainClassNameToUse('QueriesPartsLimit');
+        $commonListClass   = $usedClass->obtainClassNameToUse('QueriesPartsCommonList');
+        
+        $this->queriesParts['subQuery']  = new $subQueryListClass($this);
         $this->queriesParts['from']      = $this->queriesParts['table'];
-        $this->queriesParts['join']      = new Parts\JoinList($this);
-        $this->queriesParts['joinLeft']  = new Parts\JoinList($this);
-        $this->queriesParts['joinRight'] = new Parts\JoinList($this);
-        $this->queriesParts['order']     = new Parts\OrderList($this);
-        $this->queriesParts['limit']     = new Parts\Limit($this);
-        $this->queriesParts['group']     = new Parts\CommonList($this);
+        $this->queriesParts['join']      = new $joinListClass($this);
+        $this->queriesParts['joinLeft']  = new $joinListClass($this);
+        $this->queriesParts['joinRight'] = new $joinListClass($this);
+        $this->queriesParts['order']     = new $orderListClass($this);
+        $this->queriesParts['limit']     = new $limitClass($this);
+        $this->queriesParts['group']     = new $commonListClass($this);
         
         $this->joinDefinePrefix();
         $this->queriesParts['group']->setSeparator(',');
