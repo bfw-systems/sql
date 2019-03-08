@@ -160,4 +160,43 @@ abstract class AbstractModels extends \BfwSql\Sql
         
         return $sqlConnect;
     }
+    
+    public function obtainTableInfos()
+    {
+        if (empty($this->alias)) {
+            return $this->tableName;
+        }
+        
+        return [$this->alias => $this->tableName];
+    }
+    
+    public function select(string $type = 'array'): \BfwSql\Queries\Select
+    {
+        return parent::select($type)
+            ->from($this->obtainTableInfos())
+        ;
+    }
+    
+    public function insert(
+        string $quoteStatus = \BfwSql\Helpers\Quoting::QUOTE_ALL
+    ): \BfwSql\Queries\Insert {
+        return parent::insert($quoteStatus)
+            ->into($this->obtainTableInfos())
+        ;
+    }
+    
+    public function update(
+        string $quoteStatus = \BfwSql\Helpers\Quoting::QUOTE_ALL
+    ): \BfwSql\Queries\Update {
+        return parent::update($quoteStatus)
+            ->from($this->obtainTableInfos())
+        ;
+    }
+    
+    public function delete(): \BfwSql\Queries\Delete
+    {
+        return parent::delete()
+            ->from($this->obtainTableInfos())
+        ;
+    }
 }

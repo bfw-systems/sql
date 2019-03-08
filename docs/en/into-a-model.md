@@ -44,3 +44,6 @@ Get the id for the last item has been insert in database
 Get the id for the last item has been insert in database for a table without auto-increment
 * `\PDOStatement public query(string $request)`
 Execute a query
+
+Methods `delete`, `insert`, `select` and `update` are overrided into `AbstractModel` to define the table name and the alias before return the Query object.
+If you want change the value defined (table name or alias), you can re-call methods `table`, or `from`, or `into` (the method to use with the current query).

@@ -11,18 +11,17 @@ require_once($vendorPath.'/bulton-fr/bfw/test/unit/mocks/src/Module.php');
 
 class AbstractModels extends atoum
 {
-    use \BFW\Test\Helpers\Application;
+    use \BfwSql\Test\Helpers\CreateModule;
     
     protected $mock;
     
     public function beforeTestMethod($testMethod)
     {
-        $this->setRootDir(__DIR__.'/../../..');
-        $this->createApp();
-        $this->initApp();
+        $this->initModule();
+        $this->createSqlConnect('myBase');
         
         $this->mockGenerator
-            ->makeVisible('getApp')
+            ->makeVisible('obtainApp')
             ->makeVisible('obtainSqlConnect')
             ->orphanize('__construct') //Not call the construct
             ->generate('BfwSql\AbstractModels')
@@ -167,6 +166,87 @@ class AbstractModels extends atoum
             ->then
             ->object($this->invoke($model)->obtainSqlConnect())
                 ->isInstanceOf('\BfwSql\SqlConnect')
+        ;
+    }
+    
+    protected function queriesPrepare($queryType)
+    {
+        $this->app
+            ->getModuleList()
+            ->getModuleByName('bfw-sql')
+            ->getConfig()
+            ->setConfigKeyForFilename('class.php', 'QueriesDelete', '\mock\BfwSql\Queries\Delete')
+            ->setConfigKeyForFilename('class.php', 'QueriesInsert', '\mock\BfwSql\Queries\Insert')
+            ->setConfigKeyForFilename('class.php', 'QueriesSelect', '\mock\BfwSql\Queries\Select')
+            ->setConfigKeyForFilename('class.php', 'QueriesUpdate', '\mock\BfwSql\Queries\Update')
+        ;
+        
+        $this->assert('test AbstractModels::'.$queryType.' - prepare')
+            ->and($this->addBase('myBase'))
+            ->given($model = new \mock\BfwSql\Test\Helpers\Model)
+            ->then
+            ->given($setSqlConnect = function($sqlConnect) {
+                $this->sqlConnect = $sqlConnect;
+            })
+            ->and($setSqlConnect->call($model, $this->sqlConnect))
+        ;
+        
+        return $model;
+    }
+    
+    public function testSelect()
+    {
+        $this->assert('test AbstractModels::select')
+            ->given($model = $this->queriesPrepare('select'))
+            ->then
+            ->object($select = $model->select())
+                ->isInstanceOf('\BfwSql\Queries\Select')
+            ->string($select->getQueriesParts()['table']->getName())
+                ->isEqualTo('test_model')
+            ->string($select->getQueriesParts()['table']->getShortcut())
+                ->isEqualto('m')
+        ;
+    }
+    
+    public function testInsert()
+    {
+        $this->assert('test AbstractModels::insert')
+            ->given($model = $this->queriesPrepare('insert'))
+            ->then
+            ->object($select = $model->insert())
+                ->isInstanceOf('\BfwSql\Queries\Insert')
+            ->string($select->getQueriesParts()['table']->getName())
+                ->isEqualTo('test_model')
+            ->string($select->getQueriesParts()['table']->getShortcut())
+                ->isEqualto('m')
+        ;
+    }
+    
+    public function testUpdate()
+    {
+        $this->assert('test AbstractModels::update')
+            ->given($model = $this->queriesPrepare('update'))
+            ->then
+            ->object($select = $model->update())
+                ->isInstanceOf('\BfwSql\Queries\Update')
+            ->string($select->getQueriesParts()['table']->getName())
+                ->isEqualTo('test_model')
+            ->string($select->getQueriesParts()['table']->getShortcut())
+                ->isEqualto('m')
+        ;
+    }
+    
+    public function testDelete()
+    {
+        $this->assert('test AbstractModels::delete')
+            ->given($model = $this->queriesPrepare('delete'))
+            ->then
+            ->object($select = $model->delete())
+                ->isInstanceOf('\BfwSql\Queries\Delete')
+            ->string($select->getQueriesParts()['table']->getName())
+                ->isEqualTo('test_model')
+            ->string($select->getQueriesParts()['table']->getShortcut())
+                ->isEqualto('m')
         ;
     }
 }
