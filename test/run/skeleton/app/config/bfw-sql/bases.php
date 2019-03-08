@@ -18,12 +18,12 @@ return [
             public $user          = 'travis';
             public $password      = '';
             public $baseType      = 'mysql';
+            public $encoding      = 'utf8';
             public $tablePrefix   = 'test_';
             public $pdoOptions    = [];
             public $pdoAttributes = [
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
             ];
-            public $mysqlUtf8     = true;
         }
     ]
 ];

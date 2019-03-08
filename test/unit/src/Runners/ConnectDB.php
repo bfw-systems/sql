@@ -73,12 +73,12 @@ class ConnectDB extends atoum
                 public $user          = 'atoum';
                 public $password      = '';
                 public $baseType      = 'mysql';
+                public $encoding      = '';
                 public $tablePrefix   = 'test_';
                 public $pdoOptions    = [];
                 public $pdoAttributes = [
                     \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
                 ];
-                public $mysqlUtf8     = false;
             })
             ->if($config->setConfigKeyForFilename('bases.php', 'bases', [$newBase]))
             ->then
@@ -106,12 +106,12 @@ class ConnectDB extends atoum
                     public $user          = '';
                     public $password      = '';
                     public $baseType      = '';
+                    public $encoding      = 'utf8';
                     public $tablePrefix   = '';
                     public $pdoOptions    = [];
                     public $pdoAttributes = [
                         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
                     ];
-                    public $mysqlUtf8     = true;
                 });
             })
                 ->hasCode(\BfwSql\Runners\ConnectDB::ERR_NO_BASE_TYPE)
@@ -131,12 +131,12 @@ class ConnectDB extends atoum
                         public $user          = 'atoum';
                         public $password      = '';
                         public $baseType      = 'mysql';
+                        public $encoding      = 'utf8';
                         public $tablePrefix   = 'test_';
                         public $pdoOptions    = [];
                         public $pdoAttributes = [
                             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
                         ];
-                        public $mysqlUtf8     = true;
                     },
                     new class {
                         public $baseKeyName   = 'myBase';
@@ -147,12 +147,12 @@ class ConnectDB extends atoum
                         public $user          = 'atoum';
                         public $password      = '';
                         public $baseType      = 'mysql';
+                        public $encoding      = 'utf8';
                         public $tablePrefix   = 'test_';
                         public $pdoOptions    = [];
                         public $pdoAttributes = [
                             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
                         ];
-                        public $mysqlUtf8     = true;
                     }
                 ]
             ))
@@ -166,12 +166,12 @@ class ConnectDB extends atoum
                     public $user          = 'atoum';
                     public $password      = '';
                     public $baseType      = 'mysql';
+                    public $encoding      = 'utf8';
                     public $tablePrefix   = 'test_';
                     public $pdoOptions    = [];
                     public $pdoAttributes = [
                         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
                     ];
-                    public $mysqlUtf8     = true;
                 });
             })
                 ->hasCode(\BfwSql\Runners\ConnectDB::ERR_NO_CONNECTION_KEYNAME)
@@ -196,12 +196,12 @@ class ConnectDB extends atoum
                         public $user          = 'atoum';
                         public $password      = '';
                         public $baseType      = 'mysql';
+                        public $encoding      = 'utf8';
                         public $tablePrefix   = 'test_';
                         public $pdoOptions    = [];
                         public $pdoAttributes = [
                             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
                         ];
-                        public $mysqlUtf8     = true;
                     }
                 ]
             ))

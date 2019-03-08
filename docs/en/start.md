@@ -21,9 +21,10 @@ The object should contains properties :
 * `$user` : The username to open the database
 * `$password` : The user password
 * `$baseType` : The type of SGBD (mysql, pgsql, sqlite, etc)
-* `$pdoOptions` : Option to sent to PDO construct
-* `$useUtf8` : If the database use UTF-8 (declare the connection with utf-8)
+* `$encoding` : The database encoding, will be used in a `SET NAMES` query if not empty
 * `$tablePrefix` : The prefix of all tables (empty if no prefix)
+* `$pdoOptions` : Option to sent to PDO construct
+* `$pdoAttributes` : An array of options which will be pass to PDO `setAttribute` method
 
 ## class.php
 

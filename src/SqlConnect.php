@@ -81,9 +81,9 @@ class SqlConnect
         );
             
         $this->pdoSetAttributes();
-            
-        if ($this->connectionInfos->mysqlUtf8 === true) {
-            $this->mysqlUtf8();
+        
+        if (!empty($this->connectionInfos->encoding)) {
+            $this->sqlSetNames();
         }
     }
     
@@ -109,9 +109,10 @@ class SqlConnect
      * 
      * @return void
      */
-    protected function mysqlUtf8()
+    protected function sqlSetNames()
     {
-        $this->PDO->exec('SET NAMES utf8');
+        $encoding = $this->connectionInfos->encoding;
+        $this->PDO->exec('SET NAMES '.$encoding);
     }
     
     /**

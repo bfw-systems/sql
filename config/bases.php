@@ -60,6 +60,14 @@ return [
             public $baseType = '';
             
             /**
+             * @var string encoding Define the encoding to use for requests.
+             * Used with the query SET NAMES.
+             * 
+             * @link http://dev.mysql.com/doc/refman/5.7/en/charset-connection.html
+             */
+            public $encoding = '';
+            
+            /**
              * @var string tablePrefix The prefix used for all table.
              *  Empty if not prefix to use
              */
@@ -82,14 +90,6 @@ return [
             public $pdoAttributes = [
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
             ];
-            
-            /**
-             * @var boolean mysqlUtf8 Force datas to be UTF-8
-             *  Used for Mysql
-             * 
-             * @link http://dev.mysql.com/doc/refman/5.7/en/charset-connection.html
-             */
-            public $mysqlUtf8 = false;
         }
         // Add object (duplicate first) into the array
         // to add others sql connexions

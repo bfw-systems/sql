@@ -33,7 +33,7 @@ class SqlConnect extends atoum
         
         $this->mockGenerator
             ->makeVisible('pdoSetAttributes')
-            ->makeVisible('mysqlUtf8')
+            ->makeVisible('sqlSetNames')
             ->generate('BfwSql\SqlConnect')
         ;
         
@@ -46,12 +46,12 @@ class SqlConnect extends atoum
             public $user          = 'atoum';
             public $password      = '';
             public $baseType      = 'mysql';
+            public $encoding      = '';
             public $tablePrefix   = 'test_';
             public $pdoOptions    = [];
             public $pdoAttributes = [
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
             ];
-            public $mysqlUtf8     = false;
         };
         
         if ($testMethod === 'testConstructAndGetters') {
@@ -83,7 +83,7 @@ class SqlConnect extends atoum
     {
         $this->assert('test SqlConnect::createConnection - prepare')
             ->if($this->calling($this->mock)->pdoSetAttributes = null)
-            ->if($this->calling($this->mock)->mysqlUtf8 = null)
+            ->if($this->calling($this->mock)->sqlSetNames = null)
         ;
         
         $this->assert('test SqlConnect::createConnection with non-existent dsn')
@@ -105,12 +105,12 @@ class SqlConnect extends atoum
             ->mock($this->mock)
                 ->call('pdoSetAttributes')
                     ->once()
-                ->call('mysqlUtf8')
+                ->call('sqlSetNames')
                     ->never()
         ;
         
         $this->assert('test SqlConnect::createConnection with existing dsn and with utf8')
-            ->if($this->baseInfos->mysqlUtf8 = true)
+            ->if($this->baseInfos->encoding = 'utf8')
             ->then
             ->variable($this->mock->createConnection())
                 ->isNull()
@@ -119,7 +119,7 @@ class SqlConnect extends atoum
             ->mock($this->mock)
                 ->call('pdoSetAttributes')
                     ->once()
-                ->call('mysqlUtf8')
+                ->call('sqlSetNames')
                     ->once()
         ;
     }
@@ -139,13 +139,15 @@ class SqlConnect extends atoum
         ;
     }
     
-    public function testMysqlUtf8()
+    public function testSqlSetNames()
     {
-        $this->assert('test SqlConnect::mysqlUtf8')
+        $this->assert('test SqlConnect::sqlSetNames')
             ->if($this->mock->createConnection()) //To have a pdo instance
             ->and($this->calling($this->mock->getPDO())->exec = null)
             ->then
-            ->variable($this->mock->mysqlUtf8())
+            ->given($this->baseInfos->encoding = 'utf8')
+            ->then
+            ->variable($this->mock->sqlSetNames())
                 ->isNull()
             ->mock($this->mock->getPDO())
                 ->call('exec')
