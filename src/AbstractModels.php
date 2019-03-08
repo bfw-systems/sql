@@ -42,6 +42,11 @@ abstract class AbstractModels extends \BfwSql\Sql
     protected $tableNameWithPrefix = '';
     
     /**
+     * @var string $alias The table alias to use into queries
+     */
+    protected $alias = '';
+    
+    /**
      * @var string $baseKeyName The baseKeyName to use to connection.
      *  Use it if they are multiple database to connect in the application.
      */
@@ -76,6 +81,16 @@ abstract class AbstractModels extends \BfwSql\Sql
     public function getTableNameWithPrefix(): string
     {
         return $this->tableNameWithPrefix;
+    }
+    
+    /**
+     * Getter to property alias
+     * 
+     * @return string
+     */
+    public function getAlias(): string
+    {
+        return $this->alias;
     }
     
     /**

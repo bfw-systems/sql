@@ -7,6 +7,7 @@ Like I said before, if your model extends the class `BfwSql\AbstractModels`, you
 From `BfwSql\AbstractModels` :
 * `protected $tableName` : The table name of this model
 * `protected $tableNameWithPrefix` : The name with the table prefix
+* `protected $alias` : The alias to use into queries
 * `protected $baseKeyName` : The baseKeyName who match with the dabatase to use with this model
 
 From `BfwSql\Sql` (because `AbstractModels` extend it) :
@@ -20,6 +21,7 @@ From `BfwSql\AbstractModels` :
   * `string public getBaseKeyName()`
   * `string public getTableName()`
   * `string public getTableNameWithPrefix()`
+  * `string public getAlias()`
 * `\BFW\Application protected obtainApp()`
 To get a direct access to `\BFW\Application` instance
 * `\BfwSql\SqlConnect protected obtainSqlConnect()`

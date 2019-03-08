@@ -96,6 +96,11 @@ class AbstractModels extends atoum
                 ->isEqualTo('test_model')
         ;
         
+        $this->assert('test AbstractModels::getAlias')
+            ->string($obj->getalias())
+                ->isEqualTo('m')
+        ;
+        
         $this->assert('test AbstractModels::getBaseKeyName')
             ->string($obj->getBaseKeyName())
                 ->isEqualTo('myBase')

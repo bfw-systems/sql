@@ -6,6 +6,8 @@ class Model extends \BfwSql\AbstractModels
 {
     protected $tableName = 'model';
     
+    protected $alias = 'm';
+    
     protected $baseKeyName = 'myBase';
     
     public function setTableName($tableName)
