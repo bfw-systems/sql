@@ -55,6 +55,7 @@ class Select extends atoum
                     'where',
                     'subQuery',
                     'from',
+                    'fromColumns',
                     'join',
                     'joinLeft',
                     'joinRight',
@@ -71,6 +72,9 @@ class Select extends atoum
             ->object($queriesPart['from'])
                 ->isInstanceOf('\BfwSql\Queries\Parts\Table')
                 ->isidenticalTo($queriesPart['table'])
+            ->object($queriesPart['fromColumns'])
+                ->isInstanceOf('\BfwSql\Queries\Parts\ColumnList')
+                ->isidenticalTo($queriesPart['table']->getColumns())
             ->object($queriesPart['join'])
                 ->isInstanceOf('\BfwSql\Queries\Parts\JoinList')
             ->object($queriesPart['joinLeft'])

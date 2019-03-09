@@ -13,6 +13,7 @@ use \BfwSql\SqlConnect;
  * 
  * @method \BfwSql\Queries\Select subQuery(string $shortcut, string|\BfwSql\Queries\AbstractQuery $subQuery)
  * @method \BfwSql\Queries\Select from(string|array $nameInfos, string|array|null $columns=null)
+ * @method \BfwSql\Queries\Select fromColumns(array $columns)
  * @method \BfwSql\Queries\Select order(string $expr, string|null $sort = 'ASC')
  * @method \BfwSql\Queries\Select limit([int $offset,] int $rowCount)
  * @method \BfwSql\Queries\Select group(string $expr)
@@ -56,18 +57,21 @@ class Select extends AbstractQuery
         $limitClass        = $usedClass->obtainClassNameToUse('QueriesPartsLimit');
         $commonListClass   = $usedClass->obtainClassNameToUse('QueriesPartsCommonList');
         
-        $this->queriesParts['subQuery']  = new $subQueryListClass($this);
-        $this->queriesParts['from']      = $this->queriesParts['table'];
-        $this->queriesParts['join']      = new $joinListClass($this);
-        $this->queriesParts['joinLeft']  = new $joinListClass($this);
-        $this->queriesParts['joinRight'] = new $joinListClass($this);
-        $this->queriesParts['order']     = new $orderListClass($this);
-        $this->queriesParts['limit']     = new $limitClass($this);
-        $this->queriesParts['group']     = new $commonListClass($this);
+        $this->queriesParts['subQuery']    = new $subQueryListClass($this);
+        $this->queriesParts['from']        = $this->queriesParts['table'];
+        $this->queriesParts['fromColumns'] = &$this->queriesParts['table']->getColumns();
+        $this->queriesParts['join']        = new $joinListClass($this);
+        $this->queriesParts['joinLeft']    = new $joinListClass($this);
+        $this->queriesParts['joinRight']   = new $joinListClass($this);
+        $this->queriesParts['order']       = new $orderListClass($this);
+        $this->queriesParts['limit']       = new $limitClass($this);
+        $this->queriesParts['group']       = new $commonListClass($this);
         
         $this->joinDefinePrefix();
         $this->queriesParts['group']->setSeparator(',');
         $this->queriesParts['group']->setPartPrefix('GROUP BY');
+        
+        $this->queriesParts['table']->createColumnInstance();
         
         $this->querySgbd->disableQueriesParts($this->queriesParts);
     }
