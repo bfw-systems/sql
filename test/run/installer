@@ -15,7 +15,7 @@ php composer.phar install
 
 echo '\033[0;33mBFW Install and module\033[0m'
 ./vendor/bin/bfwInstall
-./vendor/bin/bfwInstallModules
+./vendor/bin/bfwAddMod -a
 
 echo '\033[0;33mCopy module test skeleton files\033[0m'
 cd ../
@@ -24,9 +24,38 @@ cp -Rf skeleton/app/* install/app/
 cp -Rf skeleton/src/* install/src/
 mkdir -p install/app/logs/bfw-sql
 chmod 775 install/app/logs/bfw-sql
+cd install
+
+echo '\033[0;33mEnable all modules\033[0m'
+./vendor/bin/bfwEnMod -a
+
+DIRECTORY=`pwd`
+
+echo -n '\033[0;33mCheck module bfw-sql is available ... \033[0m'
+if [ -d "$DIRECTORY/app/modules/available/bfw-sql" ]; then
+    echo '\033[1;32mOK\033[0m'
+else
+    echo '\033[1;31mFail\033[0m'
+    exit 1
+fi
+
+echo -n '\033[0;33mCheck module bfw-sql is enabled ... \033[0m'
+if [ -d "$DIRECTORY/app/modules/enabled/bfw-sql" ]; then
+    echo '\033[1;32mOK\033[0m'
+else
+    echo '\033[1;31mFail\033[0m'
+    exit 1
+fi
+
+echo -n '\033[0;33mCheck module testModules is enabled ... \033[0m'
+if [ -d "$DIRECTORY/app/modules/enabled/testModules" ]; then
+    echo '\033[1;32mOK\033[0m'
+else
+    echo '\033[1;31mFail\033[0m'
+    exit 1
+fi
 
 echo '\033[0;33mRun php integrated web server\033[0m'
-cd install
 php -S localhost:8000 -t web web/index.php &
 
 echo '\033[0;33mWait 5s web server is running\033[0m'

@@ -3,14 +3,9 @@ language: php
 
 # list any PHP version you want to test against
 php:
-  # using major version aliases
-
-  # aliased to a recent 7.0.x version
-  - 7.0
-  # aliased to a recent 7.1.x version
   - 7.1
-  # aliased to a recent 7.2.x version
   - 7.2
+  - 7.3
 
 services:
   - mysql
@@ -19,9 +14,9 @@ services:
 before_script:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS `bfw_sql_tests` CHARACTER SET utf8 COLLATE utf8_general_ci;' -u root
   - mysql -e 'SHOW DATABASES;' -u root
-  - mysql -e "GRANT ALL ON bfw_sql_tests TO 'travis'@'localhost';FLUSH PRIVILEGES;" -u root -D bfw_sql_tests
+  - mysql -e "GRANT ALL ON bfw_sql_tests.* TO 'travis'@'localhost';FLUSH PRIVILEGES;" -u root -D bfw_sql_tests
   - mysql -e 'SHOW DATABASES;' -u travis
-  - mysql -u travis -D bfw_sql_tests -e "DROP TABLE IF EXISTS test_runner;CREATE TABLE test_runner (id int UNSIGNED NOT NULL AUTO_INCREMENT, title varchar(255) NOT NULL DEFAULT '', date datetime NOT NULL, enabled tinyint(1) NOT NULL DEFAULT 0, PRIMARY KEY (id));"
+  - mysql -u travis -D bfw_sql_tests -e "DROP TABLE IF EXISTS test_runner;CREATE TABLE test_runner (id int UNSIGNED NOT NULL AUTO_INCREMENT, title varchar(255) NOT NULL DEFAULT '', date datetime NOT NULL DEFAULT NOW(), enabled tinyint(1) NOT NULL DEFAULT 0, PRIMARY KEY (id));"
   - mysql -e "SHOW TABLES;" -u root -D bfw_sql_tests
   - mysql -e "SHOW TABLES;" -u travis -D bfw_sql_tests
   - composer install

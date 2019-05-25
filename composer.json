@@ -19,8 +19,7 @@
         "source": "https://github.com/bulton-fr/bfw-sql"
     },
     "require": {
-        "php": "^7.0.0",
-        "bulton-fr/bfw": "3.0.0-rc.10"
+        "bulton-fr/bfw": "~3.0.0-RC11@RC"
     },
     "require-dev": {
         "atoum/atoum": "~3.1",
